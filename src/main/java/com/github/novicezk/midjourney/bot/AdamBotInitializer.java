@@ -1,7 +1,6 @@
 package com.github.novicezk.midjourney.bot;
 
 import com.github.novicezk.midjourney.bot.commands.CommandsManager;
-import com.github.novicezk.midjourney.bot.queue.QueueManager;
 import com.github.novicezk.midjourney.bot.utils.Config;
 import com.github.novicezk.midjourney.controller.SubmitController;
 import lombok.RequiredArgsConstructor;

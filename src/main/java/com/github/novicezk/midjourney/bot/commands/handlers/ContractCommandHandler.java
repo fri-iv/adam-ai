@@ -105,7 +105,7 @@ public class ContractCommandHandler implements CommandHandler {
                                 "**3. Who can use it?**\n" +
                                 "Currently only <@&" + Config.getRoleVanguard() + "> and <@&" + Config.getRoleVerifiedClient() + "> have access.\n" +
                                 "\n" +
-                                "To gain access click the button to get the <@&" + Config.getRoleTester() + "> role.",
+                                "To gain access click the button and get the <@&" + Config.getRoleTester() + "> role.",
                         null,
                         ColorUtil.getWarningColor())
                 ).addActionRow(roleButton)
