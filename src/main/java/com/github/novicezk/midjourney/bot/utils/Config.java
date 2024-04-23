@@ -20,6 +20,16 @@ public class Config {
     private static final String FAQ_CHANNEL = "FAQ_CHANNEL";
     private static final String MIXPANEL_PROJECT_TOKEN = "MIXPANEL_PROJECT_TOKEN";
 
+    private static final String ROLE_COMMON = "COMMON";
+    private static final String ROLE_RARE = "RARE";
+    private static final String ROLE_STRANGE = "STRANGE";
+    private static final String ROLE_UNIQUE = "UNIQUE";
+    private static final String ROLE_EPIC = "EPIC";
+
+    private static final String ROLE_VANGUARD = "VANGUARD";
+    private static final String ROLE_VERIFIED_CLIENT = "VERIFIED_CLIENT";
+    private static final String ROLE_TESTER = "TESTER";
+
     private static final String CONFIG_FILE = "adam-ai/config.properties";
     private static final Properties properties = new Properties();
 
@@ -29,6 +39,38 @@ public class Config {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static String getRoleCommon() {
+        return properties.getProperty(ROLE_COMMON);
+    }
+
+    public static String getRoleRare() {
+        return properties.getProperty(ROLE_RARE);
+    }
+
+    public static String getRoleStrange() {
+        return properties.getProperty(ROLE_STRANGE);
+    }
+
+    public static String getRoleUnique() {
+        return properties.getProperty(ROLE_UNIQUE);
+    }
+
+    public static String getRoleEpic() {
+        return properties.getProperty(ROLE_EPIC);
+    }
+
+    public static String getRoleVanguard() {
+        return properties.getProperty(ROLE_VANGUARD);
+    }
+
+    public static String getRoleVerifiedClient() {
+        return properties.getProperty(ROLE_VERIFIED_CLIENT);
+    }
+
+    public static String getRoleTester() {
+        return properties.getProperty(ROLE_TESTER);
     }
 
     public static int getSeasonVersion() {

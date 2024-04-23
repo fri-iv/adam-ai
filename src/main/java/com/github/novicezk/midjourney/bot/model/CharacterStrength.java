@@ -1,13 +1,15 @@
 package com.github.novicezk.midjourney.bot.model;
 
+import com.github.novicezk.midjourney.bot.utils.Config;
+
 import java.util.Random;
 
 public enum CharacterStrength {
-    COMMON("Common", "1225826423311437824", 40),
-    RARE("Rare", "1225826457981423748", 27),
-    STRANGE("Strange", "1225826281153761362", 18),
-    UNIQUE("Unique", "1225826496824742070", 10),
-    EPIC("Epic", "1225826560997851216", 5);
+    COMMON("Common", Config.getRoleCommon(), 40),
+    RARE("Rare", Config.getRoleRare(), 27),
+    STRANGE("Strange", Config.getRoleStrange(), 18),
+    UNIQUE("Unique", Config.getRoleUnique(), 10),
+    EPIC("Epic", Config.getRoleEpic(), 5);
 
     private final String strengthName;
     private final String roleId;

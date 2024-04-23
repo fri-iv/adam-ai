@@ -1,6 +1,7 @@
 package com.github.novicezk.midjourney.bot.error;
 
 import com.github.novicezk.midjourney.bot.events.EventsManager;
+import com.github.novicezk.midjourney.bot.utils.Config;
 import com.github.novicezk.midjourney.bot.utils.EmbedUtil;
 import net.dv8tion.jda.api.events.interaction.command.GenericCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -29,12 +30,16 @@ public class OnErrorAction {
         sendMessage(event, "Looks like you've reached the queue limit. Please wait while we work on your current requests!", false);
     }
 
+    public static void onMissingTestersRoleMessage(SlashCommandInteractionEvent event) {
+        sendMessage(event, "Oops! Seems like you're missing a required role.\nPlease visit the <#" + Config.getFaqChannel() + "> to gain access!", false);
+    }
+
     public static void sendMessage(GenericCommandInteractionEvent event, String message, boolean error) {
         if (error) {
             EventsManager.onErrorEvent(event.getUser().getId(), message);
             event.getHook().sendMessageEmbeds(List.of(EmbedUtil.createEmbedError(message))).queue();
         } else {
-            event.getHook().sendMessageEmbeds(List.of(EmbedUtil.createEmbed(message))).queue();
+            event.getHook().sendMessageEmbeds(List.of(EmbedUtil.createEmbedWarning(message))).queue();
         }
     }
 }

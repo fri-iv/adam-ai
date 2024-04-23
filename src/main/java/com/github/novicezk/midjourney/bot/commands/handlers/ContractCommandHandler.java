@@ -11,8 +11,10 @@ import com.github.novicezk.midjourney.dto.SubmitImagineDTO;
 import com.github.novicezk.midjourney.result.SubmitResultVO;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 import java.util.List;
 
@@ -91,22 +93,23 @@ public class ContractCommandHandler implements CommandHandler {
     }
 
     private void handleFaqCommand(SlashCommandInteractionEvent event) {
-        event.getGuild().getTextChannelById(Config.getFaqChannel())
-                .sendMessageEmbeds(EmbedUtil.createEmbed(
-                        "FAQ: Discord Bot Commands",
-                        "1. What is the purpose of the \"generate\" command?\n\n" +
-                                "**・Command**: generate\n" +
-                                "**・Description**: Generate random images of your avatar for inspiration.\n" +
+        Button roleButton = Button.primary("testers", "Join Testers");
+        TextChannel channel = event.getGuild().getTextChannelById(Config.getFaqChannel());
+        channel.sendMessageEmbeds(EmbedUtil.createEmbed(
+                        "Welcome!",
+                        "**1. What does our bot do?**\n" +
+                                "It's AI image generator designed to inspire your avatar ideas. Our bot greets new members with a generated image that might just fit!\n\n" +
+                                "**2. How does it work?**\n" +
+                                "Simply use the command `/generate` anytime.\n" +
+                                "For all commands just type `/help`.\n\n" +
+                                "**3. Who can use it?**\n" +
+                                "Currently only <@&" + Config.getRoleVanguard() + "> and <@&" + Config.getRoleVerifiedClient() + "> have access.\n" +
                                 "\n" +
-                                "2. What does the \"upload-image\" command do?\n\n" +
-                                "**・Command**: upload-image\n" +
-                                "**・Description**: Upload your images to use with the bot. If none are uploaded or the link expires, your avatar will be used instead.\n" +
-                                "\n" +
-                                "3. How do I contact artists?\n\n" +
-                                "Please contact <@" + Config.getContactManagerId() + ">",
+                                "To gain access click the button to get the <@&" + Config.getRoleTester() + "> role.",
                         null,
-                        ColorUtil.getWarningColor()
-                )).queue();
+                        ColorUtil.getWarningColor())
+                ).addActionRow(roleButton)
+                .queue();
     }
 
     @Override

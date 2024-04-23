@@ -5,11 +5,13 @@ import com.github.novicezk.midjourney.bot.error.OnErrorAction;
 import com.github.novicezk.midjourney.bot.model.GeneratedPromptData;
 import com.github.novicezk.midjourney.bot.prompt.PromptGenerator;
 import com.github.novicezk.midjourney.bot.queue.QueueManager;
+import com.github.novicezk.midjourney.bot.utils.Config;
 import com.github.novicezk.midjourney.bot.utils.SeasonTracker;
 import com.github.novicezk.midjourney.controller.SubmitController;
 import com.github.novicezk.midjourney.dto.SubmitImagineDTO;
 import com.github.novicezk.midjourney.result.SubmitResultVO;
 import lombok.extern.slf4j.Slf4j;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 import java.util.List;
@@ -27,6 +29,18 @@ public class GenerateCommandHandler implements CommandHandler {
     @Override
     public void handle(SlashCommandInteractionEvent event) {
         event.deferReply().setEphemeral(true).queue();
+
+        // Checking whether a user has the role
+        Member member = event.getMember();
+        boolean hasTesterRole = member != null
+                && member.getRoles().stream().anyMatch(r -> r.getId().equals(Config.getRoleTester()));
+        boolean hasAdminRole = member != null
+                && member.getRoles().stream().anyMatch(r -> r.getId().equals(Config.getAdminsRoleId()) || r.getId().equals(Config.getGodfatherId()));
+
+        if (!hasTesterRole && !hasAdminRole) {
+            OnErrorAction.onMissingTestersRoleMessage(event);
+            return;
+        }
 
         List<String> imageUrls = CommandsUtil.getUserUrls(event.getUser().getId());
         String title = CommandsUtil.generateTitle(imageUrls.isEmpty(), "");

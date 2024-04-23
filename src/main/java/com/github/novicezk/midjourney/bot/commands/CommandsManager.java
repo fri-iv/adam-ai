@@ -15,6 +15,7 @@ import com.github.novicezk.midjourney.controller.SubmitController;
 import com.github.novicezk.midjourney.dto.SubmitImagineDTO;
 import com.github.novicezk.midjourney.result.SubmitResultVO;
 import lombok.extern.slf4j.Slf4j;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
@@ -122,6 +123,7 @@ public class CommandsManager extends ListenerAdapter {
         event.deferReply().setEphemeral(true).queue();
         String buttonUserId = event.getUser().getId();
         Member member = event.getMember();
+        Guild guild = event.getGuild();
         boolean isGodfather = member != null && member.getRoles().stream().anyMatch(role -> role.getId().equals(Config.getGodfatherId()));
 
         if (event.getComponentId().equals("create")) {
@@ -130,6 +132,14 @@ public class CommandsManager extends ListenerAdapter {
                     EmbedUtil.createEmbed("We've sent you a private message please check your DMs.")
             ).queue();
             return;
+        }
+
+        if (event.getComponentId().equals("testers") && guild != null) {
+            event.getHook().sendMessageEmbeds(
+                    EmbedUtil.createEmbed("Welcome to <@&" + Config.getRoleTester() + ">! You can now use the `/generate` command.")
+            ).queue();
+
+            guild.addRoleToMember(event.getMember(), guild.getRoleById(Config.getRoleTester())).queue();
         }
 
         if (!event.getMessage().getContentRaw().contains(buttonUserId) && !isGodfather) {
@@ -142,7 +152,7 @@ public class CommandsManager extends ListenerAdapter {
         if (event.getComponentId().equals("delete")) {
             event.getChannel().deleteMessageById(event.getMessageId()).queue();
             event.getHook().sendMessageEmbeds(
-                    EmbedUtil.createEmbed("The post has been deleted.")
+                    EmbedUtil.createEmbedSuccess("The post has been deleted.")
             ).queue();
         }
     }
