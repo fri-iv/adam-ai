@@ -5,30 +5,46 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class Config {
+    // Version
     private static final String SEASON_VERSION = "SEASON_VERSION";
-    private static final String DISCORD_BOT_TOKEN = "DISCORD_BOT_TOKEN";
-    private static final String IMGBB_TOKEN = "IMGBB_TOKEN";
+
+    // Queue settings
+    private static final String QUEUE_LIMIT_PER_PERSON = "QUEUE_LIMIT_PER_PERSON";
+
+    // Channel IDs for sending messages
     private static final String SENDING_CHANNEL = "SENDING_CHANNEL";
     private static final String QUEUE_CHANNEL = "QUEUE_CHANNEL";
-    private static final String GUILD_ID = "GUILD_ID";
-    private static final String GODFATHER_ID = "GODFATHER_ID";
-    private static final String ADMINS_ROLE_ID = "ADMINS_ROLE_ID";
-    private static final String CONTACT_MANAGER_ID = "CONTACT_MANAGER_ID";
-    private static final String FAQ_CHANNEL_URL = "FAQ_CHANNEL_URL";
-    private static final String QUEUE_LIMIT_PER_PERSON = "QUEUE_LIMIT_PER_PERSON";
     private static final String LOGS_CHANNEL = "LOGS_CHANNEL";
     private static final String FAQ_CHANNEL = "FAQ_CHANNEL";
-    private static final String MIXPANEL_PROJECT_TOKEN = "MIXPANEL_PROJECT_TOKEN";
+    private static final String DEBUG_CHANNEL = "DEBUG_CHANNEL";
 
+    // Roles rarity IDs
     private static final String ROLE_COMMON = "COMMON";
     private static final String ROLE_RARE = "RARE";
     private static final String ROLE_STRANGE = "STRANGE";
     private static final String ROLE_UNIQUE = "UNIQUE";
     private static final String ROLE_EPIC = "EPIC";
 
+    // Roles
     private static final String ROLE_VANGUARD = "VANGUARD";
     private static final String ROLE_VERIFIED_CLIENT = "VERIFIED_CLIENT";
     private static final String ROLE_TESTER = "TESTER";
+
+    // Links to channels
+    private static final String FAQ_CHANNEL_URL = "FAQ_CHANNEL_URL";
+
+    // ID of the guild and the main administrator
+    private static final String GUILD_ID = "GUILD_ID";
+    private static final String GODFATHER_ID = "GODFATHER_ID";
+
+    // ID of administrators and roles
+    private static final String ADMINS_ROLE_ID = "ADMINS_ROLE_ID";
+    private static final String CONTACT_MANAGER_ID = "CONTACT_MANAGER_ID";
+
+    // Tokens for services
+    private static final String DISCORD_BOT_TOKEN = "DISCORD_BOT_TOKEN";
+    private static final String IMGBB_TOKEN = "IMGBB_TOKEN";
+    private static final String MIXPANEL_PROJECT_TOKEN = "MIXPANEL_PROJECT_TOKEN";
 
     private static final String CONFIG_FILE = "adam-ai/config.properties";
     private static final Properties properties = new Properties();
@@ -123,6 +139,10 @@ public class Config {
 
     public static String getFaqChannel() {
         return properties.getProperty(FAQ_CHANNEL);
+    }
+
+    public static String getDebugChannel() {
+        return properties.getProperty(DEBUG_CHANNEL);
     }
 
     public static String getMixpanelProjectToken() {

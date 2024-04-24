@@ -68,28 +68,59 @@ public class ContractCommandHandler implements CommandHandler {
     }
 
     private void handleTask(SlashCommandInteractionEvent event, String task) {
-        if ("test".equals(task)) {
-            event.getHook().sendMessageEmbeds(List.of(EmbedUtil.createEmbed("test command"))).queue();
-        } else if ("faq".equals(task) && event.getGuild() != null) {
-            handleFaqCommand(event);
-            event.getHook().sendMessageEmbeds(EmbedUtil.createEmbed("done")).queue();
-        } else if ("rare".equals(task)) {
-            int[] counts = new int[CharacterStrength.values().length];
-
-            for (int i = 0; i < 100; i++) {
-                CharacterStrength strength = CharacterStrength.getRandomStrength();
-                counts[strength.ordinal()]++;
-            }
-
-            StringBuilder stringBuilder = new StringBuilder();
-            for (CharacterStrength strength : CharacterStrength.values()) {
-                stringBuilder.append(strength.getStrengthName()).append(": ").append(counts[strength.ordinal()]).append(", ");
-            }
-            stringBuilder.setLength(stringBuilder.length() - 2);
-            event.getHook().sendMessageEmbeds(EmbedUtil.createEmbed("Character Strength Counts", stringBuilder.toString())).queue();
-        } else {
-            event.getHook().sendMessageEmbeds(List.of(EmbedUtil.createEmbed("Command not found"))).queue();
+        switch (task) {
+            case "test":
+                event.getHook().sendMessageEmbeds(List.of(EmbedUtil.createEmbed("test command"))).queue();
+                break;
+            case "faq":
+                handleFaqCommand(event);
+                event.getHook().sendMessageEmbeds(EmbedUtil.createEmbedSuccess("done")).queue();
+                break;
+            case "rare":
+                handleRareCommand(event);
+                break;
+            case "create":
+                handleCreateAvatarCommand(event);
+                break;
+            default:
+                event.getHook().sendMessageEmbeds(List.of(EmbedUtil.createEmbed("Command not found"))).queue();
+                break;
         }
+    }
+
+    private void handleCreateAvatarCommand(SlashCommandInteractionEvent event) {
+        String channelId = Config.getDebugChannel();
+//        String channelId = "1092429060270985247";
+        if (event.getGuild() == null || event.getGuild().getTextChannelById(channelId) == null) {
+            OnErrorAction.onDefaultMessage(event);
+            return;
+        }
+        event.getHook().sendMessageEmbeds(EmbedUtil.createEmbedSuccess("Done")).queue();
+
+        Button createButton = Button.success("create-avatar", "Create avatar \uD83D\uDCAB");
+        TextChannel channel = event.getGuild().getTextChannelById(channelId);
+        channel.sendMessage(String.format(
+                        "Hey there! Interested in creating your own avatar? Share your ideas with <@%s> in DMs or click this button and we'll reach out to you shortly!",
+                        Config.getContactManagerId()
+                ))
+                .addActionRow(createButton)
+                .queue();
+    }
+
+    private void handleRareCommand(SlashCommandInteractionEvent event) {
+        int[] counts = new int[CharacterStrength.values().length];
+
+        for (int i = 0; i < 100; i++) {
+            CharacterStrength strength = CharacterStrength.getRandomStrength();
+            counts[strength.ordinal()]++;
+        }
+
+        StringBuilder stringBuilder = new StringBuilder();
+        for (CharacterStrength strength : CharacterStrength.values()) {
+            stringBuilder.append(strength.getStrengthName()).append(": ").append(counts[strength.ordinal()]).append(", ");
+        }
+        stringBuilder.setLength(stringBuilder.length() - 2);
+        event.getHook().sendMessageEmbeds(EmbedUtil.createEmbed("Character Strength Counts", stringBuilder.toString())).queue();
     }
 
     private void handleFaqCommand(SlashCommandInteractionEvent event) {

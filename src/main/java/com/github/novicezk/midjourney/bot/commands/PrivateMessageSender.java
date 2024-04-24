@@ -3,6 +3,7 @@ package com.github.novicezk.midjourney.bot.commands;
 import com.github.novicezk.midjourney.bot.utils.Config;
 import com.github.novicezk.midjourney.bot.utils.EmbedUtil;
 import com.github.novicezk.midjourney.bot.utils.ImageDownloader;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
@@ -16,7 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PrivateMessageSender {
-    public void sendToUser(ButtonInteractionEvent event) {
+
+    public void sendToUser(ButtonInteractionEvent event, String text) {
         Member member = event.getMember();
         if (member != null) {
             List<Message.Attachment> attachments = event.getMessage().getAttachments();
@@ -31,8 +33,7 @@ public class PrivateMessageSender {
             }
             User user = member.getUser();
             user.openPrivateChannel().queue(privateChannel -> {
-                privateChannel.sendMessage("Hi there!\n\n" +
-                                "If you're looking for an avatar like the one in the picture just reach out to <@" + Config.getContactManagerId() + ">!")
+                privateChannel.sendMessage(text)
                         .addFiles(files)
                         .queue();
             });
@@ -50,6 +51,15 @@ public class PrivateMessageSender {
                         channel.sendMessageEmbeds(EmbedUtil.createEmbed("Your message has been sent to the team!")).queue();
                     });
                 });
+            }
+        });
+    }
+
+    public void notifyContactManager(JDA jda, String text) {
+        jda.retrieveUserById(Config.getContactManagerId()).queue(contactManager -> {
+            if (contactManager != null) {
+                contactManager.openPrivateChannel().queue(privateChannel -> privateChannel.sendMessage(text)
+                        .queue());
             }
         });
     }

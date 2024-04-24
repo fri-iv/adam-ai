@@ -35,11 +35,23 @@ public class ButtonInteractionHandler {
             handleUnauthorizedButton(event);
         } else if (event.getComponentId().equals("delete")) {
             handleDeleteButton(event);
+        } else if (event.getComponentId().equals("create-avatar")) {
+            handleCreateAvatarButton(event);
         }
     }
 
+    private void handleCreateAvatarButton(ButtonInteractionEvent event) {
+        privateMessageSender.sendToUser(event, "Hi there!\n\n" +
+                "Our team has been notified about your request and we'll get in touch as soon as we're available. Feel free to share your thoughts here or simply wait for our contact.");
+        event.getHook().sendMessageEmbeds(
+                EmbedUtil.createEmbed("We've sent you a private message please check your DMs.")
+        ).queue();
+        privateMessageSender.notifyContactManager(event.getJDA(), String.format("Received a request from <@%s> to create an avatar.", event.getUser().getId()));
+    }
+
     private void handleCreateButton(ButtonInteractionEvent event) {
-        privateMessageSender.sendToUser(event);
+        privateMessageSender.sendToUser(event, "Hi there!\n\n" +
+                "If you're looking for an avatar like the one in the picture just reach out to <@" + Config.getContactManagerId() + ">!");
         event.getHook().sendMessageEmbeds(
                 EmbedUtil.createEmbed("We've sent you a private message please check your DMs.")
         ).queue();

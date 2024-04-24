@@ -34,6 +34,10 @@ public class OnErrorAction {
         sendMessage(event, "Oops! Seems like you're missing a required role.\nPlease visit the <#" + Config.getFaqChannel() + "> to gain access!", false);
     }
 
+    public static void onDefaultMessage(SlashCommandInteractionEvent event) {
+        sendMessage(event, "Oops! Something went wrong.", false);
+    }
+
     public static void sendMessage(GenericCommandInteractionEvent event, String message, boolean error) {
         if (error) {
             EventsManager.onErrorEvent(event.getUser().getId(), message);
