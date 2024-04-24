@@ -34,14 +34,15 @@ public class CommandsManager extends ListenerAdapter {
 
     private List<CommandHandler> initializeCommandHandlers(SubmitController submitController) {
         List<CommandHandler> handlers = new ArrayList<>();
-        handlers.add(new GetLogCommandHandler());
-        handlers.add(new UploadImageCommandHandler());
-        handlers.add(new ContractCommandHandler(submitController));
         handlers.add(new GenerateCommandHandler(submitController));
+        handlers.add(new UploadImageCommandHandler());
         handlers.add(new GetImagesCommandHandler());
-        handlers.add(new PingCommandHandler());
         handlers.add(new QueueCommandHandler());
+        handlers.add(new GetLogCommandHandler());
+        handlers.add(new ContractCommandHandler(submitController));
         handlers.add(new EmbedCommandHandler());
+        handlers.add(new PingCommandHandler());
+        handlers.add(new HelpCommandHandler());
         return handlers;
     }
 

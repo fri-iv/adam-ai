@@ -25,23 +25,25 @@ public class CommandInitializer {
         // contract command
         OptionData promptContract = new OptionData(OptionType.STRING, "prompt", "Prompt to use the contract command");
         OptionData idContract = new OptionData(OptionType.STRING, "task", "Task id");
-        commandDataList.add(Commands.slash(ContractCommandHandler.COMMAND_NAME, "admins only").addOptions(promptContract, idContract));
+        commandDataList.add(Commands.slash(ContractCommandHandler.COMMAND_NAME, "Admins only").addOptions(promptContract, idContract));
 
-        // other commands
-        commandDataList.add(Commands.slash(GetImagesCommandHandler.COMMAND_NAME, "Get your currently uploaded images."));
-        commandDataList.add(Commands.slash(GenerateCommandHandler.COMMAND_NAME, "Need some inspiration? Use this command to generate images!"));
-        commandDataList.add(Commands.slash(GetLogCommandHandler.COMMAND_NAME, "Logs file"));
-        commandDataList.add(Commands.slash(PingCommandHandler.COMMAND_NAME, "default ping command(or?)"));
-        commandDataList.add(Commands.slash(QueueCommandHandler.COMMAND_NAME_GET, "Check the current queue status."));
-        commandDataList.add(Commands.slash(QueueCommandHandler.COMMAND_NAME_CLEAR, "admins only"));
-
+        // embed command
         OptionData embedDescription = new OptionData(OptionType.STRING, "description", "String", true);
         OptionData embedChannel = new OptionData(OptionType.CHANNEL, "channel", "Name", true);
         OptionData embedTitle = new OptionData(OptionType.STRING, "title", "String");
         OptionData embedFooter = new OptionData(OptionType.STRING, "footer", "String");
         OptionData embedColor = new OptionData(OptionType.STRING, "color", "hex #000000");
-        commandDataList.add(Commands.slash(EmbedCommandHandler.COMMAND_NAME, "admins only")
+        commandDataList.add(Commands.slash(EmbedCommandHandler.COMMAND_NAME, "Admins only")
                 .addOptions(embedChannel, embedDescription, embedTitle, embedFooter, embedColor));
+
+        // other commands
+        commandDataList.add(Commands.slash(GetImagesCommandHandler.COMMAND_NAME, "Get your currently uploaded images."));
+        commandDataList.add(Commands.slash(GenerateCommandHandler.COMMAND_NAME, "Need some inspiration? Use this command to generate images!"));
+        commandDataList.add(Commands.slash(GetLogCommandHandler.COMMAND_NAME, "Logs file"));
+        commandDataList.add(Commands.slash(PingCommandHandler.COMMAND_NAME, "Default ping command(or?)"));
+        commandDataList.add(Commands.slash(QueueCommandHandler.COMMAND_NAME_GET, "Check the current queue status."));
+        commandDataList.add(Commands.slash(QueueCommandHandler.COMMAND_NAME_CLEAR, "Admins only"));
+        commandDataList.add(Commands.slash(HelpCommandHandler.COMMAND_NAME, "View all available bot commands"));
 
         return commandDataList;
     }

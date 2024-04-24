@@ -36,7 +36,7 @@ public class AdamBotInitializer implements ApplicationRunner {
                                     GatewayIntent.GUILD_MESSAGES,
                                     GatewayIntent.DIRECT_MESSAGES
                             )
-                            .setActivity(Activity.listening("your commands"))
+                            .setActivity(Activity.playing("generating images"))
                             .build();
 
                     apiInstance.addEventListener(new CommandsManager(submitController));

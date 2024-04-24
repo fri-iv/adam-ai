@@ -12,15 +12,18 @@ public class PingCommandHandler implements CommandHandler {
     public void handle(SlashCommandInteractionEvent event) {
         int probability = random.nextInt(100) + 1; // Generate random number from 1 to 100
 
+        String text;
         if (probability <= 1) {
-            event.reply(":partying_face: wow looks like you **win!** :tada:").setEphemeral(true).queue();
+            text = ":partying_face: wow looks like you **win!** :tada:";
         } else if (probability <= 5) {
-            event.reply("what's the score btw?").setEphemeral(true).queue();
+            text = "what's the score btw?";
         } else if (probability <= 20) {
-            event.reply("what was that?").setEphemeral(true).queue();
+            text = "what was that?";
         } else {
-            event.reply("pong").setEphemeral(true).queue();
+            text = "pong";
         }
+
+        event.reply(text).setEphemeral(true).queue();
     }
 
     @Override

@@ -98,7 +98,7 @@ public class ContractCommandHandler implements CommandHandler {
         channel.sendMessageEmbeds(EmbedUtil.createEmbed(
                         "Welcome!",
                         "**1. What does our bot do?**\n" +
-                                "It's AI image generator designed to inspire your avatar ideas. Our bot greets new members with a generated image that might just fit!\n\n" +
+                                "Our AI image generator is here to inspire your avatar ideas! Our bot welcomes new members with a generated image that might suit you but if you have your own idea for your avatar feel free to share it with us!\n\n" +
                                 "**2. How does it work?**\n" +
                                 "Simply use the command `/generate` anytime.\n" +
                                 "For all commands just type `/help`.\n\n" +
