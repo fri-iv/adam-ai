@@ -20,7 +20,7 @@ import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 @Slf4j
 public class GuildMemberJoinHandler {
 
-    private SubmitController submitController;
+    private final SubmitController submitController;
 
     public GuildMemberJoinHandler(SubmitController submitController) {
         this.submitController = submitController;

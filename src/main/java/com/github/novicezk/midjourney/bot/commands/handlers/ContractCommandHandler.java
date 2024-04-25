@@ -72,7 +72,7 @@ public class ContractCommandHandler implements CommandHandler {
             case "test":
                 event.getHook().sendMessageEmbeds(List.of(EmbedUtil.createEmbed("test command"))).queue();
                 break;
-            case "faq":
+            case "faq-ai":
                 handleFaqCommand(event);
                 event.getHook().sendMessageEmbeds(EmbedUtil.createEmbedSuccess("done")).queue();
                 break;
@@ -82,10 +82,51 @@ public class ContractCommandHandler implements CommandHandler {
             case "create":
                 handleCreateAvatarCommand(event);
                 break;
+            case "faq-avatar":
+                handleFaqAvatarCommand(event);
+                break;
             default:
                 event.getHook().sendMessageEmbeds(List.of(EmbedUtil.createEmbed("Command not found"))).queue();
                 break;
         }
+    }
+
+    private void handleFaqAvatarCommand(SlashCommandInteractionEvent event) {
+        String channelId = Config.getDebugChannel();
+//        String channelId = "1091727782498816010";
+        if (event.getGuild() == null || event.getGuild().getTextChannelById(channelId) == null) {
+            OnErrorAction.onDefaultMessage(event);
+            return;
+        }
+        event.getHook().sendMessageEmbeds(EmbedUtil.createEmbedSuccess("Done")).queue();
+
+        Button createButton = Button.success("faq:create-avatar", "Create avatar \uD83D\uDCAB");
+        TextChannel channel = event.getGuild().getTextChannelById(channelId);
+        channel.sendMessageEmbeds(EmbedUtil.createEmbed(
+                        "Frequently Asked Questions",
+                        """
+                                **Q: How do I get started on my project?**
+                                 A: To begin your project <#1092429060270985247> provide us with any reference images and information you have. We'll then give you a quote and timeline for the project.
+                                 
+                                 **Q: How much does a custom avatar cost?**
+                                 A: The cost varies based on factors like design complexity, revisions needed and additional features. We provide personalized quotes for each project considering your requirements and budget.
+                                 
+                                 **Q: When do I need to pay for the avatar?**
+                                 A: We require a 50% deposit upfront to start with the remaining balance due upon completion.
+                                 
+                                 **Q: How will I receive the avatar?**
+                                 A: Once complete you can choose to receive Unity materials and a tutorial for self-uploading or have us upload it to a private world. Just let us know your preference!
+                                 
+                                 **Q: What payment options are available?**
+                                 A: We accept PayPal, ko-fi and cryptocurrency. For PayPal we'll provide necessary details. For cryptocurrency specify your preference and we'll supply the corresponding wallet address.
+                                 
+                                 **Q: How long will my project take?**
+                                 A: The timeline depends on factors like project complexity and workload. We'll provide an estimated timeline at the project's start and keep you informed of any changes.
+                               \s""",
+                        null,
+                        ColorUtil.getWarningColor()))
+                .addActionRow(createButton)
+                .queue();
     }
 
     private void handleCreateAvatarCommand(SlashCommandInteractionEvent event) {
@@ -97,7 +138,7 @@ public class ContractCommandHandler implements CommandHandler {
         }
         event.getHook().sendMessageEmbeds(EmbedUtil.createEmbedSuccess("Done")).queue();
 
-        Button createButton = Button.success("create-avatar", "Create avatar \uD83D\uDCAB");
+        Button createButton = Button.success("ch:create-avatar", "Create avatar \uD83D\uDCAB");
         TextChannel channel = event.getGuild().getTextChannelById(channelId);
         channel.sendMessage(String.format(
                         "Hey there! Interested in creating your own avatar? Share your ideas with <@%s> in DMs or click this button and we'll reach out to you shortly!",

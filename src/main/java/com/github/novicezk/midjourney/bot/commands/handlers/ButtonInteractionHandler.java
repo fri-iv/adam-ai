@@ -35,7 +35,7 @@ public class ButtonInteractionHandler {
             handleUnauthorizedButton(event);
         } else if (event.getComponentId().equals("delete")) {
             handleDeleteButton(event);
-        } else if (event.getComponentId().equals("create-avatar")) {
+        } else if (event.getComponentId().contains("create-avatar")) {
             handleCreateAvatarButton(event);
         }
     }
@@ -46,7 +46,14 @@ public class ButtonInteractionHandler {
         event.getHook().sendMessageEmbeds(
                 EmbedUtil.createEmbed("We've sent you a private message please check your DMs.")
         ).queue();
-        privateMessageSender.notifyContactManager(event.getJDA(), String.format("Received a request from <@%s> to create an avatar.", event.getUser().getId()));
+
+        boolean isFaqEvent = event.getComponentId().equals("faq:create-avatar");
+        String title = isFaqEvent ? "Create button from FAQ" : "Create button from create-avatar channel";
+        privateMessageSender.notifyContactManager(
+                event.getJDA(),
+                title,
+                String.format("Received a request from <@%s> to create an avatar.", event.getUser().getId())
+        );
     }
 
     private void handleCreateButton(ButtonInteractionEvent event) {

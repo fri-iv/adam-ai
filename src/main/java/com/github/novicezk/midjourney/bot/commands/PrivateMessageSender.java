@@ -55,11 +55,12 @@ public class PrivateMessageSender {
         });
     }
 
-    public void notifyContactManager(JDA jda, String text) {
+    public void notifyContactManager(JDA jda, String title, String text) {
         jda.retrieveUserById(Config.getContactManagerId()).queue(contactManager -> {
             if (contactManager != null) {
-                contactManager.openPrivateChannel().queue(privateChannel -> privateChannel.sendMessage(text)
-                        .queue());
+                contactManager.openPrivateChannel().queue(privateChannel ->
+                        privateChannel.sendMessageEmbeds(EmbedUtil.createEmbed(title, text))
+                                .queue());
             }
         });
     }
