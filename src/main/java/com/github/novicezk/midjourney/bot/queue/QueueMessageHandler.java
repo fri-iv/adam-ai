@@ -83,17 +83,23 @@ public class QueueMessageHandler extends MessageHandler {
         String prompt = matcher.replaceAll("$1");
 
         QueueEntry entry = QueueManager.removeFromQueue(prompt);
+
+        // do not show any generations instead of those generated in ai-arts channel
+        if (!prompt.contains("signature") || !prompt.contains("class") || !prompt.contains("character")) {
+            return;
+        }
+
         String postMessage = "<@" + userId + ">";
         if (entry != null) {
             postMessage = "<@" + entry.getUserId() + ">\n\n" + entry.getMessage();
         }
 
-        Button downloadButton = Button.success("create", "Create Avatar \uD83D\uDCAB");
+        Button createButton = Button.success("ai-art-create", "Create Avatar \uD83D\uDCAB");
         Button faqButton = Button.of(ButtonStyle.LINK, Config.getFaqChannelUrl(), "Huh?");
         Button deleteButton = Button.danger("delete", "\uD83D\uDDD1\uFE0F");
         channel.sendMessage(postMessage)
                 .addFiles(file)
-                .setActionRow(downloadButton, faqButton, deleteButton)
+                .setActionRow(createButton, faqButton, deleteButton)
                 .queue();
     }
 }

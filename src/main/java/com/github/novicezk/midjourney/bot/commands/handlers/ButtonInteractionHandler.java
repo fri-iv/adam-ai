@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class ButtonInteractionHandler {
 
-    private PrivateMessageSender privateMessageSender;
+    private final PrivateMessageSender privateMessageSender;
 
     public ButtonInteractionHandler(PrivateMessageSender privateMessageSender) {
         this.privateMessageSender = privateMessageSender;
@@ -28,7 +28,7 @@ public class ButtonInteractionHandler {
         boolean isGodfather = member != null
                 && member.getRoles().stream().anyMatch(role -> role.getId().equals(Config.getGodfatherId()));
 
-        if (event.getComponentId().equals("create")) {
+        if (event.getComponentId().equals("ai-art-create") || event.getComponentId().equals("create")) {
             handleCreateButton(event);
         } else if (event.getComponentId().equals("testers") && guild != null) {
             handleTestersButton(event, guild);
