@@ -3,6 +3,7 @@ package com.github.novicezk.midjourney.bot.commands.handlers;
 import com.github.novicezk.midjourney.ReturnCode;
 import com.github.novicezk.midjourney.bot.commands.CommandsUtil;
 import com.github.novicezk.midjourney.bot.error.ErrorMessageHandler;
+import com.github.novicezk.midjourney.bot.events.EventsManager;
 import com.github.novicezk.midjourney.bot.model.GeneratedPromptData;
 import com.github.novicezk.midjourney.bot.prompt.PromptGenerator;
 import com.github.novicezk.midjourney.bot.queue.QueueManager;
@@ -63,6 +64,7 @@ public class GuildMemberJoinHandler {
     ) {
         if (result.getCode() == ReturnCode.SUCCESS || result.getCode() == ReturnCode.IN_QUEUE) {
             QueueManager.addToQueue(event.getGuild(), prompt, event.getUser().getId(), result.getResult(), postText);
+            EventsManager.onWelcomeGenerate(event);
         } else {
             ErrorMessageHandler.sendMessage(
                     event.getGuild(),

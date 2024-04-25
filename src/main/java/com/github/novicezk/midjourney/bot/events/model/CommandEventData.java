@@ -3,6 +3,7 @@ package com.github.novicezk.midjourney.bot.events.model;
 import com.github.novicezk.midjourney.bot.events.EventUtil;
 import com.github.novicezk.midjourney.bot.utils.SeasonTracker;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.json.JSONObject;
 
@@ -22,6 +23,25 @@ public class CommandEventData implements MixpanelEventData {
         data.put("type", EVENT_NAME);
         data.put("event-id", event.getId());
         data.put("channel", event.getChannel().getName());
+        data.put("version", SeasonTracker.getCurrentSeasonVersion() + "." + SeasonTracker.getCurrentGenerationCount());
+        data.put("season", SeasonTracker.getCurrentSeasonVersion());
+
+        Member member = event.getMember();
+        if (member != null) {
+            data.put("roles", EventUtil.rolesToString(member.getRoles()));
+        }
+    }
+
+    public CommandEventData(GuildMemberJoinEvent event, String eventName) {
+        this.eventName = eventName;
+
+        data.put("user-id", event.getUser().getId());
+        data.put("user-name", event.getUser().getName());
+        data.put("user-name-global", event.getUser().getGlobalName());
+        data.put("name", eventName);
+        data.put("type", EVENT_NAME);
+        data.put("event-id", 0);
+        data.put("channel", "Welcome channel");
         data.put("version", SeasonTracker.getCurrentSeasonVersion() + "." + SeasonTracker.getCurrentGenerationCount());
         data.put("season", SeasonTracker.getCurrentSeasonVersion());
 
