@@ -5,9 +5,11 @@ import com.github.novicezk.midjourney.bot.error.ErrorMessageHandler;
 import com.github.novicezk.midjourney.bot.images.ImageStorage;
 import com.github.novicezk.midjourney.bot.images.ImageValidator;
 import com.github.novicezk.midjourney.bot.queue.QueueManager;
+import com.github.novicezk.midjourney.bot.utils.Config;
 import com.github.novicezk.midjourney.bot.utils.EmbedUtil;
 import com.github.novicezk.midjourney.result.SubmitResultVO;
 import lombok.extern.slf4j.Slf4j;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
@@ -63,5 +65,12 @@ public class CommandsUtil {
             event.getHook().deleteOriginal().queue();
             log.error("{}: {}", result.getCode(), result.getDescription());
         }
+    }
+
+    public static boolean isUserAuthorized(Member member) {
+        String adminsRoleId = Config.getAdminsRoleId();
+        String godfatherId = Config.getGodfatherId();
+        return member.getRoles().stream()
+                .anyMatch(role -> role.getId().equals(adminsRoleId) || role.getId().equals(godfatherId));
     }
 }

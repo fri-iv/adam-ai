@@ -1,8 +1,10 @@
 package com.github.novicezk.midjourney.bot.commands.handlers;
 
+import com.github.novicezk.midjourney.bot.commands.CommandsUtil;
 import com.github.novicezk.midjourney.bot.error.OnErrorAction;
 import com.github.novicezk.midjourney.bot.utils.EmbedUtil;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.unions.GuildChannelUnion;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -16,6 +18,12 @@ public class EmbedCommandHandler implements CommandHandler {
     @Override
     public void handle(SlashCommandInteractionEvent event) {
         event.deferReply().setEphemeral(true).queue();
+
+        Member member = event.getMember();
+        if (member == null || !CommandsUtil.isUserAuthorized(member)) {
+            OnErrorAction.onMissingRoleMessage(event);
+            return;
+        }
 
         OptionMapping descriptionMapping = event.getOption("description");
         OptionMapping channelMapping = event.getOption("channel");

@@ -33,7 +33,7 @@ public class ContractCommandHandler implements CommandHandler {
         event.deferReply().setEphemeral(true).queue();
 
         Member member = event.getMember();
-        if (member == null || !isAuthorized(member)) {
+        if (member == null || !CommandsUtil.isUserAuthorized(member)) {
             OnErrorAction.onMissingRoleMessage(event);
             return;
         }
@@ -47,13 +47,6 @@ public class ContractCommandHandler implements CommandHandler {
         } else {
             OnErrorAction.onMissingFieldMessage(event);
         }
-    }
-
-    private boolean isAuthorized(Member member) {
-        String adminsRoleId = Config.getAdminsRoleId();
-        String godfatherId = Config.getGodfatherId();
-        return member.getRoles().stream()
-                .anyMatch(role -> role.getId().equals(adminsRoleId) || role.getId().equals(godfatherId));
     }
 
     private void handlePrompt(SlashCommandInteractionEvent event, String prompt) {

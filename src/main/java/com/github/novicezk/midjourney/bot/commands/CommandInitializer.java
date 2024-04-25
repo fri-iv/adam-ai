@@ -36,6 +36,11 @@ public class CommandInitializer {
         commandDataList.add(Commands.slash(EmbedCommandHandler.COMMAND_NAME, "Admins only")
                 .addOptions(embedChannel, embedDescription, embedTitle, embedFooter, embedColor));
 
+        // analytics stats command
+        OptionData analyticsChannel = new OptionData(OptionType.CHANNEL, "channel", "Name", true);
+        commandDataList.add(Commands.slash(AnalyticsCommandHandler.COMMAND_NAME, "Admins only")
+                .addOptions(analyticsChannel));
+
         // other commands
         commandDataList.add(Commands.slash(GetImagesCommandHandler.COMMAND_NAME, "Get your currently uploaded images."));
         commandDataList.add(Commands.slash(GenerateCommandHandler.COMMAND_NAME, "Need some inspiration? Use this command to generate images!"));

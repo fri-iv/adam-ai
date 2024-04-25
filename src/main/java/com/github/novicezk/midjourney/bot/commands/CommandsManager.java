@@ -43,6 +43,7 @@ public class CommandsManager extends ListenerAdapter {
         handlers.add(new EmbedCommandHandler());
         handlers.add(new PingCommandHandler());
         handlers.add(new HelpCommandHandler());
+        handlers.add(new AnalyticsCommandHandler());
         return handlers;
     }
 
