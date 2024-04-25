@@ -4,6 +4,7 @@ import com.github.novicezk.midjourney.bot.commands.PrivateMessageSender;
 import com.github.novicezk.midjourney.bot.events.EventsManager;
 import com.github.novicezk.midjourney.bot.utils.Config;
 import com.github.novicezk.midjourney.bot.utils.EmbedUtil;
+import com.github.novicezk.midjourney.bot.utils.MessageUtil;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
@@ -49,16 +50,25 @@ public class ButtonInteractionHandler {
 
         boolean isFaqEvent = event.getComponentId().equals("faq:create-avatar");
         String title = isFaqEvent ? "Create button from FAQ" : "Create button from create-avatar channel";
+        String channelId = isFaqEvent ? "<#1091727782498816010>" : "<#1092429060270985247>";
         privateMessageSender.notifyContactManager(
                 event.getJDA(),
                 title,
-                String.format("Received a request from <@%s> to create an avatar.", event.getUser().getId())
+                String.format("%s\nReceived a request from <@%s> to create an avatar.", channelId, event.getUser().getId())
         );
     }
 
     private void handleCreateButton(ButtonInteractionEvent event) {
         privateMessageSender.sendToUser(event, "Hi there!\n\n" +
                 "If you're looking for an avatar like the one in the picture just reach out to <@" + Config.getContactManagerId() + ">!");
+
+        String messageLink = MessageUtil.getLinkToMessage(event.getMessage(), event.getGuild(), event.getChannel());
+        privateMessageSender.notifyContactManager(
+                event.getJDA(),
+                "Create button from AI Arts",
+                String.format("%sReceived a request from <@%s> to create an avatar", messageLink, event.getUser().getId())
+        );
+
         event.getHook().sendMessageEmbeds(
                 EmbedUtil.createEmbed("We've sent you a private message please check your DMs.")
         ).queue();
