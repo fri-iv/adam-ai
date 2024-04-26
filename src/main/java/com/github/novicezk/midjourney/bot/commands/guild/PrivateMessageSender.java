@@ -18,19 +18,12 @@ import java.util.List;
 
 public class PrivateMessageSender {
 
-    public void sendToUser(ButtonInteractionEvent event, String text) {
+    public void sendArtToUser(ButtonInteractionEvent event, String text) {
         Member member = event.getMember();
         if (member != null) {
             List<Message.Attachment> attachments = event.getMessage().getAttachments();
-            List<FileUpload> files = new ArrayList<>();
-            for (Message.Attachment attachment : attachments) {
-                try {
-                    File imageFile = ImageDownloader.downloadImage(attachment.getUrl());
-                    files.add(FileUpload.fromData(imageFile));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            List<FileUpload> files = getFilesFromAttachments(attachments);
+
             User user = member.getUser();
             user.openPrivateChannel().queue(privateChannel -> {
                 privateChannel.sendMessage(text)
@@ -40,28 +33,47 @@ public class PrivateMessageSender {
         }
     }
 
-    public void sendToContactManager(MessageReceivedEvent event) {
+    public void sendToContactManager(MessageReceivedEvent event, List<Message.Attachment> attachments) {
+        List<FileUpload> files = getFilesFromAttachments(attachments);
         event.getJDA().retrieveUserById(Config.getContactManagerId()).queue(contactManager -> {
             if (contactManager != null) {
                 contactManager.openPrivateChannel().queue(privateChannel -> {
-                    privateChannel.sendMessage("Received private message from <@" + event.getAuthor().getId() + ">\n\n"
+                    privateChannel.sendMessage("Received private message from <@" + event.getAuthor().getId() + ">\n\n> "
                                     + event.getMessage().getContentRaw())
+                            .addFiles(files)
                             .queue();
                     event.getAuthor().openPrivateChannel().queue(channel -> {
-                        channel.sendMessageEmbeds(EmbedUtil.createEmbed("Your message has been sent to the team!")).queue();
+                        channel.sendMessageEmbeds(EmbedUtil.createEmbed("Your message has been sent to the team!"))
+                                .queue();
                     });
                 });
             }
         });
     }
 
-    public void notifyContactManager(JDA jda, String title, String text) {
+    public void notifyContactManager(JDA jda, List<Message.Attachment> attachments, String title, String text) {
+        List<FileUpload> files = getFilesFromAttachments(attachments);
         jda.retrieveUserById(Config.getContactManagerId()).queue(contactManager -> {
             if (contactManager != null) {
                 contactManager.openPrivateChannel().queue(privateChannel ->
                         privateChannel.sendMessageEmbeds(EmbedUtil.createEmbed(title, text))
+                                .addFiles(files)
                                 .queue());
             }
         });
+    }
+
+    private List<FileUpload> getFilesFromAttachments(List<Message.Attachment> attachments) {
+        List<FileUpload> files = new ArrayList<>();
+        for (Message.Attachment attachment : attachments) {
+            try {
+                File imageFile = ImageDownloader.downloadImage(attachment.getUrl());
+                files.add(FileUpload.fromData(imageFile));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return files;
     }
 }

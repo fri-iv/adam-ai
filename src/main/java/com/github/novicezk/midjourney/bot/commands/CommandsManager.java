@@ -20,32 +20,32 @@ import java.util.List;
 
 @Slf4j
 public class CommandsManager extends ListenerAdapter {
-    private final List<CommandHandler> commandHandlers;
     private final ButtonInteractionHandler buttonInteractionHandler;
     private final GuildMemberJoinHandler guildMemberJoinHandler;
     private final MessageReceivedHandler messageReceivedHandler;
+    private final List<CommandHandler> commandHandlers;
 
     public CommandsManager(SubmitController submitController) {
         PrivateMessageSender privateMessageSender = new PrivateMessageSender();
 
-        this.commandHandlers = initializeCommandHandlers(submitController);
         this.buttonInteractionHandler = new ButtonInteractionHandler(privateMessageSender);
-        this.guildMemberJoinHandler = new GuildMemberJoinHandler(submitController);
         this.messageReceivedHandler = new MessageReceivedHandler(privateMessageSender);
+        this.guildMemberJoinHandler = new GuildMemberJoinHandler(submitController);
+        this.commandHandlers = initializeCommandHandlers(submitController);
     }
 
     private List<CommandHandler> initializeCommandHandlers(SubmitController submitController) {
         List<CommandHandler> handlers = new ArrayList<>();
+        handlers.add(new ContractCommandHandler(submitController));
         handlers.add(new GenerateCommandHandler(submitController));
         handlers.add(new UploadImageCommandHandler());
         handlers.add(new GetImagesCommandHandler());
-        handlers.add(new QueueCommandHandler());
+        handlers.add(new AnalyticsCommandHandler());
         handlers.add(new GetLogCommandHandler());
-        handlers.add(new ContractCommandHandler(submitController));
+        handlers.add(new QueueCommandHandler());
         handlers.add(new EmbedCommandHandler());
         handlers.add(new PingCommandHandler());
         handlers.add(new HelpCommandHandler());
-        handlers.add(new AnalyticsCommandHandler());
         return handlers;
     }
 

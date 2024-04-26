@@ -12,11 +12,12 @@ public class Config {
     private static final String QUEUE_LIMIT_PER_PERSON = "QUEUE_LIMIT_PER_PERSON";
 
     // Channel IDs for sending messages
+    private static final String CREATE_AVATAR_CHANNEL = "CREATE_AVATAR_CHANNEL";
     private static final String SENDING_CHANNEL = "SENDING_CHANNEL";
     private static final String QUEUE_CHANNEL = "QUEUE_CHANNEL";
+    private static final String DEBUG_CHANNEL = "DEBUG_CHANNEL";
     private static final String LOGS_CHANNEL = "LOGS_CHANNEL";
     private static final String FAQ_CHANNEL = "FAQ_CHANNEL";
-    private static final String DEBUG_CHANNEL = "DEBUG_CHANNEL";
     private static final String ARTS_CHANNEL = "ARTS_CHANNEL";
 
     // Roles rarity IDs
@@ -100,6 +101,10 @@ public class Config {
 
     public static String getImgbbToken() {
         return properties.getProperty(IMGBB_TOKEN);
+    }
+
+    public static String getCreateAvatarChannel() {
+        return properties.getProperty(CREATE_AVATAR_CHANNEL);
     }
 
     public static String getSendingChannel() {

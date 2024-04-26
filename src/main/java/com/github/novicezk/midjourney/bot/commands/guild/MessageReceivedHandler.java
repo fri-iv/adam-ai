@@ -14,7 +14,7 @@ public class MessageReceivedHandler {
     public void onMessageReceived(MessageReceivedEvent event) {
         // check for private messages to bot
         if (event.getChannelType().equals(ChannelType.PRIVATE) && !event.getAuthor().getId().equals(event.getJDA().getSelfUser().getId())) {
-            privateMessageSender.sendToContactManager(event);
+            privateMessageSender.sendToContactManager(event, event.getMessage().getAttachments());
         }
 
         // check if user send message to AI category

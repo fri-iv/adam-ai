@@ -7,6 +7,7 @@ import com.github.novicezk.midjourney.bot.events.EventsManager;
 import com.github.novicezk.midjourney.bot.model.GeneratedPromptData;
 import com.github.novicezk.midjourney.bot.prompt.PromptGenerator;
 import com.github.novicezk.midjourney.bot.queue.QueueManager;
+import com.github.novicezk.midjourney.bot.utils.Config;
 import com.github.novicezk.midjourney.bot.utils.SeasonTracker;
 import com.github.novicezk.midjourney.bot.utils.WelcomeMessageTracker;
 import com.github.novicezk.midjourney.controller.SubmitController;
@@ -16,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 @Slf4j
 public class GuildMemberJoinHandler {
@@ -30,12 +32,32 @@ public class GuildMemberJoinHandler {
         Member member = event.getMember();
         User user = member.getUser();
 
-        log.debug("onGuildMemberJoin");
-        if (user.getAvatarUrl() != null && !WelcomeMessageTracker.hasBeenWelcomed(user.getId())) {
-            log.debug("onGuildMemberJoin hasBeenWelcomed");
+        handleWelcomeMessage(user);
+        handleGenerateWelcomeArt(user, event);
+    }
 
-            String discordAvatarUrl = CommandsUtil.getImageUrlFromDiscordAvatar(event.getUser());
-            GeneratedPromptData promptData = new PromptGenerator().generatePrompt(discordAvatarUrl, event.getUser());
+    // send welcome message to DMs
+    private void handleWelcomeMessage(User user) {
+        String welcomeMessage = String.format("""
+               Hey there! I'm Adam, the **Avatar Portal** guild's bot.
+                               \s
+               Want to create your own avatar? Send me your ideas or reach out to our manager <@%s>
+               Click the button and we'll get in touch ASAP. Enjoy your stay!
+               """,
+                Config.getContactManagerId()
+        );
+
+        Button createButton = Button.success("wel:create-avatar", "Create avatar \uD83D\uDCAB");
+        user.openPrivateChannel().queue(privateChannel -> privateChannel
+                .sendMessage(welcomeMessage)
+                .addActionRow(createButton)
+                .queue());
+    }
+
+    private void handleGenerateWelcomeArt(User user, GuildMemberJoinEvent event) {
+        if (user.getAvatarUrl() != null && !WelcomeMessageTracker.hasBeenWelcomed(user.getId())) {
+            String discordAvatarUrl = CommandsUtil.getImageUrlFromDiscordAvatar(user);
+            GeneratedPromptData promptData = new PromptGenerator().generatePrompt(discordAvatarUrl, user);
 
             SubmitImagineDTO imagineDTO = new SubmitImagineDTO();
             imagineDTO.setPrompt(promptData.getPrompt());

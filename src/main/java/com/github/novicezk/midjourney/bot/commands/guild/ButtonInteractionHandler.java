@@ -39,7 +39,24 @@ public class ButtonInteractionHandler {
     }
 
     private void handleCreateAvatarButton(ButtonInteractionEvent event) {
-        privateMessageSender.sendToUser(event, "Hi there!\n\n" +
+        // handle welcome button
+        if (event.getComponentId().equals("wel:create-avatar")) {
+            event.getHook().sendMessageEmbeds(
+                    EmbedUtil.createEmbed("Our team has been notified about your request and we'll get in touch as soon as we're available. Feel free to share your thoughts here or simply wait for our contact.")
+            ).queue();
+
+            privateMessageSender.notifyContactManager(
+                    event.getJDA(),
+                    event.getMessage().getAttachments(),
+                    "Create button from Welcome message",
+                    String.format("Received a request from <@%s> to create an avatar.", event.getUser().getId())
+            );
+
+            return;
+        }
+
+        // handle faq or create-avatar channel button
+        privateMessageSender.sendArtToUser(event, "Hi there!\n\n" +
                 "Our team has been notified about your request and we'll get in touch as soon as we're available. Feel free to share your thoughts here or simply wait for our contact.");
         event.getHook().sendMessageEmbeds(
                 EmbedUtil.createEmbed("We've sent you a private message please check your DMs.")
@@ -47,21 +64,23 @@ public class ButtonInteractionHandler {
 
         boolean isFaqEvent = event.getComponentId().equals("faq:create-avatar");
         String title = isFaqEvent ? "Create button from FAQ" : "Create button from create-avatar channel";
-        String channelId = isFaqEvent ? "<#1091727782498816010>" : "<#1092429060270985247>";
+        String channelId = isFaqEvent ? "<#" + Config.getFaqChannel() + ">" : "<#" + Config.getCreateAvatarChannel() + ">";
         privateMessageSender.notifyContactManager(
                 event.getJDA(),
+                event.getMessage().getAttachments(),
                 title,
                 String.format("%s\nReceived a request from <@%s> to create an avatar.", channelId, event.getUser().getId())
         );
     }
 
     private void handleCreateButton(ButtonInteractionEvent event) {
-        privateMessageSender.sendToUser(event, "Hi there!\n\n" +
+        privateMessageSender.sendArtToUser(event, "Hi there!\n\n" +
                 "If you're looking for an avatar like the one in the picture just reach out to <@" + Config.getContactManagerId() + ">!");
 
         String messageLink = MessageUtil.getLinkToMessage(event.getMessage(), event.getGuild(), event.getChannel());
         privateMessageSender.notifyContactManager(
                 event.getJDA(),
+                event.getMessage().getAttachments(),
                 "Create button from AI Arts",
                 String.format("%sReceived a request from <@%s> to create an avatar", messageLink, event.getUser().getId())
         );
