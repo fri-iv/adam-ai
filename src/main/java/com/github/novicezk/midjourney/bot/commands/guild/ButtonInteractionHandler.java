@@ -39,37 +39,34 @@ public class ButtonInteractionHandler {
     }
 
     private void handleCreateAvatarButton(ButtonInteractionEvent event) {
-        // handle welcome button
-        if (event.getComponentId().equals("wel:create-avatar")) {
-            event.getHook().sendMessageEmbeds(
-                    EmbedUtil.createEmbed("Our team has been notified about your request and we'll get in touch as soon as we're available. Feel free to share your thoughts here or simply wait for our contact.")
-            ).queue();
+        String componentId = event.getComponentId();
+        String messageContent;
+        String notificationTitle;
+        String notificationChannel = "";
 
-            privateMessageSender.notifyContactManager(
-                    event.getJDA(),
-                    event.getMessage().getAttachments(),
-                    "Create button from Welcome message",
-                    String.format("Received a request from <@%s> to create an avatar.", event.getUser().getId())
-            );
-
-            return;
+        if (componentId.equals("wel:create-avatar")) {
+            messageContent = "Our team has been notified about your request and we'll get in touch as soon as we're available. Feel free to share your thoughts here or simply wait for our contact.";
+            notificationTitle = "Create button from Welcome message";
+        } else {
+            messageContent = "We've sent you a private message please check your DMs.";
+            notificationTitle = componentId.equals("faq:create-avatar") ? "Create button from FAQ" : "Create button from create-avatar channel";
+            notificationChannel = componentId.equals("faq:create-avatar")
+                    ? "<#" + Config.getFaqChannel() + ">\n" : "<#" + Config.getCreateAvatarChannel() + ">\n";
         }
 
-        // handle faq or create-avatar channel button
-        privateMessageSender.sendArtToUser(event, "Hi there!\n\n" +
-                "Our team has been notified about your request and we'll get in touch as soon as we're available. Feel free to share your thoughts here or simply wait for our contact.");
-        event.getHook().sendMessageEmbeds(
-                EmbedUtil.createEmbed("We've sent you a private message please check your DMs.")
-        ).queue();
+        // Send message to the user
+        event.getHook().sendMessageEmbeds(EmbedUtil.createEmbed(messageContent)).queue();
+        if (!componentId.equals("wel:create-avatar")) {
+            privateMessageSender.sendArtToUser(event, "Hi there!\n\n" +
+                    "Our team has been notified about your request and we'll get in touch as soon as we're available. Feel free to share your thoughts here or simply wait for our contact.");
+        }
 
-        boolean isFaqEvent = event.getComponentId().equals("faq:create-avatar");
-        String title = isFaqEvent ? "Create button from FAQ" : "Create button from create-avatar channel";
-        String channelId = isFaqEvent ? "<#" + Config.getFaqChannel() + ">" : "<#" + Config.getCreateAvatarChannel() + ">";
+        // Notify contact manager
         privateMessageSender.notifyContactManager(
                 event.getJDA(),
                 event.getMessage().getAttachments(),
-                title,
-                String.format("%s\nReceived a request from <@%s> to create an avatar.", channelId, event.getUser().getId())
+                notificationTitle,
+                String.format("%sReceived a request from <@%s> to create an avatar.", notificationChannel, event.getUser().getId())
         );
     }
 
