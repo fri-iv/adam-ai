@@ -1,4 +1,4 @@
-package com.github.novicezk.midjourney.bot.commands;
+package com.github.novicezk.midjourney.bot.commands.guild;
 
 import com.github.novicezk.midjourney.bot.commands.handlers.*;
 import net.dv8tion.jda.api.interactions.commands.OptionType;

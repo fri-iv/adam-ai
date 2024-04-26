@@ -1,4 +1,4 @@
-package com.github.novicezk.midjourney.bot.commands.handlers;
+package com.github.novicezk.midjourney.bot.commands.guild;
 
 import com.github.novicezk.midjourney.ReturnCode;
 import com.github.novicezk.midjourney.bot.commands.CommandsUtil;

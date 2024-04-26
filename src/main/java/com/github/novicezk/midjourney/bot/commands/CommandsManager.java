@@ -1,11 +1,11 @@
 package com.github.novicezk.midjourney.bot.commands;
 
+import com.github.novicezk.midjourney.bot.commands.guild.*;
 import com.github.novicezk.midjourney.bot.commands.handlers.*;
 import com.github.novicezk.midjourney.bot.events.EventsManager;
 import com.github.novicezk.midjourney.bot.queue.QueueManager;
 import com.github.novicezk.midjourney.controller.SubmitController;
 import lombok.extern.slf4j.Slf4j;
-import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -21,15 +21,17 @@ import java.util.List;
 @Slf4j
 public class CommandsManager extends ListenerAdapter {
     private final List<CommandHandler> commandHandlers;
-    private final PrivateMessageSender privateMessageSender;
     private final ButtonInteractionHandler buttonInteractionHandler;
     private final GuildMemberJoinHandler guildMemberJoinHandler;
+    private final MessageReceivedHandler messageReceivedHandler;
 
     public CommandsManager(SubmitController submitController) {
+        PrivateMessageSender privateMessageSender = new PrivateMessageSender();
+
         this.commandHandlers = initializeCommandHandlers(submitController);
-        this.privateMessageSender = new PrivateMessageSender();
         this.buttonInteractionHandler = new ButtonInteractionHandler(privateMessageSender);
         this.guildMemberJoinHandler = new GuildMemberJoinHandler(submitController);
+        this.messageReceivedHandler = new MessageReceivedHandler(privateMessageSender);
     }
 
     private List<CommandHandler> initializeCommandHandlers(SubmitController submitController) {
@@ -48,10 +50,8 @@ public class CommandsManager extends ListenerAdapter {
     }
 
     @Override
-    public void onMessageReceived(MessageReceivedEvent event) {
-        if (event.getChannelType().equals(ChannelType.PRIVATE) && !event.getAuthor().getId().equals(event.getJDA().getSelfUser().getId())) {
-            privateMessageSender.sendToContactManager(event);
-        }
+    public void onMessageReceived(@NotNull MessageReceivedEvent event) {
+        messageReceivedHandler.onMessageReceived(event);
     }
 
     @Override

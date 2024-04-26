@@ -17,6 +17,7 @@ public class Config {
     private static final String LOGS_CHANNEL = "LOGS_CHANNEL";
     private static final String FAQ_CHANNEL = "FAQ_CHANNEL";
     private static final String DEBUG_CHANNEL = "DEBUG_CHANNEL";
+    private static final String ARTS_CHANNEL = "ARTS_CHANNEL";
 
     // Roles rarity IDs
     private static final String ROLE_COMMON = "COMMON";
@@ -143,6 +144,10 @@ public class Config {
 
     public static String getDebugChannel() {
         return properties.getProperty(DEBUG_CHANNEL);
+    }
+
+    public static String getArtsChannel() {
+        return properties.getProperty(ARTS_CHANNEL);
     }
 
     public static String getMixpanelProjectToken() {

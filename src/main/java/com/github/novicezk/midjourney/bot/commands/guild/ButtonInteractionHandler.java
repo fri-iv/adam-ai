@@ -1,6 +1,5 @@
-package com.github.novicezk.midjourney.bot.commands.handlers;
+package com.github.novicezk.midjourney.bot.commands.guild;
 
-import com.github.novicezk.midjourney.bot.commands.PrivateMessageSender;
 import com.github.novicezk.midjourney.bot.events.EventsManager;
 import com.github.novicezk.midjourney.bot.utils.Config;
 import com.github.novicezk.midjourney.bot.utils.EmbedUtil;
@@ -32,10 +31,8 @@ public class ButtonInteractionHandler {
             handleCreateButton(event);
         } else if (event.getComponentId().equals("testers") && guild != null) {
             handleTestersButton(event, guild);
-        } else if (!event.getMessage().getContentRaw().contains(buttonUserId) && !isGodfather) {
-            handleUnauthorizedButton(event);
         } else if (event.getComponentId().equals("delete")) {
-            handleDeleteButton(event);
+            handleDeleteButton(event, buttonUserId, isGodfather);
         } else if (event.getComponentId().contains("create-avatar")) {
             handleCreateAvatarButton(event);
         }
@@ -88,7 +85,12 @@ public class ButtonInteractionHandler {
         ).queue();
     }
 
-    private void handleDeleteButton(ButtonInteractionEvent event) {
+    private void handleDeleteButton(ButtonInteractionEvent event, String buttonUserId, boolean isGodfather) {
+        if (!event.getMessage().getContentRaw().contains(buttonUserId) && !isGodfather) {
+            handleUnauthorizedButton(event);
+            return;
+        }
+
         event.getChannel().deleteMessageById(event.getMessageId()).queue();
         event.getHook().sendMessageEmbeds(
                 EmbedUtil.createEmbedSuccess("The post has been deleted.")

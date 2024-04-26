@@ -85,7 +85,7 @@ public class QueueMessageHandler extends MessageHandler {
         QueueEntry entry = QueueManager.removeFromQueue(prompt);
 
         // do not show any generations instead of those generated in ai-arts channel
-        if (!prompt.contains("signature") || !prompt.contains("class") || !prompt.contains("character")) {
+        if (!prompt.contains("signature") || !prompt.contains("AVIS")) {
             return;
         }
 
