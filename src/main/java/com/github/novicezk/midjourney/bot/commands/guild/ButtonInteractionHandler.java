@@ -52,21 +52,20 @@ public class ButtonInteractionHandler {
             notificationTitle = componentId.equals("faq:create-avatar") ? "Create button from FAQ" : "Create button from create-avatar channel";
             notificationChannel = componentId.equals("faq:create-avatar")
                     ? "<#" + Config.getFaqChannel() + ">\n" : "<#" + Config.getCreateAvatarChannel() + ">\n";
+
+            privateMessageSender.sendArtToUser(event, "Hi there!\n\n" +
+                    "Our team has been notified about your request and we'll get in touch as soon as we're available. Feel free to share your thoughts here or simply wait for our contact.");
         }
 
         // Send message to the user
         event.getHook().sendMessageEmbeds(EmbedUtil.createEmbed(messageContent)).queue();
-        if (!componentId.equals("wel:create-avatar")) {
-            privateMessageSender.sendArtToUser(event, "Hi there!\n\n" +
-                    "Our team has been notified about your request and we'll get in touch as soon as we're available. Feel free to share your thoughts here or simply wait for our contact.");
-        }
 
         // Notify contact manager
         privateMessageSender.notifyContactManager(
                 event.getJDA(),
                 event.getMessage().getAttachments(),
                 notificationTitle,
-                String.format("%sReceived a request from <@%s> to create an avatar.", notificationChannel, event.getUser().getId())
+                String.format("%sReceived a request from <@%s> (%s) to create an avatar.", notificationChannel, event.getUser().getId(), event.getUser().getName())
         );
     }
 
@@ -79,7 +78,7 @@ public class ButtonInteractionHandler {
                 event.getJDA(),
                 event.getMessage().getAttachments(),
                 "Create button from AI Arts",
-                String.format("%sReceived a request from <@%s> to create an avatar", messageLink, event.getUser().getId())
+                String.format("%sReceived a request from <@%s> (%s) to create an avatar", messageLink, event.getUser().getId(), event.getUser().getName())
         );
 
         event.getHook().sendMessageEmbeds(

@@ -17,33 +17,33 @@ public class EventsManager {
         String logText = "c:" + event.getName();
         EventsStorage.logCommandInvocation(logText, event.getUser().getId());
         MixpanelManager.trackEvent(new CommandEventData(event));
-        sendLogToDiscord(event.getGuild(), event.getUser().getId(), logText);
+        sendLogToDiscord(event.getGuild(), event.getUser().getId(), event.getUser().getName(), logText);
     }
 
     public static void onButtonClick(ButtonInteractionEvent event) {
         String logText = "b:" + event.getComponentId();
         EventsStorage.logButtonInteraction(logText, event.getUser().getId());
         MixpanelManager.trackEvent(new ButtonEventData(event));
-        sendLogToDiscord(event.getGuild(), event.getUser().getId(), logText);
+        sendLogToDiscord(event.getGuild(), event.getUser().getId(), event.getUser().getName(), logText);
     }
 
     public static void onWelcomeGenerate(GuildMemberJoinEvent event) {
         String logText = "Welcome generate";
         EventsStorage.logButtonInteraction(logText, event.getUser().getId());
         MixpanelManager.trackEvent(new CommandEventData(event, logText));
-        sendLogToDiscord(event.getGuild(), event.getUser().getId(), logText);
+        sendLogToDiscord(event.getGuild(), event.getUser().getId(), event.getUser().getName(), logText);
     }
 
     public static void onErrorEvent(String userId, String failReason) {
         MixpanelManager.trackEvent(new ErrorEventData(userId, failReason));
     }
 
-    private static void sendLogToDiscord(@Nullable Guild guild, String userId, String text) {
+    private static void sendLogToDiscord(@Nullable Guild guild, String userId, String username, String text) {
         if (guild == null || guild.getTextChannelById(Config.getLogsChannel()) == null) {
             return;
         }
 
         TextChannel logChannel = guild.getTextChannelById(Config.getLogsChannel());
-        logChannel.sendMessageEmbeds(EmbedUtil.createEmbed(String.format("%s — <@%s>", text, userId))).queue();
+        logChannel.sendMessageEmbeds(EmbedUtil.createEmbed(String.format("%s — <@%s>, %s", text, userId, username))).queue();
     }
 }
