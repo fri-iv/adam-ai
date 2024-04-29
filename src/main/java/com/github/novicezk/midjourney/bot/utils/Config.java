@@ -7,6 +7,7 @@ import java.util.Properties;
 public class Config {
     // Version
     private static final String SEASON_VERSION = "SEASON_VERSION";
+    private static final String APP_VERSION = "APP_VERSION";
 
     // Queue settings
     private static final String QUEUE_LIMIT_PER_PERSON = "QUEUE_LIMIT_PER_PERSON";
@@ -89,6 +90,10 @@ public class Config {
 
     public static String getRoleTester() {
         return properties.getProperty(ROLE_TESTER);
+    }
+
+    public static String getAppVersion() {
+        return properties.getProperty(APP_VERSION);
     }
 
     public static int getSeasonVersion() {

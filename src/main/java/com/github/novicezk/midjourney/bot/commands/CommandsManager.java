@@ -4,6 +4,7 @@ import com.github.novicezk.midjourney.bot.commands.guild.*;
 import com.github.novicezk.midjourney.bot.commands.handlers.*;
 import com.github.novicezk.midjourney.bot.events.EventsManager;
 import com.github.novicezk.midjourney.bot.queue.QueueManager;
+import com.github.novicezk.midjourney.bot.user.UserJoinTimeManager;
 import com.github.novicezk.midjourney.controller.SubmitController;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
@@ -84,6 +85,7 @@ public class CommandsManager extends ListenerAdapter {
 
     @Override
     public void onGuildMemberJoin(@NotNull GuildMemberJoinEvent event) {
+        UserJoinTimeManager.addUserJoinTime(event.getUser().getId());
         guildMemberJoinHandler.handleGuildMemberJoin(event);
     }
 

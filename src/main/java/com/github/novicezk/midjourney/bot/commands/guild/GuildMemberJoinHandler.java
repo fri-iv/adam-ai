@@ -7,6 +7,7 @@ import com.github.novicezk.midjourney.bot.events.EventsManager;
 import com.github.novicezk.midjourney.bot.model.GeneratedPromptData;
 import com.github.novicezk.midjourney.bot.prompt.PromptGenerator;
 import com.github.novicezk.midjourney.bot.queue.QueueManager;
+import com.github.novicezk.midjourney.bot.user.UserJoinTimeManager;
 import com.github.novicezk.midjourney.bot.utils.Config;
 import com.github.novicezk.midjourney.bot.utils.SeasonTracker;
 import com.github.novicezk.midjourney.bot.utils.WelcomeMessageTracker;
@@ -18,6 +19,8 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
+
+import java.util.List;
 
 @Slf4j
 public class GuildMemberJoinHandler {
@@ -34,6 +37,16 @@ public class GuildMemberJoinHandler {
 
         handleWelcomeMessage(user);
         handleGenerateWelcomeArt(user, event);
+        cacheAllMembers(event.getGuild().getMembers());
+    }
+
+    private void cacheAllMembers(List<Member> members) {
+        if (!members.isEmpty()) {
+            for (Member member : members) {
+                String userId = member.getId();
+                UserJoinTimeManager.addUserJoinTime(userId);
+            }
+        }
     }
 
     // send welcome message to DMs

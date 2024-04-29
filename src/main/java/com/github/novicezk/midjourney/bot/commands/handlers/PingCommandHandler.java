@@ -1,5 +1,6 @@
 package com.github.novicezk.midjourney.bot.commands.handlers;
 
+import com.github.novicezk.midjourney.bot.utils.Config;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 import java.util.Random;
@@ -22,6 +23,8 @@ public class PingCommandHandler implements CommandHandler {
         } else {
             text = "pong";
         }
+
+        text += "\nVersion: " + Config.getAppVersion();
 
         event.reply(text).setEphemeral(true).queue();
     }
