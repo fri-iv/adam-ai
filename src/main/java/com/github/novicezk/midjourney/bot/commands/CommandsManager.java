@@ -8,6 +8,7 @@ import com.github.novicezk.midjourney.controller.SubmitController;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
+import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -22,6 +23,7 @@ import java.util.List;
 public class CommandsManager extends ListenerAdapter {
     private final ButtonInteractionHandler buttonInteractionHandler;
     private final GuildMemberJoinHandler guildMemberJoinHandler;
+    private final GuildMemberLeaveHandler guildMemberLeaveHandler;
     private final MessageReceivedHandler messageReceivedHandler;
     private final List<CommandHandler> commandHandlers;
 
@@ -32,6 +34,7 @@ public class CommandsManager extends ListenerAdapter {
         this.messageReceivedHandler = new MessageReceivedHandler(privateMessageSender);
         this.guildMemberJoinHandler = new GuildMemberJoinHandler(submitController);
         this.commandHandlers = initializeCommandHandlers(submitController);
+        this.guildMemberLeaveHandler = new GuildMemberLeaveHandler();
     }
 
     private List<CommandHandler> initializeCommandHandlers(SubmitController submitController) {
@@ -82,5 +85,10 @@ public class CommandsManager extends ListenerAdapter {
     @Override
     public void onGuildMemberJoin(@NotNull GuildMemberJoinEvent event) {
         guildMemberJoinHandler.handleGuildMemberJoin(event);
+    }
+
+    @Override
+    public void onGuildMemberRemove(@NotNull GuildMemberRemoveEvent event) {
+        guildMemberLeaveHandler.onGuildMemberRemove(event);
     }
 }
