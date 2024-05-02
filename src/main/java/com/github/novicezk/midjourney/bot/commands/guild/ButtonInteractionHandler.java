@@ -50,6 +50,16 @@ public class ButtonInteractionHandler {
         } else {
             messageContent = "We've sent you a private message please check your DMs.";
             notificationTitle = componentId.equals("faq:create-avatar") ? "Create button from FAQ" : "Create button from create-avatar channel";
+
+            if (componentId.equals("faq:create-avatar")) {
+                notificationChannel = "<#" + Config.getFaqChannel() + ">\n";
+            } else if (componentId.equals("welch:create-avatar")) {
+                notificationChannel = "<#" + Config.getWelcomeChannel() + ">\n";
+                notificationTitle = "Create button from Welcome channel";
+            } else {
+                notificationChannel = "<#" + Config.getCreateAvatarChannel() + ">\n";
+            }
+
             notificationChannel = componentId.equals("faq:create-avatar")
                     ? "<#" + Config.getFaqChannel() + ">\n" : "<#" + Config.getCreateAvatarChannel() + ">\n";
 

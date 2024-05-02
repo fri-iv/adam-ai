@@ -5,20 +5,21 @@ import com.github.novicezk.midjourney.bot.commands.CommandsUtil;
 import com.github.novicezk.midjourney.bot.error.ErrorMessageHandler;
 import com.github.novicezk.midjourney.bot.events.EventsManager;
 import com.github.novicezk.midjourney.bot.model.GeneratedPromptData;
+import com.github.novicezk.midjourney.bot.model.images.ImageComposed;
 import com.github.novicezk.midjourney.bot.prompt.PromptGenerator;
 import com.github.novicezk.midjourney.bot.queue.QueueManager;
 import com.github.novicezk.midjourney.bot.user.UserJoinTimeManager;
-import com.github.novicezk.midjourney.bot.utils.Config;
-import com.github.novicezk.midjourney.bot.utils.SeasonTracker;
-import com.github.novicezk.midjourney.bot.utils.WelcomeMessageTracker;
+import com.github.novicezk.midjourney.bot.utils.*;
 import com.github.novicezk.midjourney.controller.SubmitController;
 import com.github.novicezk.midjourney.dto.SubmitImagineDTO;
 import com.github.novicezk.midjourney.result.SubmitResultVO;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import net.dv8tion.jda.api.utils.FileUpload;
 
 import java.util.List;
 
@@ -35,7 +36,8 @@ public class GuildMemberJoinHandler {
         Member member = event.getMember();
         User user = member.getUser();
 
-        handleWelcomeMessage(user);
+        handleWelcomeChannelMessage(event, user);
+        handleWelcomeDirectMessage(user);
         handleGenerateWelcomeArt(user, event);
         cacheAllMembers(event.getGuild().getMembers());
     }
@@ -49,8 +51,54 @@ public class GuildMemberJoinHandler {
         }
     }
 
+    // send welcome message to welcome channel
+    private void handleWelcomeChannelMessage(GuildMemberJoinEvent event, User user) {
+        String channelId = Config.getWelcomeChannel();
+        String avatarUrl = user.getAvatarUrl() != null ? user.getAvatarUrl() : user.getDefaultAvatarUrl();
+        if (event.getGuild().getTextChannelById(channelId) == null || avatarUrl == null) {
+            return;
+        }
+
+        Button createButton = Button.success("welch:create-avatar", "Create avatar \uD83D\uDCAB");
+        TextChannel channel = event.getGuild().getTextChannelById(channelId);
+        try {
+            ImageComposed composeImage = ImageComposer.composeImage(avatarUrl);
+            channel.sendMessage(String.format("Hello <@%s>", event.getUser().getId()))
+                    .addEmbeds(EmbedUtil.createEmbed(
+                            ":wave:  **Welcome to the server!**", String.format("""
+                                     :large_blue_diamond: How do I begin?
+                                     :small_blue_diamond: <#%s>
+                                     :small_blue_diamond: Check out our showcases to see the quality of our models
+                                     \s
+                                     :large_orange_diamond: What's next?
+                                     :small_orange_diamond: <#%s>
+                                     :small_orange_diamond: Stay tuned here for our latest projects and updates
+                                     \s
+                                     :point_right: <#%s>
+                                     :small_orange_diamond: Please go through and read rules
+                                     :small_orange_diamond: Once you've done that feel free to check roles
+                                     \s
+                                     :large_blue_diamond: Ready for your own model?
+                                     :small_blue_diamond: Just click the button below and we'll get in touch!
+                                     \s
+                                     With all that said welcome and enjoy your stay!
+                                    """,
+                                    Config.getShowcasesChannel(),
+                                    Config.getUpdatesChannel(),
+                                    Config.getRulesChannel()
+                            ), "Do it! Click it! Really!", composeImage.getAvverageColor(), composeImage.getFileUrl()
+                    ))
+                    .addFiles(FileUpload.fromData(composeImage.getImageFile()))
+                    .addActionRow(createButton)
+                    .queue();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
     // send welcome message to DMs
-    private void handleWelcomeMessage(User user) {
+    private void handleWelcomeDirectMessage(User user) {
         String welcomeMessage = String.format("""
                Hey there! I'm Adam, the **Avatar Portal** guild's bot.
                                \s

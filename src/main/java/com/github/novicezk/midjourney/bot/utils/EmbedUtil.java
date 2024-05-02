@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import java.awt.*;
 
 public class EmbedUtil {
-    public static MessageEmbed createEmbed(String title, String description, String footer, Color color) {
+    public static MessageEmbed createEmbed(String title, String description, String footer, Color color, String imageUrl) {
         EmbedBuilder builder = new EmbedBuilder();
         builder.setColor(color);
 
@@ -22,7 +22,15 @@ public class EmbedUtil {
             builder.setFooter(footer);
         }
 
+        if (imageUrl != null) {
+            builder.setImage(imageUrl);
+        }
+
         return builder.build();
+    }
+
+    public static MessageEmbed createEmbed(String title, String description, String footer, Color color) {
+        return createEmbed(title, description, footer, color, null);
     }
 
     public static MessageEmbed createEmbed(String description) {

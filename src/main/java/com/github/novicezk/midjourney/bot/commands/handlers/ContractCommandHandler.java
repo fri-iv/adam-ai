@@ -3,9 +3,11 @@ package com.github.novicezk.midjourney.bot.commands.handlers;
 import com.github.novicezk.midjourney.bot.commands.CommandsUtil;
 import com.github.novicezk.midjourney.bot.error.OnErrorAction;
 import com.github.novicezk.midjourney.bot.model.CharacterStrength;
+import com.github.novicezk.midjourney.bot.model.images.ImageComposed;
 import com.github.novicezk.midjourney.bot.utils.ColorUtil;
 import com.github.novicezk.midjourney.bot.utils.Config;
 import com.github.novicezk.midjourney.bot.utils.EmbedUtil;
+import com.github.novicezk.midjourney.bot.utils.ImageComposer;
 import com.github.novicezk.midjourney.controller.SubmitController;
 import com.github.novicezk.midjourney.dto.SubmitImagineDTO;
 import com.github.novicezk.midjourney.result.SubmitResultVO;
@@ -15,6 +17,7 @@ import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import net.dv8tion.jda.api.utils.FileUpload;
 
 import java.util.List;
 
@@ -78,9 +81,60 @@ public class ContractCommandHandler implements CommandHandler {
             case "faq-avatar":
                 handleFaqAvatarCommand(event);
                 break;
+            case "welcome-msg":
+                handleWelcomeMessageCommand(event);
+                break;
             default:
                 event.getHook().sendMessageEmbeds(List.of(EmbedUtil.createEmbed("Command not found"))).queue();
                 break;
+        }
+    }
+
+    private void handleWelcomeMessageCommand(SlashCommandInteractionEvent event) {
+        String channelId = Config.getDebugChannel();
+//        String channelId = Config.getWelcomeChannel();
+
+        String avatarUrl = event.getUser().getAvatarUrl() != null ? event.getUser().getAvatarUrl() : event.getUser().getDefaultAvatarUrl();
+        if (event.getGuild() == null || event.getGuild().getTextChannelById(channelId) == null || avatarUrl == null) {
+            OnErrorAction.onDefaultMessage(event);
+            return;
+        }
+        event.getHook().sendMessageEmbeds(EmbedUtil.createEmbedSuccess("Done")).queue();
+
+        Button createButton = Button.success("welch:create-avatar", "Create avatar \uD83D\uDCAB");
+        TextChannel channel = event.getGuild().getTextChannelById(channelId);
+        try {
+            ImageComposed composeImage = ImageComposer.composeImage(avatarUrl);
+            channel.sendMessage(String.format("Hello <@%s>", event.getUser().getId()))
+                    .addEmbeds(EmbedUtil.createEmbed(
+                            ":wave:  **Welcome to the server!**", String.format("""
+                                     :large_blue_diamond: How do I begin?
+                                     :small_blue_diamond: <#%s>
+                                     :small_blue_diamond: Check out our showcases to see the quality of our models
+                                     \s
+                                     :large_orange_diamond: What's next?
+                                     :small_orange_diamond: <#%s>
+                                     :small_orange_diamond: Stay tuned here for our latest projects and updates
+                                     \s
+                                     :point_right: <#%s>
+                                     :small_orange_diamond: Please go through and read rules
+                                     :small_orange_diamond: Once you've done that feel free to check roles
+                                     \s
+                                     :large_blue_diamond: Ready for your own model?
+                                     :small_blue_diamond: Just click the button below and we'll get in touch!
+                                     \s
+                                     With all that said, welcome and enjoy your stay!
+                                    """,
+                                    Config.getShowcasesChannel(),
+                                    Config.getUpdatesChannel(),
+                                    Config.getRulesChannel()
+                            ), "Do it! Click it! Really!", composeImage.getAvverageColor(), composeImage.getFileUrl()
+                    ))
+                    .addFiles(FileUpload.fromData(composeImage.getImageFile()))
+                    .addActionRow(createButton)
+                    .queue();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 

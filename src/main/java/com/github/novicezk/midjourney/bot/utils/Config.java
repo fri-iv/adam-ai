@@ -20,6 +20,10 @@ public class Config {
     private static final String LOGS_CHANNEL = "LOGS_CHANNEL";
     private static final String FAQ_CHANNEL = "FAQ_CHANNEL";
     private static final String ARTS_CHANNEL = "ARTS_CHANNEL";
+    private static final String WELCOME_CHANNEL = "WELCOME_CHANNEL";
+    private static final String SHOWCASES_CHANNEL = "SHOWCASES_CHANNEL";
+    private static final String UPDATES_CHANNEL = "UPDATES_CHANNEL";
+    private static final String RULES_CHANNEL = "RULES_CHANNEL";
 
     // Roles rarity IDs
     private static final String ROLE_COMMON = "COMMON";
@@ -158,6 +162,22 @@ public class Config {
 
     public static String getArtsChannel() {
         return properties.getProperty(ARTS_CHANNEL);
+    }
+
+    public static String getWelcomeChannel() {
+        return properties.getProperty(WELCOME_CHANNEL);
+    }
+
+    public static String getShowcasesChannel() {
+        return properties.getProperty(SHOWCASES_CHANNEL);
+    }
+
+    public static String getUpdatesChannel() {
+        return properties.getProperty(UPDATES_CHANNEL);
+    }
+
+    public static String getRulesChannel() {
+        return properties.getProperty(RULES_CHANNEL);
     }
 
     public static String getMixpanelProjectToken() {
