@@ -22,6 +22,10 @@ COPY . .
 # Copy file config.properties
 COPY config.properties adam-ai/config.properties
 
+# Copy welcome_images folder
+COPY welcome_images adam-ai/welcome_images
+
+
 RUN mvn clean package \
     && mv target/midjourney-proxy-*.jar ./app.jar \
     && rm -rf target
