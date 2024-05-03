@@ -110,20 +110,20 @@ public class ContractCommandHandler implements CommandHandler {
                             ":wave:  **Welcome to the server!**", String.format("""
                                      :large_blue_diamond: How do I begin?
                                      :small_blue_diamond: <#%s>
-                                     :small_blue_diamond: Check out our showcases to see the quality of our models
-                                     \s
+                                     :small_blue_diamond: See our showcases for model quality
+                                      \s
                                      :large_orange_diamond: What's next?
                                      :small_orange_diamond: <#%s>
-                                     :small_orange_diamond: Stay tuned here for our latest projects and updates
-                                     \s
+                                     :small_orange_diamond: Stay tuned for updates and projects
+                                      \s
                                      :point_right: <#%s>
                                      :small_orange_diamond: Please go through and read rules
-                                     :small_orange_diamond: Once you've done that feel free to check roles
-                                     \s
+                                     :small_orange_diamond: After that check roles freely
+                                      \s
                                      :large_blue_diamond: Ready for your own model?
-                                     :small_blue_diamond: Just click the button below and we'll get in touch!
-                                     \s
-                                     With all that said, welcome and enjoy your stay!
+                                     :small_blue_diamond: Click the button and we'll reach out!
+                                      \s
+                                     Welcome and enjoy!
                                     """,
                                     Config.getShowcasesChannel(),
                                     Config.getUpdatesChannel(),
