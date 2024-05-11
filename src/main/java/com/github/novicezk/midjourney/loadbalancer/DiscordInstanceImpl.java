@@ -4,6 +4,7 @@ package com.github.novicezk.midjourney.loadbalancer;
 import cn.hutool.core.thread.ThreadUtil;
 import com.github.novicezk.midjourney.Constants;
 import com.github.novicezk.midjourney.ReturnCode;
+import com.github.novicezk.midjourney.bot.events.EventsManager;
 import com.github.novicezk.midjourney.domain.DiscordAccount;
 import com.github.novicezk.midjourney.enums.BlendDimensions;
 import com.github.novicezk.midjourney.enums.TaskStatus;
@@ -145,6 +146,7 @@ public class DiscordInstanceImpl implements DiscordInstance {
 			if (result.getCode() != ReturnCode.SUCCESS) {
 				task.fail(result.getDescription());
 				saveAndNotify(task);
+				EventsManager.onMidjourneyFailure(task.getFailReason());
 				log.debug("task finished, id: {}, status: {}", task.getId(), task.getStatus());
 				return;
 			}

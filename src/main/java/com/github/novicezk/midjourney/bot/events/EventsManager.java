@@ -6,6 +6,7 @@ import com.github.novicezk.midjourney.bot.events.model.ErrorEventData;
 import com.github.novicezk.midjourney.bot.events.model.LeaveEventData;
 import com.github.novicezk.midjourney.bot.utils.Config;
 import com.github.novicezk.midjourney.bot.utils.EmbedUtil;
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
@@ -14,6 +15,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import org.jetbrains.annotations.Nullable;
 
+@Slf4j
 public class EventsManager {
     public static void onCommand(SlashCommandInteractionEvent event) {
         String logText = "c:" + event.getName();
@@ -43,6 +45,10 @@ public class EventsManager {
 
     public static void onErrorEvent(String userId, String failReason) {
         MixpanelManager.trackEvent(new ErrorEventData(userId, failReason));
+    }
+
+    public static void onMidjourneyFailure(String failReason) {
+        log.info("Midjourney task finished FAILURE - {}", failReason);
     }
 
     private static void sendLogToDiscord(@Nullable Guild guild, String userId, String username, String text) {
