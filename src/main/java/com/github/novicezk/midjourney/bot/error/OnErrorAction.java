@@ -5,12 +5,17 @@ import com.github.novicezk.midjourney.bot.utils.Config;
 import com.github.novicezk.midjourney.bot.utils.EmbedUtil;
 import net.dv8tion.jda.api.events.interaction.command.GenericCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 
 import java.util.List;
 
 public class OnErrorAction {
 
     public static void onImageErrorMessage(SlashCommandInteractionEvent event) {
+        sendMessage(event, "Oops! We couldn't find any image. Please run the command `/upload-image` and try again.", false);
+    }
+
+    public static void onImageErrorMessage(ButtonInteractionEvent event) {
         sendMessage(event, "Oops! We couldn't find any image. Please run the command `/upload-image` and try again.", false);
     }
 
@@ -30,7 +35,15 @@ public class OnErrorAction {
         sendMessage(event, "Looks like you've reached the queue limit. Please wait while we work on your current requests!", false);
     }
 
+    public static void onQueueFullMessage(ButtonInteractionEvent event) {
+        sendMessage(event, "Looks like you've reached the queue limit. Please wait while we work on your current requests!", false);
+    }
+
     public static void onMissingTestersRoleMessage(SlashCommandInteractionEvent event) {
+        sendMessage(event, "Oops! Seems like you're missing a required role.\nPlease visit the <#" + Config.getFaqChannel() + "> to gain access!", false);
+    }
+
+    public static void onMissingTestersRoleMessage(ButtonInteractionEvent event) {
         sendMessage(event, "Oops! Seems like you're missing a required role.\nPlease visit the <#" + Config.getFaqChannel() + "> to gain access!", false);
     }
 
@@ -39,6 +52,15 @@ public class OnErrorAction {
     }
 
     public static void sendMessage(GenericCommandInteractionEvent event, String message, boolean error) {
+        if (error) {
+            EventsManager.onErrorEvent(event.getUser().getId(), message);
+            event.getHook().sendMessageEmbeds(List.of(EmbedUtil.createEmbedError(message))).queue();
+        } else {
+            event.getHook().sendMessageEmbeds(List.of(EmbedUtil.createEmbedWarning(message))).queue();
+        }
+    }
+
+    public static void sendMessage(ButtonInteractionEvent event, String message, boolean error) {
         if (error) {
             EventsManager.onErrorEvent(event.getUser().getId(), message);
             event.getHook().sendMessageEmbeds(List.of(EmbedUtil.createEmbedError(message))).queue();

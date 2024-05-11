@@ -1,9 +1,11 @@
 package com.github.novicezk.midjourney.bot.commands.guild;
 
+import com.github.novicezk.midjourney.bot.commands.util.GeneratingRequestHandler;
 import com.github.novicezk.midjourney.bot.events.EventsManager;
 import com.github.novicezk.midjourney.bot.utils.Config;
 import com.github.novicezk.midjourney.bot.utils.EmbedUtil;
 import com.github.novicezk.midjourney.bot.utils.MessageUtil;
+import com.github.novicezk.midjourney.controller.SubmitController;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
@@ -12,9 +14,11 @@ import org.jetbrains.annotations.NotNull;
 public class ButtonInteractionHandler {
 
     private final PrivateMessageSender privateMessageSender;
+    private final SubmitController submitController;
 
-    public ButtonInteractionHandler(PrivateMessageSender privateMessageSender) {
+    public ButtonInteractionHandler(SubmitController submitController, PrivateMessageSender privateMessageSender) {
         this.privateMessageSender = privateMessageSender;
+        this.submitController = submitController;
     }
 
     public void handleButtonInteraction(@NotNull ButtonInteractionEvent event) {
@@ -35,7 +39,15 @@ public class ButtonInteractionHandler {
             handleDeleteButton(event, buttonUserId, isGodfather);
         } else if (event.getComponentId().contains("create-avatar")) {
             handleCreateAvatarButton(event);
+        } else if (event.getComponentId().equals("re-roll")) {
+            handleReRollButton(event);
         }
+    }
+
+    private void handleReRollButton(ButtonInteractionEvent event) {
+        // handle re-roll request
+        new GeneratingRequestHandler(submitController)
+                .doReRoll(event);
     }
 
     private void handleCreateAvatarButton(ButtonInteractionEvent event) {
@@ -46,22 +58,19 @@ public class ButtonInteractionHandler {
 
         if (componentId.equals("wel:create-avatar")) {
             messageContent = "Our team has been notified about your request and we'll get in touch as soon as we're available. Feel free to share your thoughts here or simply wait for our contact.";
-            notificationTitle = "Create button from Welcome message";
+            notificationTitle = "Create Avatar click! Direct message";
         } else {
             messageContent = "We've sent you a private message please check your DMs.";
-            notificationTitle = componentId.equals("faq:create-avatar") ? "Create button from FAQ" : "Create button from create-avatar channel";
+            notificationTitle = componentId.equals("faq:create-avatar") ? "Create Avatar click! FAQ" : "Create Avatar click! create-avatar channel";
 
             if (componentId.equals("faq:create-avatar")) {
                 notificationChannel = "<#" + Config.getFaqChannel() + ">\n";
             } else if (componentId.equals("welch:create-avatar")) {
                 notificationChannel = "<#" + Config.getWelcomeChannel() + ">\n";
-                notificationTitle = "Create button from Welcome channel";
+                notificationTitle = "Create Avatar click! Welcome channel";
             } else {
                 notificationChannel = "<#" + Config.getCreateAvatarChannel() + ">\n";
             }
-
-            notificationChannel = componentId.equals("faq:create-avatar")
-                    ? "<#" + Config.getFaqChannel() + ">\n" : "<#" + Config.getCreateAvatarChannel() + ">\n";
 
             privateMessageSender.sendArtToUser(event, "Hi there!\n\n" +
                     "Our team has been notified about your request and we'll get in touch as soon as we're available. Feel free to share your thoughts here or simply wait for our contact.");

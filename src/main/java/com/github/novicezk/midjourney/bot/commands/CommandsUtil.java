@@ -11,7 +11,8 @@ import com.github.novicezk.midjourney.result.SubmitResultVO;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.command.GenericCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +51,28 @@ public class CommandsUtil {
             SubmitResultVO result,
             String postText,
             String prompt,
-            SlashCommandInteractionEvent event
+            GenericCommandInteractionEvent event
+    ) {
+        if (result.getCode() == ReturnCode.SUCCESS || result.getCode() == ReturnCode.IN_QUEUE) {
+            QueueManager.addToQueue(event.getGuild(), prompt, event.getUser().getId(), result.getResult(), postText);
+            event.getHook().sendMessageEmbeds(List.of(EmbedUtil.createEmbed("You're in the queue! \uD83E\uDD73"))).queue();
+        } else {
+            ErrorMessageHandler.sendMessage(
+                    event.getGuild(),
+                    event.getUser().getId(),
+                    "Critical miss! \uD83C\uDFB2\uD83E\uDD26 \nTry again or upload new image!",
+                    result.getCode() + " " + result.getDescription()
+            );
+            event.getHook().deleteOriginal().queue();
+            log.error("{}: {}", result.getCode(), result.getDescription());
+        }
+    }
+
+    public static void handleCommandResponse(
+            SubmitResultVO result,
+            String postText,
+            String prompt,
+            ButtonInteractionEvent event
     ) {
         if (result.getCode() == ReturnCode.SUCCESS || result.getCode() == ReturnCode.IN_QUEUE) {
             QueueManager.addToQueue(event.getGuild(), prompt, event.getUser().getId(), result.getResult(), postText);

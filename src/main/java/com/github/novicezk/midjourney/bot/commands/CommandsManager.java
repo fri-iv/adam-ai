@@ -31,7 +31,7 @@ public class CommandsManager extends ListenerAdapter {
     public CommandsManager(SubmitController submitController) {
         PrivateMessageSender privateMessageSender = new PrivateMessageSender();
 
-        this.buttonInteractionHandler = new ButtonInteractionHandler(privateMessageSender);
+        this.buttonInteractionHandler = new ButtonInteractionHandler(submitController, privateMessageSender);
         this.messageReceivedHandler = new MessageReceivedHandler(privateMessageSender);
         this.guildMemberJoinHandler = new GuildMemberJoinHandler(submitController);
         this.commandHandlers = initializeCommandHandlers(submitController);

@@ -15,7 +15,7 @@ public class ErrorMessageHandler {
         if (guild != null) {
             TextChannel channel = guild.getTextChannelById(Config.getSendingChannel());
             if (channel != null) {
-                channel.sendMessageEmbeds(List.of(EmbedUtil.createEmbedError("<@" + userId + "> \n\n" + text))).queue();
+                channel.sendMessageEmbeds(List.of(EmbedUtil.createEmbedWarning("<@" + userId + "> \n\n" + text))).queue();
 
                 // Save the reason
                 ErrorMessageStorage.saveErrorMessage(userId, failReason);

@@ -14,9 +14,11 @@ import com.github.novicezk.midjourney.result.SubmitResultVO;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
 import net.dv8tion.jda.api.utils.FileUpload;
 
 import java.util.List;
@@ -84,10 +86,31 @@ public class ContractCommandHandler implements CommandHandler {
             case "welcome-msg":
                 handleWelcomeMessageCommand(event);
                 break;
+            case "generate":
+                handeGenerateCommand(event);
+                break;
             default:
                 event.getHook().sendMessageEmbeds(List.of(EmbedUtil.createEmbed("Command not found"))).queue();
                 break;
         }
+    }
+
+    private void handeGenerateCommand(SlashCommandInteractionEvent event) {
+        String channelId = Config.getDebugChannel();
+        if (event.getGuild() == null || event.getGuild().getTextChannelById(channelId) == null) {
+            return;
+        }
+        event.getHook().sendMessageEmbeds(EmbedUtil.createEmbedSuccess("Done")).queue();
+
+        TextChannel channel = event.getGuild().getTextChannelById(channelId);
+        Button createButton = Button.success("ai-art-create", "Create Avatar \uD83D\uDCAB");
+        Button faqButton = Button.of(ButtonStyle.LINK, Config.getFaqChannelUrl(), "What's that?");
+        Button rerollButton = Button.secondary("re-roll", Emoji.fromUnicode("\uD83D\uDD04"));
+        Button deleteButton = Button.danger("delete", Emoji.fromUnicode("\uD83D\uDDD1\uFE0F"));
+
+        channel.sendMessage("postMessage\nhttps://cdn.discordapp.com/attachments/1231964533887598613/1235824177944989706/image.jpg")
+                .addActionRow(createButton, faqButton, rerollButton, deleteButton)
+                .queue();
     }
 
     private void handleWelcomeMessageCommand(SlashCommandInteractionEvent event) {

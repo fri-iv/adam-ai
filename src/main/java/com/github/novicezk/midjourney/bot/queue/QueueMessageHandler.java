@@ -13,6 +13,7 @@ import com.github.novicezk.midjourney.wss.handle.MessageHandler;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
 import net.dv8tion.jda.api.utils.FileUpload;
@@ -95,11 +96,13 @@ public class QueueMessageHandler extends MessageHandler {
         }
 
         Button createButton = Button.success("ai-art-create", "Create Avatar \uD83D\uDCAB");
-        Button faqButton = Button.of(ButtonStyle.LINK, Config.getFaqChannelUrl(), "Huh?");
-        Button deleteButton = Button.danger("delete", "\uD83D\uDDD1\uFE0F");
+        Button faqButton = Button.of(ButtonStyle.LINK, Config.getFaqChannelUrl(), "What's that?");
+        Button rerollButton = Button.secondary("re-roll", Emoji.fromUnicode("\uD83D\uDD04"));
+        Button deleteButton = Button.danger("delete", Emoji.fromUnicode("\uD83D\uDDD1\uFE0F"));
+
         channel.sendMessage(postMessage)
                 .addFiles(file)
-                .setActionRow(createButton, faqButton, deleteButton)
+                .setActionRow(createButton, faqButton, rerollButton, deleteButton)
                 .queue();
     }
 }
