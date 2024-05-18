@@ -44,7 +44,8 @@ public class AdamBotInitializer implements ApplicationRunner {
                             .build();
 
                     apiInstance.addEventListener(new BotEventManager(submitController));
-                    new TrelloWebhookRegister().registerWebhook();
+
+                    registerApi();
                 }
             }
         }
@@ -55,5 +56,9 @@ public class AdamBotInitializer implements ApplicationRunner {
             throw new IllegalStateException("JDA has not been initialized yet.");
         }
         return apiInstance;
+    }
+
+    private void registerApi() {
+        new TrelloWebhookRegister().registerWebhook();
     }
 }

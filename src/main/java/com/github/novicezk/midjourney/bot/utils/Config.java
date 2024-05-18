@@ -24,6 +24,7 @@ public class Config {
     private static final String SHOWCASES_CHANNEL = "SHOWCASES_CHANNEL";
     private static final String UPDATES_CHANNEL = "UPDATES_CHANNEL";
     private static final String RULES_CHANNEL = "RULES_CHANNEL";
+    private static final String PROJECTS_CATEGORY = "PROJECTS_CATEGORY";
 
     // Roles rarity IDs
     private static final String ROLE_COMMON = "COMMON";
@@ -53,6 +54,13 @@ public class Config {
     private static final String IMGBB_TOKEN = "IMGBB_TOKEN";
     private static final String MIXPANEL_PROJECT_TOKEN = "MIXPANEL_PROJECT_TOKEN";
 
+    // Trello tokens
+    private static final String TRELLO_API_KEY = "TRELLO_API_KEY";
+    private static final String TRELLO_SECRET = "TRELLO_SECRET";
+    private static final String TRELLO_TOKEN = "TRELLO_TOKEN";
+    private static final String TRELLO_BOARD = "TRELLO_BOARD";
+    private static final String TRELLO_CALLBACK_URL = "TRELLO_CALLBACK_URL";
+
     private static final String CONFIG_FILE = "adam-ai/config.properties";
     private static final Properties properties = new Properties();
 
@@ -62,6 +70,26 @@ public class Config {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static String getTrelloApiKey() {
+        return properties.getProperty(TRELLO_API_KEY);
+    }
+
+    public static String getTrelloSecret() {
+        return properties.getProperty(TRELLO_SECRET);
+    }
+
+    public static String getTrelloBoard() {
+        return properties.getProperty(TRELLO_BOARD);
+    }
+
+    public static String getTrelloToken() {
+        return properties.getProperty(TRELLO_TOKEN);
+    }
+
+    public static String getTrelloCallbackUrl() {
+        return properties.getProperty(TRELLO_CALLBACK_URL);
     }
 
     public static String getRoleCommon() {
@@ -178,6 +206,10 @@ public class Config {
 
     public static String getRulesChannel() {
         return properties.getProperty(RULES_CHANNEL);
+    }
+
+    public static String getProjectsCategory() {
+        return properties.getProperty(PROJECTS_CATEGORY);
     }
 
     public static String getMixpanelProjectToken() {

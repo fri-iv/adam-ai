@@ -11,6 +11,10 @@ public class ColorUtil {
         return Color.decode("#EF934D");
     }
 
+    public static Color getCuteColor() {
+        return Color.decode("#FF6DBF");
+    }
+
     public static Color getErrorColor() {
         return Color.decode("#ED4337");
     }

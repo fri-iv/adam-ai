@@ -161,6 +161,19 @@
             <artifactId>mixpanel-java</artifactId>
             <version>1.5.2</version>
         </dependency>
+
+<!--        Trello-->
+        <dependency>
+            <groupId>com.julienvey.trello</groupId>
+            <artifactId>trello-java-wrapper</artifactId>
+            <version>0.3.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-classic</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
     </dependencies>
 
     <repositories>
