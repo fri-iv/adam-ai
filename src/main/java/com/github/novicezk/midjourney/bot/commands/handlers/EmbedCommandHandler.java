@@ -9,8 +9,14 @@ import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.unions.GuildChannelUnion;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.interactions.commands.build.Commands;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 import java.awt.*;
+import java.util.Collections;
+import java.util.List;
 
 public class EmbedCommandHandler implements CommandHandler {
     public static final String COMMAND_NAME = "create-embed";
@@ -69,5 +75,16 @@ public class EmbedCommandHandler implements CommandHandler {
     @Override
     public boolean supports(String eventName) {
         return COMMAND_NAME.equals(eventName);
+    }
+
+    @Override
+    public List<CommandData> getCommandData() {
+        OptionData embedDescription = new OptionData(OptionType.STRING, "description", "String", true);
+        OptionData embedChannel = new OptionData(OptionType.CHANNEL, "channel", "Name", true);
+        OptionData embedTitle = new OptionData(OptionType.STRING, "title", "String");
+        OptionData embedFooter = new OptionData(OptionType.STRING, "footer", "String");
+        OptionData embedColor = new OptionData(OptionType.STRING, "color", "hex #000000");
+         return Collections.singletonList(Commands.slash(EmbedCommandHandler.COMMAND_NAME, "Admins only")
+                 .addOptions(embedChannel, embedDescription, embedTitle, embedFooter, embedColor));
     }
 }

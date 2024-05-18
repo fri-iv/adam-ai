@@ -1,6 +1,7 @@
 package com.github.novicezk.midjourney.bot;
 
-import com.github.novicezk.midjourney.bot.commands.CommandsManager;
+import com.github.novicezk.midjourney.bot.commands.BotEventManager;
+import com.github.novicezk.midjourney.bot.trello.TrelloWebhookRegister;
 import com.github.novicezk.midjourney.bot.utils.Config;
 import com.github.novicezk.midjourney.controller.SubmitController;
 import lombok.RequiredArgsConstructor;
@@ -39,10 +40,11 @@ public class AdamBotInitializer implements ApplicationRunner {
                                     GatewayIntent.GUILD_PRESENCES
                             )
                             .setMemberCachePolicy(MemberCachePolicy.ONLINE)
-                            .setActivity(Activity.playing("generating images"))
+                            .setActivity(Activity.playing("my best role"))
                             .build();
 
-                    apiInstance.addEventListener(new CommandsManager(submitController));
+                    apiInstance.addEventListener(new BotEventManager(submitController));
+                    new TrelloWebhookRegister().registerWebhook();
                 }
             }
         }

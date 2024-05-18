@@ -8,8 +8,13 @@ import com.github.novicezk.midjourney.bot.utils.EmbedUtil;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.interactions.commands.build.Commands;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class UploadImageCommandHandler implements CommandHandler {
@@ -63,5 +68,16 @@ public class UploadImageCommandHandler implements CommandHandler {
     @Override
     public boolean supports(String eventName) {
         return COMMAND_NAME.equals(eventName);
+    }
+
+    @Override
+    public List<CommandData> getCommandData() {
+        OptionData attachment = new OptionData(OptionType.ATTACHMENT, "main_image", "Choose your image", true);
+        OptionData attachment2 = new OptionData(OptionType.ATTACHMENT, "image2", "Optional image", false);
+        OptionData attachment3 = new OptionData(OptionType.ATTACHMENT, "image3", "Optional image", false);
+        OptionData attachment4 = new OptionData(OptionType.ATTACHMENT, "image4", "Optional image", false);
+        return Collections.singletonList(Commands
+                .slash(UploadImageCommandHandler.COMMAND_NAME, "Upload your image to generate something amazing!")
+                .addOptions(attachment, attachment2, attachment3, attachment4));
     }
 }

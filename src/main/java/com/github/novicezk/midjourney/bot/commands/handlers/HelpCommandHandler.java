@@ -4,6 +4,10 @@ import com.github.novicezk.midjourney.bot.utils.ColorUtil;
 import com.github.novicezk.midjourney.bot.utils.Config;
 import com.github.novicezk.midjourney.bot.utils.EmbedUtil;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.interactions.commands.build.Commands;
+
+import java.util.List;
 
 public class HelpCommandHandler implements CommandHandler {
     public static final String COMMAND_NAME = "help";
@@ -34,5 +38,10 @@ public class HelpCommandHandler implements CommandHandler {
     @Override
     public boolean supports(String eventName) {
         return COMMAND_NAME.equals(eventName);
+    }
+
+    @Override
+    public List<CommandData> getCommandData() {
+        return List.of(Commands.slash(HelpCommandHandler.COMMAND_NAME, "View all available bot commands"));
     }
 }

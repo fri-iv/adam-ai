@@ -11,6 +11,8 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.utils.FileUpload;
 
 import java.io.*;
@@ -210,5 +212,10 @@ public class GetLogCommandHandler implements CommandHandler {
     @Override
     public boolean supports(String eventName) {
         return COMMAND_NAME.equals(eventName);
+    }
+
+    @Override
+    public List<CommandData> getCommandData() {
+        return Collections.singletonList(Commands.slash(GetLogCommandHandler.COMMAND_NAME, "Logs file"));
     }
 }

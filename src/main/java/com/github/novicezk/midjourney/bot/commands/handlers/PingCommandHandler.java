@@ -2,7 +2,11 @@ package com.github.novicezk.midjourney.bot.commands.handlers;
 
 import com.github.novicezk.midjourney.bot.utils.Config;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.interactions.commands.build.Commands;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 public class PingCommandHandler implements CommandHandler {
@@ -32,5 +36,10 @@ public class PingCommandHandler implements CommandHandler {
     @Override
     public boolean supports(String eventName) {
         return COMMAND_NAME.equals(eventName);
+    }
+
+    @Override
+    public List<CommandData> getCommandData() {
+        return Collections.singletonList(Commands.slash(PingCommandHandler.COMMAND_NAME, "Default ping command(or?)"));
     }
 }

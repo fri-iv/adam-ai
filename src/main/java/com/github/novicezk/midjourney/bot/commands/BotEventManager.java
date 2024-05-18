@@ -21,14 +21,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
-public class CommandsManager extends ListenerAdapter {
+public class BotEventManager extends ListenerAdapter {
     private final ButtonInteractionHandler buttonInteractionHandler;
     private final GuildMemberJoinHandler guildMemberJoinHandler;
     private final GuildMemberLeaveHandler guildMemberLeaveHandler;
     private final MessageReceivedHandler messageReceivedHandler;
     private final List<CommandHandler> commandHandlers;
 
-    public CommandsManager(SubmitController submitController) {
+    public BotEventManager(SubmitController submitController) {
         PrivateMessageSender privateMessageSender = new PrivateMessageSender();
 
         this.buttonInteractionHandler = new ButtonInteractionHandler(submitController, privateMessageSender);
@@ -40,8 +40,10 @@ public class CommandsManager extends ListenerAdapter {
 
     private List<CommandHandler> initializeCommandHandlers(SubmitController submitController) {
         List<CommandHandler> handlers = new ArrayList<>();
+
         handlers.add(new ContractCommandHandler(submitController));
         handlers.add(new GenerateCommandHandler(submitController));
+        handlers.add(new CreateChannelCommandHandler());
         handlers.add(new UploadImageCommandHandler());
         handlers.add(new GetImagesCommandHandler());
         handlers.add(new AnalyticsCommandHandler());
@@ -50,6 +52,7 @@ public class CommandsManager extends ListenerAdapter {
         handlers.add(new EmbedCommandHandler());
         handlers.add(new PingCommandHandler());
         handlers.add(new HelpCommandHandler());
+
         return handlers;
     }
 
@@ -71,7 +74,10 @@ public class CommandsManager extends ListenerAdapter {
 
     @Override
     public void onGuildReady(@NotNull GuildReadyEvent event) {
-        List<CommandData> commandData = CommandInitializer.initializeCommands();
+        List<CommandData> commandData = new ArrayList<>();
+        for (CommandHandler handler : commandHandlers) {
+            commandData.addAll(handler.getCommandData());
+        }
         event.getGuild().updateCommands().addCommands(commandData).queue();
 
         // clear queue on start

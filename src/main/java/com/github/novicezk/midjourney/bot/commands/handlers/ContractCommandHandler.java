@@ -17,10 +17,15 @@ import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.interactions.commands.build.Commands;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
 import net.dv8tion.jda.api.utils.FileUpload;
 
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -257,5 +262,13 @@ public class ContractCommandHandler implements CommandHandler {
     @Override
     public boolean supports(String eventName) {
         return COMMAND_NAME.equals(eventName);
+    }
+
+    @Override
+    public List<CommandData> getCommandData() {
+        OptionData promptContract = new OptionData(OptionType.STRING, "prompt", "Prompt to use the contract command");
+        OptionData idContract = new OptionData(OptionType.STRING, "task", "Task id");
+        return Collections.singletonList(Commands
+                .slash(ContractCommandHandler.COMMAND_NAME, "Admins only").addOptions(promptContract, idContract));
     }
 }

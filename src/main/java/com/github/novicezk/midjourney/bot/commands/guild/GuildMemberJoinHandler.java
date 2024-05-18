@@ -100,7 +100,7 @@ public class GuildMemberJoinHandler {
     // send welcome message to DMs
     private void handleWelcomeDirectMessage(User user) {
         String welcomeMessage = String.format("""
-               Hey there! I'm Adam, the **Avatar Portal** guild's bot.
+               Hey there! I'm Adam, the **Avatar Studio** guild's bot.
                                \s
                Want to create your own avatar? Send me your ideas or reach out to our manager <@%s>
                Click the button and we'll get in touch ASAP. Enjoy your stay!

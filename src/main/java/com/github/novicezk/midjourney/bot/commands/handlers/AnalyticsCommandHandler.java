@@ -10,6 +10,10 @@ import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.unions.GuildChannelUnion;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.interactions.commands.build.Commands;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -72,5 +76,12 @@ public class AnalyticsCommandHandler implements CommandHandler {
     @Override
     public boolean supports(String eventName) {
         return COMMAND_NAME.equals(eventName);
+    }
+
+    @Override
+    public List<CommandData> getCommandData() {
+        OptionData analyticsChannel = new OptionData(OptionType.CHANNEL, "channel", "Name", true);
+        return Collections.singletonList(Commands.slash(AnalyticsCommandHandler.COMMAND_NAME, "Admins only")
+                .addOptions(analyticsChannel));
     }
 }

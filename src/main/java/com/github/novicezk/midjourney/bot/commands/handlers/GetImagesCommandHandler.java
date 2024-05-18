@@ -5,8 +5,11 @@ import com.github.novicezk.midjourney.bot.error.OnErrorAction;
 import com.github.novicezk.midjourney.bot.utils.EmbedUtil;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.requests.restaction.WebhookMessageCreateAction;
 
+import java.util.Collections;
 import java.util.List;
 
 public class GetImagesCommandHandler implements CommandHandler {
@@ -47,5 +50,10 @@ public class GetImagesCommandHandler implements CommandHandler {
     @Override
     public boolean supports(String eventName) {
         return COMMAND_NAME.equals(eventName);
+    }
+
+    @Override
+    public List<CommandData> getCommandData() {
+        return Collections.singletonList(Commands.slash(GetImagesCommandHandler.COMMAND_NAME, "Get your currently uploaded images."));
     }
 }

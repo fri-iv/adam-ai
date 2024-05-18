@@ -7,6 +7,8 @@ import com.github.novicezk.midjourney.bot.utils.Config;
 import com.github.novicezk.midjourney.bot.utils.EmbedUtil;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.interactions.commands.build.Commands;
 
 import java.util.Comparator;
 import java.util.List;
@@ -59,5 +61,11 @@ public class QueueCommandHandler implements CommandHandler {
     @Override
     public boolean supports(String eventName) {
         return COMMAND_NAME_GET.equals(eventName) || COMMAND_NAME_CLEAR.equals(eventName);
+    }
+
+    @Override
+    public List<CommandData> getCommandData() {
+        return List.of(Commands.slash(QueueCommandHandler.COMMAND_NAME_GET, "Check the current queue status."),
+                Commands.slash(QueueCommandHandler.COMMAND_NAME_CLEAR, "Admins only"));
     }
 }

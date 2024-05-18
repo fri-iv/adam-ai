@@ -126,8 +126,8 @@ public class PromptGenerator {
         if (characterStrength != CharacterStrength.COMMON) {
             messageBuilder
                     .append("\n**Strength:** ").append(characterStrength.getStrengthEmoji()).append("\n")
-                    .append("**Rarity Level:** <@&").append(characterStrength.getRoleId()).append(">\n")
-                    .append("**Class Name:** ").append(characterClass.getName()).append("\n");
+                    .append("**Class Name:** ").append(characterClass.getName()).append("\n")
+                    .append("**Rarity Level:** <@&").append(characterStrength.getRoleId()).append(">\n");
         } else {
             messageBuilder
                     .append("\n**Rarity Level:** <@&").append(characterStrength.getRoleId()).append(">\n");
