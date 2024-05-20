@@ -10,7 +10,7 @@ public class TrelloWebhookRegister {
     public void registerWebhook() {
         HttpServer server;
         try {
-            server = HttpServer.create(new InetSocketAddress(8000), 0);
+            server = HttpServer.create(new InetSocketAddress(22), 0);
             server.createContext("/webhook", new WebhookHandler());
             server.setExecutor(null); // creates a default executor
             server.start();
