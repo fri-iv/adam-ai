@@ -1,5 +1,6 @@
 package com.github.novicezk.midjourney.bot.commands.handlers;
 
+import com.github.novicezk.midjourney.bot.commands.CommandsUtil;
 import com.github.novicezk.midjourney.bot.error.OnErrorAction;
 import com.github.novicezk.midjourney.bot.trello.TrelloCardFetcher;
 import com.github.novicezk.midjourney.bot.utils.Config;
@@ -25,6 +26,12 @@ public class CreateProjectCommandHandler implements CommandHandler {
     @Override
     public void handle(SlashCommandInteractionEvent event) {
         event.deferReply().setEphemeral(true).queue();
+
+        Member member = event.getMember();
+        if (member == null || !CommandsUtil.isUserAuthorized(member)) {
+            OnErrorAction.onMissingRoleMessage(event);
+            return;
+        }
 
         Guild guild = event.getGuild();
         OptionMapping trelloOption = event.getOption("trello-link");
@@ -55,7 +62,7 @@ public class CreateProjectCommandHandler implements CommandHandler {
                 .setEphemeral(true)
                 .queue();
 
-        category.createTextChannel(String.format("%s-%s", trelloCard.getIdShort(), trelloCard.getName()))
+        category.createTextChannel(String.format("%s・%s", trelloCard.getIdShort(), trelloCard.getName()))
                 .addPermissionOverride(customer, Permission.VIEW_CHANNEL.getRawValue(), 0)
                 .addPermissionOverride(artist, Permission.VIEW_CHANNEL.getRawValue(), 0)
                 .queue(channel -> {

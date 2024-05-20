@@ -14,6 +14,7 @@ import net.dv8tion.jda.api.entities.channel.concrete.Category;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
 import java.io.*;
+import java.util.regex.Pattern;
 
 @Slf4j
 public class WebhookHandler implements HttpHandler {
@@ -25,7 +26,6 @@ public class WebhookHandler implements HttpHandler {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        log.debug("Received request {}", exchange.getRequestMethod());
         if ("HEAD".equals(exchange.getRequestMethod())) {
             // Handle the webhook payload
             // For simplicity, just respond with 200 OK
@@ -43,8 +43,7 @@ public class WebhookHandler implements HttpHandler {
     }
 
     private void handlePost(HttpExchange exchange) throws IOException {
-        InputStream requestBody = exchange.getRequestBody();
-        try {
+        try (InputStream requestBody = exchange.getRequestBody()) {
             TrelloModel payload = objectMapper.readValue(requestBody, TrelloModel.class);
 
             if (payload != null) {
@@ -53,8 +52,6 @@ public class WebhookHandler implements HttpHandler {
         } catch (Exception e) {
             log.error("Failed to process webhook payload", e);
             exchange.sendResponseHeaders(500, -1);
-        } finally {
-            requestBody.close();
         }
     }
 
@@ -78,8 +75,12 @@ public class WebhookHandler implements HttpHandler {
             return;
         }
 
+        // Assuming cardId is an integer or long
+        String cardIdStr = String.valueOf(cardId);
+        String regexPattern = "^" + Pattern.quote(cardIdStr) + "・.*";
+        Pattern pattern = Pattern.compile(regexPattern);
         for (TextChannel channel : projectsCategory.getTextChannels()) {
-            if (channel.getName().contains(String.valueOf(cardId))) {
+            if (pattern.matcher(channel.getName()).matches()) {
                 channel.sendMessageEmbeds(EmbedUtil.createEmbedCute(String.format("Project status updated to: **%s**.", status)))
                         .queue();
             }

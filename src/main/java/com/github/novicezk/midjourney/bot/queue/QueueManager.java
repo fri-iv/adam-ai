@@ -41,7 +41,7 @@ public class QueueManager {
         queueMap.clear();
 
         // uncomment when need
-//        notifyQueueClearedChannel(guild);
+        notifyQueueClearedChannel(guild);
     }
 
     public static boolean reachLimitQueue(String userId) {
@@ -73,14 +73,14 @@ public class QueueManager {
             return;
         }
 
-        TextChannel channel = guild.getTextChannelById(Config.getQueueChannel());
+        TextChannel channel = guild.getTextChannelById(Config.getLogsChannel());
         if (channel != null) {
             sendQueueClearedMessage(channel);
         }
     }
 
     private static void sendQueueClearedMessage(TextChannel channel) {
-        String queueClearedText = "Adam has been restarted. The queue is clear now!";
+        String queueClearedText = "Adam Bot has been restarted. The queue is clear now!";
 
         channel.retrieveMessageById(channel.getLatestMessageId()).queue(lastMessage -> {
             MessageEmbed embed = lastMessage.getEmbeds().get(0);
