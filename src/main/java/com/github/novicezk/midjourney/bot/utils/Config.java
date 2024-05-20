@@ -34,9 +34,11 @@ public class Config {
     private static final String ROLE_EPIC = "EPIC";
 
     // Roles
-    private static final String ROLE_VANGUARD = "VANGUARD";
     private static final String ROLE_VERIFIED_CLIENT = "VERIFIED_CLIENT";
+    private static final String ROLE_LINKS_ALLOWED = "LINKS_ALLOWED";
+    private static final String ROLE_VANGUARD = "VANGUARD";
     private static final String ROLE_TESTER = "TESTER";
+    private static final String ROLE_MUTED = "MUTED";
 
     // Links to channels
     private static final String FAQ_CHANNEL_URL = "FAQ_CHANNEL_URL";
@@ -122,6 +124,14 @@ public class Config {
 
     public static String getRoleTester() {
         return properties.getProperty(ROLE_TESTER);
+    }
+
+    public static String getRoleMuted() {
+        return properties.getProperty(ROLE_MUTED);
+    }
+
+    public static String getRoleLinksAllowed() {
+        return properties.getProperty(ROLE_LINKS_ALLOWED);
     }
 
     public static String getAppVersion() {

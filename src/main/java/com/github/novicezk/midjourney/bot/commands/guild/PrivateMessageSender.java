@@ -63,6 +63,19 @@ public class PrivateMessageSender {
         });
     }
 
+    public void notifyMutedMember(MessageReceivedEvent event) {
+        Member member = event.getMember();
+        if (member != null) {
+            User user = member.getUser();
+            user.openPrivateChannel().queue(privateChannel ->
+                    privateChannel.sendMessage(String.format(
+                                    "You've been muted in the guild for violating our rules. To be unmuted, please contact <@%s>",
+                                    Config.getContactManagerId()
+                            ))
+                            .queue());
+        }
+    }
+
     private List<FileUpload> getFilesFromAttachments(List<Message.Attachment> attachments) {
         List<FileUpload> files = new ArrayList<>();
         for (Message.Attachment attachment : attachments) {

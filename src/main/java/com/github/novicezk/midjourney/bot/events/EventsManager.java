@@ -15,6 +15,7 @@ import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
@@ -57,6 +58,16 @@ public class EventsManager {
 
         Guild guild = AdamBotInitializer.getApiInstance().getGuildById(Config.getGuildId());
         sendLogToDiscord(guild, null, null, errorMessage, ColorUtil.getErrorColor());
+    }
+
+    public static void onMutedMember(MessageReceivedEvent event) {
+        String errorMessage = "User muted:\n\n" + event.getMessage().getContentRaw();
+        log.info(errorMessage);
+
+        String id = event.getAuthor().getId();
+        String username = event.getAuthor().getName();
+
+        sendLogToDiscord(event.getGuild(), id, username, errorMessage, ColorUtil.getErrorColor());
     }
 
     private static void sendLogToDiscord(@Nullable Guild guild, String userId, String username, String text) {
