@@ -48,6 +48,7 @@ public class BotEventManager extends ListenerAdapter {
         handlers.add(new GenerateCommandHandler(submitController));
         handlers.add(new MuteCommandHandler(privateMessageSender));
         handlers.add(new CreateProjectCommandHandler());
+        handlers.add(new DeleteMessageCommandHandler());
         handlers.add(new UploadImageCommandHandler());
         handlers.add(new GetImagesCommandHandler());
         handlers.add(new AnalyticsCommandHandler());
