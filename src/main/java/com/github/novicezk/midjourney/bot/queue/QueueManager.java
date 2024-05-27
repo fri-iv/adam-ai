@@ -4,7 +4,6 @@ import com.github.novicezk.midjourney.bot.utils.Config;
 import com.github.novicezk.midjourney.bot.utils.EmbedUtil;
 import com.github.novicezk.midjourney.bot.utils.SeasonTracker;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
 import java.sql.Timestamp;
@@ -80,15 +79,8 @@ public class QueueManager {
     }
 
     private static void sendQueueClearedMessage(TextChannel channel) {
-        String queueClearedText = "Adam Bot has been restarted. The queue is clear now!";
-
-        channel.retrieveMessageById(channel.getLatestMessageId()).queue(lastMessage -> {
-            MessageEmbed embed = lastMessage.getEmbeds().get(0);
-            if (embed != null && !queueClearedText.equals(embed.getDescription())) {
-                channel.sendMessageEmbeds(List.of(EmbedUtil.createEmbed(queueClearedText)))
-                        .queue();
-            }
-        });
+        String queueClearedText = "Adam Bot has been restarted, the queue is clear now.";
+        channel.sendMessageEmbeds(List.of(EmbedUtil.createEmbed(queueClearedText))).queue();
     }
 
     private static String cleanPrompt(String prompt) {

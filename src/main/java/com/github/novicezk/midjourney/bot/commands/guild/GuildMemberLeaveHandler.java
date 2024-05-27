@@ -26,9 +26,9 @@ public class GuildMemberLeaveHandler {
 
         String leaveReason;
         if (event.getGuild().retrieveBanList().stream().anyMatch(ban -> ban.getUser().getId().equals(userId))) {
-            leaveReason = "The user has been banned";
+            leaveReason = "User has been banned";
         } else {
-            leaveReason = "The user left the guild";
+            leaveReason = "User left the guild";
         }
 
         leaveReason += formattedDuration;
