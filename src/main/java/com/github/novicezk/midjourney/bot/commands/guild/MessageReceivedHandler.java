@@ -51,7 +51,7 @@ public class MessageReceivedHandler {
                 if (muteRole != null) {
                     event.getGuild().addRoleToMember(member, muteRole).queue();
 
-                    privateMessageSender.notifyMutedMember(event);
+                    privateMessageSender.notifyMutedMember(event.getMember());
                     EventsManager.onMutedMember(event);
                 }
             }

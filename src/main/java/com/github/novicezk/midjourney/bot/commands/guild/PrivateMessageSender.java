@@ -63,8 +63,7 @@ public class PrivateMessageSender {
         });
     }
 
-    public void notifyMutedMember(MessageReceivedEvent event) {
-        Member member = event.getMember();
+    public void notifyMutedMember(Member member) {
         if (member != null) {
             User user = member.getUser();
             user.openPrivateChannel().queue(privateChannel ->

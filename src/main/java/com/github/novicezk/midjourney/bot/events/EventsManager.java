@@ -10,6 +10,7 @@ import com.github.novicezk.midjourney.bot.utils.Config;
 import com.github.novicezk.midjourney.bot.utils.EmbedUtil;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
@@ -66,6 +67,16 @@ public class EventsManager {
 
         String id = event.getAuthor().getId();
         String username = event.getAuthor().getName();
+
+        sendLogToDiscord(event.getGuild(), id, username, errorMessage, ColorUtil.getErrorColor());
+    }
+
+    public static void onMutedMember(SlashCommandInteractionEvent event, Member member, String reason) {
+        String errorMessage = String.format("User muted for the reason: %s", reason);
+        log.info(errorMessage);
+
+        String id = member.getId();
+        String username = member.getEffectiveName();
 
         sendLogToDiscord(event.getGuild(), id, username, errorMessage, ColorUtil.getErrorColor());
     }

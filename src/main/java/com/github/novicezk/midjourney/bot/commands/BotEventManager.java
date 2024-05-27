@@ -32,17 +32,21 @@ public class BotEventManager extends ListenerAdapter {
         PrivateMessageSender privateMessageSender = new PrivateMessageSender();
 
         this.buttonInteractionHandler = new ButtonInteractionHandler(submitController, privateMessageSender);
+        this.commandHandlers = initializeCommandHandlers(submitController, privateMessageSender);
         this.messageReceivedHandler = new MessageReceivedHandler(privateMessageSender);
         this.guildMemberJoinHandler = new GuildMemberJoinHandler(submitController);
-        this.commandHandlers = initializeCommandHandlers(submitController);
         this.guildMemberLeaveHandler = new GuildMemberLeaveHandler();
     }
 
-    private List<CommandHandler> initializeCommandHandlers(SubmitController submitController) {
+    private List<CommandHandler> initializeCommandHandlers(
+            SubmitController submitController,
+            PrivateMessageSender privateMessageSender
+    ) {
         List<CommandHandler> handlers = new ArrayList<>();
 
         handlers.add(new ContractCommandHandler(submitController));
         handlers.add(new GenerateCommandHandler(submitController));
+        handlers.add(new MuteCommandHandler(privateMessageSender));
         handlers.add(new CreateProjectCommandHandler());
         handlers.add(new UploadImageCommandHandler());
         handlers.add(new GetImagesCommandHandler());
