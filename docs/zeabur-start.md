@@ -20,7 +20,7 @@
 11. 点击环境变量，点击编辑原始环境变量，添加你需要的环境变量
 12. 关于环境变量，与 `Railway` 稍有不同，需要把 `.` 和 `-` 全部换成 `_`，例如如下格式
     ```properties
-    PORT=8000
+    PORT=8081
     mj_discord_guild_id=xxx
     mj_discord_channel_id=xxx
     mj_discord_user_token=xxx

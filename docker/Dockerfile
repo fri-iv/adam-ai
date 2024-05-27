@@ -10,7 +10,7 @@ ENV JAVA_OPTS -XX:MaxRAMPercentage=85 -Djava.awt.headless=true -XX:+HeapDumpOnOu
  -XX:MaxGCPauseMillis=20 -XX:InitiatingHeapOccupancyPercent=35 -Xlog:gc:file=/home/spring/logs/gc.log \
  -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=9876 -Dcom.sun.management.jmxremote.ssl=false \
  -Dcom.sun.management.jmxremote.authenticate=false -Dlogging.file.path=/home/spring/logs \
- -Dserver.port=8000 -Duser.timezone=Asia/Shanghai
+ -Dserver.port=8081 -Duser.timezone=Asia/Shanghai
 
 RUN groupadd -g 1000 ${group} \
 	&& useradd -d "$SPRING_HOME" -u 1000 -g 1000 -m -s /bin/bash ${user} \
@@ -25,7 +25,7 @@ USER ${user}
 
 WORKDIR $SPRING_HOME
 
-EXPOSE 8000 9876
+EXPOSE 8081 9876
 
 ENTRYPOINT ["bash","-c","java $JAVA_OPTS -cp ./app org.springframework.boot.loader.JarLauncher"]
 

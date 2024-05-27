@@ -24,7 +24,7 @@ public class PaymentCommandHandler implements CommandHandler {
                         If you prefer to use debit or credit cards or cannot use **PayPal**, visit our **ko-fi** page %s. Keep in mind that ko-fi charges an additional fee of **5%% + $0.30**. To confirm the correct donation amount, use the `/kofi-price` command.
 
                         For cryptocurrency payments, please contact <@%s> for the wallet address.
-              \s""",
+              """,
                 Config.getContactManagerId(),
                 Config.getPaypalEmail(),
                 Config.getKofiPage(),

@@ -51,6 +51,5 @@ public class KofiCommandHandler implements CommandHandler {
         return Collections.singletonList(Commands
                 .slash(COMMAND_NAME, "Calculate the ko-fi price including their fees")
                 .addOptions(amount));
-
     }
 }

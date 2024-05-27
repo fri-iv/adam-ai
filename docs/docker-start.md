@@ -4,7 +4,7 @@
 2. Start the container and map the config directory
 ```shell
 docker run -d --name midjourney-proxy \
- -p 8000:8000 \
+ -p 8081:8080 \
  -v /xxx/xxx/config:/home/spring/config \
  novicezk/midjourney-proxy:2.6.1
 ```
@@ -13,7 +13,7 @@ docker run -d --name midjourney-proxy \
 Attachment: Without mapping the config directory, set parameters directly in the startup command
 ```shell
 docker run -d --name midjourney-proxy \
- -p 8000:8000 \
+ -p 8081:8080 \
  -e mj.discord.guild-id=xxx \
  -e mj.discord.channel-id=xxx \
  -e mj.discord.user-token=xxx \
