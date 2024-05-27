@@ -63,6 +63,10 @@ public class Config {
     private static final String TRELLO_BOARD = "TRELLO_BOARD";
     private static final String TRELLO_CALLBACK_URL = "TRELLO_CALLBACK_URL";
 
+    // Contact details
+    private static final String PAYPAL_EMAIL = "PAYPAL_EMAIL";
+    private static final String KOFI_PAGE = "KOFI_PAGE";
+
     private static final String CONFIG_FILE = "adam-ai/config.properties";
     private static final Properties properties = new Properties();
 
@@ -224,5 +228,13 @@ public class Config {
 
     public static String getMixpanelProjectToken() {
         return properties.getProperty(MIXPANEL_PROJECT_TOKEN);
+    }
+
+    public static String getPaypalEmail() {
+        return properties.getProperty(PAYPAL_EMAIL);
+    }
+
+    public static String getKofiPage() {
+        return properties.getProperty(KOFI_PAGE);
     }
 }

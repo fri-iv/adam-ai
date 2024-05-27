@@ -52,11 +52,13 @@ public class BotEventManager extends ListenerAdapter {
         handlers.add(new UploadImageCommandHandler());
         handlers.add(new GetImagesCommandHandler());
         handlers.add(new AnalyticsCommandHandler());
+        handlers.add(new PaymentCommandHandler());
         handlers.add(new GetLogCommandHandler());
         handlers.add(new QueueCommandHandler());
         handlers.add(new EmbedCommandHandler());
         handlers.add(new PingCommandHandler());
         handlers.add(new HelpCommandHandler());
+        handlers.add(new KofiCommandHandler());
 
         return handlers;
     }
