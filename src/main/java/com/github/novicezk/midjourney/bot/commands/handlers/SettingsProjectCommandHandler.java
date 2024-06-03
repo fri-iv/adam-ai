@@ -86,10 +86,7 @@ public class SettingsProjectCommandHandler implements CommandHandler {
             title = "Payment received!";
         }
         event.getHook().sendMessageEmbeds(EmbedUtil.createEmbedSuccess("done")).queue();
-        channel.sendMessageEmbeds(EmbedUtil.createEmbedCute(
-                title,
-                price
-        )).queue();
+        channel.sendMessageEmbeds(EmbedUtil.createEmbedSuccess(title, price)).queue();
     }
 
     @Override

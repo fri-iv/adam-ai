@@ -51,7 +51,7 @@ public class BotEventManager extends ListenerAdapter {
         handlers.add(new CreateProjectCommandHandler());
         handlers.add(new DeleteMessageCommandHandler());
         handlers.add(new UploadImageCommandHandler());
-        handlers.add(new PinChannelCommandHandler());
+        handlers.add(new PingChannelCommandHandler());
         handlers.add(new GetImagesCommandHandler());
         handlers.add(new AnalyticsCommandHandler());
         handlers.add(new PaymentCommandHandler());
@@ -62,6 +62,7 @@ public class BotEventManager extends ListenerAdapter {
         handlers.add(new PingCommandHandler());
         handlers.add(new HelpCommandHandler());
         handlers.add(new KofiCommandHandler());
+        handlers.add(new InfoCommandHandler());
         handlers.add(new PinCommandHandler());
 
         return handlers;

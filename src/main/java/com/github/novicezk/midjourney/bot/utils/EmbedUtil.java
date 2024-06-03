@@ -46,15 +46,15 @@ public class EmbedUtil {
     }
 
     public static MessageEmbed createEmbedCute(String description) {
-        return createEmbedCute(null, description);
-    }
-
-    public static MessageEmbed createEmbedCute(String title, String description) {
-        return createEmbed(title, description, null, ColorUtil.getCuteColor());
+        return createEmbed(null, description, null, ColorUtil.getCuteColor());
     }
 
     public static MessageEmbed createEmbedError(String description) {
         return createEmbed(null, description, null, ColorUtil.getErrorColor());
+    }
+
+    public static MessageEmbed createEmbedSuccess(String title, String description) {
+        return createEmbed(null, description, null, ColorUtil.getSuccessColor());
     }
 
     public static MessageEmbed createEmbedSuccess(String description) {
@@ -63,9 +63,5 @@ public class EmbedUtil {
 
     public static MessageEmbed createEmbedWithFooter(String title, String description, String footer) {
         return createEmbed(title, description, footer, ColorUtil.getDefaultColor());
-    }
-
-    public static MessageEmbed createEmbedWithFooter(String description, String footer) {
-        return createEmbed(null, description, footer, ColorUtil.getDefaultColor());
     }
 }
