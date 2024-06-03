@@ -17,8 +17,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class DeleteMessageCommandHandler implements CommandHandler {
-    public static final String COMMAND_NAME = "delete-message";
+public class PinCommandHandler implements CommandHandler {
+    public static final String COMMAND_NAME = "pin-message";
     private static final Pattern MESSAGE_LINK_PATTERN = Pattern.compile("https://discord\\.com/channels/(\\d+)/(\\d+)/(\\d+).*");
 
     @Override
@@ -31,8 +31,8 @@ public class DeleteMessageCommandHandler implements CommandHandler {
             return;
         }
 
-        OptionMapping messageLink = event.getOption("message-link");
         Guild guild = event.getGuild();
+        OptionMapping messageLink = event.getOption("message-link");
 
         if (guild == null || messageLink == null) {
             OnErrorAction.onMissingFieldMessage(event);
@@ -42,20 +42,16 @@ public class DeleteMessageCommandHandler implements CommandHandler {
         Matcher matcher = MESSAGE_LINK_PATTERN.matcher(messageLink.getAsString());
         if (matcher.find()) {
             String channelId = matcher.group(2);
-            guild.getTextChannelById(channelId).retrieveMessageById(matcher.group(3)).queue(
-                    message -> message.delete().queue(
-                            success -> event.getHook().sendMessageEmbeds(EmbedUtil.createEmbedSuccess("done")).queue(),
-                            failure -> {
-                                event.getHook()
-                                        .sendMessageEmbeds(EmbedUtil.createEmbedWarning("Failed to delete message. Make sure you have permission to delete messages in that channel."))
-                                        .queue();
-                            }
+            String messageId = matcher.group(3);
 
+            guild.getTextChannelById(channelId).retrieveMessageById(messageId).queue(
+                    message -> message.pin().queue(
+                            success -> event.getHook().sendMessageEmbeds(EmbedUtil.createEmbed("Message successfully pinned.")).queue(),
+                            failure -> event.getHook().sendMessageEmbeds(EmbedUtil.createEmbed("Failed to pin message. Make sure you have permission to pin messages in that channel.")).queue()
                     ),
-                    notFound -> event.getHook()
-                            .sendMessageEmbeds(EmbedUtil.createEmbedWarning("Message not found. Make sure you've provided the correct message link."))
-                            .queue()
+                    notFound -> event.getHook().sendMessageEmbeds(EmbedUtil.createEmbed("Message not found. Make sure you've provided the correct message link.")).queue()
             );
+
         } else {
             event.getHook()
                     .sendMessageEmbeds(EmbedUtil.createEmbedWarning("Invalid message link format. Please provide a valid Discord message link."))
@@ -70,7 +66,7 @@ public class DeleteMessageCommandHandler implements CommandHandler {
 
     @Override
     public List<CommandData> getCommandData() {
-        OptionData link = new OptionData(OptionType.STRING, "message-link", "Copy message link to delete", true);
+        OptionData link = new OptionData(OptionType.STRING, "message-link", "Copy message link to pin", true);
         return Collections.singletonList(Commands
                 .slash(COMMAND_NAME, "Admins only")
                 .addOptions(link));

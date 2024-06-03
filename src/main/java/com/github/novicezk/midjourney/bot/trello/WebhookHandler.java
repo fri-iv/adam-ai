@@ -81,7 +81,7 @@ public class WebhookHandler implements HttpHandler {
         Pattern pattern = Pattern.compile(regexPattern);
         for (TextChannel channel : projectsCategory.getTextChannels()) {
             if (pattern.matcher(channel.getName()).matches()) {
-                channel.sendMessageEmbeds(EmbedUtil.createEmbedCute(String.format("Project status updated to: **%s**.", status)))
+                channel.sendMessageEmbeds(EmbedUtil.createEmbedCute(String.format("Project status updated to: **%s**", status)))
                         .queue();
             }
         }

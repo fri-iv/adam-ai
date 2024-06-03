@@ -7,7 +7,7 @@ import java.net.InetSocketAddress;
 
 public class TrelloWebhookRegister {
 
-    public void registerWebhook() {
+    public static void registerWebhook() {
         HttpServer server;
         try {
             server = HttpServer.create(new InetSocketAddress(8000), 0);

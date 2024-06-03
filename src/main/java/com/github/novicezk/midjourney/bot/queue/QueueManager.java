@@ -37,10 +37,15 @@ public class QueueManager {
     }
 
     public static void clearQueue(Guild guild) {
+        clearQueue(guild, false);
+    }
+
+    public static void clearQueue(Guild guild, boolean fromStart) {
         queueMap.clear();
 
-        // uncomment when need
-        notifyQueueClearedChannel(guild);
+        if (fromStart) {
+            notifyQueueClearedChannel(guild);
+        }
     }
 
     public static boolean reachLimitQueue(String userId) {

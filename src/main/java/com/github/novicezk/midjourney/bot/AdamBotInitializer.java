@@ -59,6 +59,6 @@ public class AdamBotInitializer implements ApplicationRunner {
     }
 
     private void registerApi() {
-        new TrelloWebhookRegister().registerWebhook();
+        TrelloWebhookRegister.registerWebhook();
     }
 }

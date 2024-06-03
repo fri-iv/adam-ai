@@ -1,5 +1,6 @@
 package com.github.novicezk.midjourney.bot.commands.guild;
 
+import com.github.novicezk.midjourney.bot.commands.util.BotUtil;
 import com.github.novicezk.midjourney.bot.events.EventsManager;
 import com.github.novicezk.midjourney.bot.utils.Config;
 import lombok.extern.slf4j.Slf4j;
@@ -23,8 +24,10 @@ public class MessageReceivedHandler {
     }
 
     public void onMessageReceived(MessageReceivedEvent event) {
-        boolean isPrivate = event.getChannelType().equals(ChannelType.PRIVATE) && !event.getAuthor().getId().equals(event.getJDA().getSelfUser().getId());
-        boolean forbiddenMessageChannels = !event.getAuthor().isBot()
+        boolean isPrivate = event.getChannelType().equals(ChannelType.PRIVATE)
+                && !event.getAuthor().getId().equals(event.getJDA().getSelfUser().getId());
+
+        boolean forbiddenMessageChannels = !BotUtil.isAdamBot(event.getAuthor().getId())
                 && (event.getChannel().getId().equals(Config.getArtsChannel())
                 || event.getChannel().getId().equals(Config.getQueueChannel())
                 || event.getChannel().getId().equals(Config.getFaqChannel()));

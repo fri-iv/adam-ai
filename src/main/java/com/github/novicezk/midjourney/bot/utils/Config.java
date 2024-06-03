@@ -9,6 +9,9 @@ public class Config {
     private static final String SEASON_VERSION = "SEASON_VERSION";
     private static final String APP_VERSION = "APP_VERSION";
 
+    // Version
+    private static final String BOT_ID = "BOT_ID";
+
     // Queue settings
     private static final String QUEUE_LIMIT_PER_PERSON = "QUEUE_LIMIT_PER_PERSON";
 
@@ -76,6 +79,10 @@ public class Config {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static String getBotId() {
+        return properties.getProperty(BOT_ID);
     }
 
     public static String getTrelloApiKey() {

@@ -56,9 +56,11 @@ public class BotEventManager extends ListenerAdapter {
         handlers.add(new GetLogCommandHandler());
         handlers.add(new QueueCommandHandler());
         handlers.add(new EmbedCommandHandler());
+        handlers.add(new PriceCommandHandler());
         handlers.add(new PingCommandHandler());
         handlers.add(new HelpCommandHandler());
         handlers.add(new KofiCommandHandler());
+        handlers.add(new PinCommandHandler());
 
         return handlers;
     }
@@ -88,7 +90,7 @@ public class BotEventManager extends ListenerAdapter {
         event.getGuild().updateCommands().addCommands(commandData).queue();
 
         // clear queue on start
-        QueueManager.clearQueue(event.getGuild());
+        QueueManager.clearQueue(event.getGuild(), true);
     }
 
     @Override
