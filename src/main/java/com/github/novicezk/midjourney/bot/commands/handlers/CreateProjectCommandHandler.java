@@ -2,7 +2,7 @@ package com.github.novicezk.midjourney.bot.commands.handlers;
 
 import com.github.novicezk.midjourney.bot.commands.CommandsUtil;
 import com.github.novicezk.midjourney.bot.error.OnErrorAction;
-import com.github.novicezk.midjourney.bot.trello.TrelloCardFetcher;
+import com.github.novicezk.midjourney.bot.trello.TrelloManager;
 import com.github.novicezk.midjourney.bot.utils.Config;
 import com.github.novicezk.midjourney.bot.utils.EmbedUtil;
 import com.julienvey.trello.domain.Card;
@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.Category;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -37,8 +38,9 @@ public class CreateProjectCommandHandler implements CommandHandler {
         OptionMapping trelloOption = event.getOption("trello-link");
         OptionMapping customerOption = event.getOption("customer");
         OptionMapping artistOption = event.getOption("artist");
+        OptionMapping priceOption = event.getOption("price");
 
-        if (trelloOption == null || customerOption == null || artistOption == null || guild == null) {
+        if (trelloOption == null || customerOption == null || artistOption == null || guild == null || priceOption == null) {
             OnErrorAction.onMissingFieldMessage(event);
             return;
         }
@@ -48,8 +50,7 @@ public class CreateProjectCommandHandler implements CommandHandler {
         Member customer = customerOption.getAsMember();
         Member artist = artistOption.getAsMember();
 
-        TrelloCardFetcher fetcher = new TrelloCardFetcher();
-        Card trelloCard = fetcher.getTrelloCardByLink(trelloLink);
+        Card trelloCard = TrelloManager.getTrelloCardByLink(trelloLink);
 
         Category category = guild.getCategoryById(categoryId);
         if (category == null || customer == null || artist == null) {
@@ -80,7 +81,27 @@ public class CreateProjectCommandHandler implements CommandHandler {
                                     Config.getContactManagerId()
                             ))
                             .queue();
+
+                    updateChannelTopic(channel, trelloCard, priceOption.getAsDouble());
                 });
+
+    }
+
+    private void updateChannelTopic(TextChannel channel, Card trelloCard, double price) {
+        String columnName = TrelloManager.getColumnByCard(trelloCard).getName();
+        String topic = String.format("""
+                Project status: **%s**
+                
+                Total price: **$%,.2f**
+                Already paid: **$0**
+                Remaining balance: **$%,.2f**
+                """,
+                columnName,
+                price,
+                price
+        );
+
+        channel.getManager().setTopic(topic).queue();
     }
 
     @Override
@@ -93,9 +114,10 @@ public class CreateProjectCommandHandler implements CommandHandler {
         OptionData trello = new OptionData(OptionType.STRING, "trello-link", "https://trello.com/");
         OptionData customer = new OptionData(OptionType.MENTIONABLE, "customer", "Participants");
         OptionData artist = new OptionData(OptionType.MENTIONABLE, "artist", "Participants");
+        OptionData price = new OptionData(OptionType.NUMBER, "price", "Project price");
 
         return Collections.singletonList(Commands
                 .slash(COMMAND_NAME, "Admins only")
-                .addOptions(trello, customer, artist));
+                .addOptions(trello, customer, artist, price));
     }
 }

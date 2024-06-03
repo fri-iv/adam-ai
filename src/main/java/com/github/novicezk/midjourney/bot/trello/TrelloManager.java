@@ -3,14 +3,24 @@ package com.github.novicezk.midjourney.bot.trello;
 import com.github.novicezk.midjourney.bot.utils.Config;
 import com.julienvey.trello.Trello;
 import com.julienvey.trello.domain.Card;
+import com.julienvey.trello.domain.TList;
 import com.julienvey.trello.impl.TrelloImpl;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class TrelloCardFetcher {
+public class TrelloManager {
+    private final static Trello trelloApi;
 
-    public Card getTrelloCardByLink(String cardUrl) {
+    static {
+        trelloApi = new TrelloImpl(Config.getTrelloApiKey(), Config.getTrelloToken());
+    }
+
+    public static TList getColumnByCard(Card card) {
+        return trelloApi.getList(card.getIdList());
+    }
+
+    public static Card getTrelloCardByLink(String cardUrl) {
         // Extract card ID from URL
         String cardId = extractCardIdFromUrl(cardUrl);
         if (cardId == null) {
@@ -18,14 +28,11 @@ public class TrelloCardFetcher {
             return null;
         }
 
-        // Initialize Trello API client
-        Trello trelloApi = new TrelloImpl(Config.getTrelloApiKey(), Config.getTrelloToken());
-
         // Fetch card details
         return trelloApi.getCard(cardId);
     }
 
-    private String extractCardIdFromUrl(String url) {
+    private static String extractCardIdFromUrl(String url) {
         Pattern pattern = Pattern.compile("https://trello\\.com/c/([a-zA-Z0-9]+)/.*");
         Matcher matcher = pattern.matcher(url);
         if (matcher.matches()) {

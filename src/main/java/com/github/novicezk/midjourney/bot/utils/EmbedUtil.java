@@ -54,7 +54,7 @@ public class EmbedUtil {
     }
 
     public static MessageEmbed createEmbedSuccess(String title, String description) {
-        return createEmbed(null, description, null, ColorUtil.getSuccessColor());
+        return createEmbed(title, description, null, ColorUtil.getSuccessColor());
     }
 
     public static MessageEmbed createEmbedSuccess(String description) {
