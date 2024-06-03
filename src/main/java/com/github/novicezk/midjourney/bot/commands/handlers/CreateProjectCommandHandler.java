@@ -68,17 +68,24 @@ public class CreateProjectCommandHandler implements CommandHandler {
                 .addPermissionOverride(artist, Permission.VIEW_CHANNEL.getRawValue(), 0)
                 .queue(channel -> {
                     channel.sendMessage(String.format("""
-                                    Hello, <@%s>!
+                                    ## Welcome to **Avatar Studio**!
 
-                                    This is a private channel where you can chat with your artist and track your project's status.
-                                    Feel free to ask any questions!
+                                    <@%s>
+                                    Your project **%s** is now in progress!
+                                    Chat here to discuss details.
                                     
-                                    artist <@%s>
-                                    payments <@%s>
+                                    **3D Artist:** <@%s>
+                                    **Project Manager:** <@%s>
+                                    **Price:** $%,.2f
+
+                                    `/info` for the current project status
+                                    `/payment` for payment details
                                     """,
                                     customer.getId(),
+                                    trelloCard.getName(),
                                     artist.getId(),
-                                    Config.getContactManagerId()
+                                    Config.getContactManagerId(),
+                                    priceOption.getAsDouble()
                             ))
                             .queue();
 
