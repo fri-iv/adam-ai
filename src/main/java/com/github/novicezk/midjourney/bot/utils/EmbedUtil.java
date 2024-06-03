@@ -46,7 +46,11 @@ public class EmbedUtil {
     }
 
     public static MessageEmbed createEmbedCute(String description) {
-        return createEmbed(null, description, null, ColorUtil.getCuteColor());
+        return createEmbedCute(null, description);
+    }
+
+    public static MessageEmbed createEmbedCute(String title, String description) {
+        return createEmbed(title, description, null, ColorUtil.getCuteColor());
     }
 
     public static MessageEmbed createEmbedError(String description) {

@@ -66,21 +66,21 @@ public class MessageReceivedHandler {
                             "We're ready to proceed with your payment",
                             String.format("Please send the remaining balance to our **PayPal** account at **%s**\n" +
                                             "\n" +
-                                            "Amount already paid: **$%,.2f**\n" +
                                             "Total price: **$%,.2f**\n" +
+                                            "Already paid: **$%,.2f**\n" +
                                             "Remaining balance: **$%,.2f**\n" +
                                             "\n" +
                                             "Once the payment has been made, please notify <@%s> so we can proceed with the next steps.\n" +
                                             "\n" +
                                             "`/payment` for more information or to see additional payment options",
                                     Config.getPaypalEmail(),
-                                    paid,
                                     total,
+                                    paid,
                                     remaining,
                                     Config.getContactManagerId()
                             ),
                             "Any fees incurred will be your responsibility. Thank you!",
-                            ColorUtil.getWarningColor()
+                            ColorUtil.getSuccessColor()
                     ))
                     .addActionRow(copyButton)
                     .queue();

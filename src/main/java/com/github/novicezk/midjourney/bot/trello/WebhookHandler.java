@@ -83,7 +83,30 @@ public class WebhookHandler implements HttpHandler {
             if (pattern.matcher(channel.getName()).matches()) {
                 channel.sendMessageEmbeds(EmbedUtil.createEmbedCute(String.format("Project status updated to: **%s**", status)))
                         .queue();
+
+                updateChannelTopic(channel, status);
             }
         }
+    }
+
+    private void updateChannelTopic(TextChannel channel, String status) {
+        String topic = channel.getTopic();
+        if (topic == null) {
+            return;
+        }
+
+        String[] lines = topic.split("\\n");
+        lines[0] = String.format("Project status: **%s**", status);
+
+        StringBuilder topicBuilder = new StringBuilder();
+        for (String line : lines) {
+            topicBuilder.append(line).append("\n");
+        }
+
+        if (!topicBuilder.isEmpty()) {
+            topicBuilder.setLength(topicBuilder.length() - 1);
+        }
+
+        channel.getManager().setTopic(topicBuilder.toString()).queue();
     }
 }
