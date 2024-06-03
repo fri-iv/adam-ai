@@ -15,8 +15,6 @@ public class PaymentCommandHandler implements CommandHandler {
     @Override
     public void handle(SlashCommandInteractionEvent event) {
         String details = String.format("""
-                        All payments are processed through <@%s> only!
-                      \s
                         We accept payments via **PayPal**, **ko-fi**, and **cryptocurrency**.
 
                         For **PayPal**, send your payment to **%s** and choose the **'Family and Friends'** option to avoid extra fees.
@@ -25,7 +23,6 @@ public class PaymentCommandHandler implements CommandHandler {
 
                         For cryptocurrency payments, please contact <@%s> for the wallet address.
               """,
-                Config.getContactManagerId(),
                 Config.getPaypalEmail(),
                 Config.getKofiPage(),
                 Config.getContactManagerId()
@@ -34,7 +31,7 @@ public class PaymentCommandHandler implements CommandHandler {
         event.replyEmbeds(EmbedUtil.createEmbed(
                 "Payment Details",
                 details,
-                "Any fees incurred will be your responsibility.",
+                "Any fees incurred will be your responsibility. Thank you!",
                 ColorUtil.getCuteColor()
         )).setEphemeral(true).queue();
     }

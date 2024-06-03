@@ -2,12 +2,16 @@ package com.github.novicezk.midjourney.bot.commands.guild;
 
 import com.github.novicezk.midjourney.bot.commands.util.BotUtil;
 import com.github.novicezk.midjourney.bot.events.EventsManager;
+import com.github.novicezk.midjourney.bot.utils.ColorUtil;
 import com.github.novicezk.midjourney.bot.utils.Config;
+import com.github.novicezk.midjourney.bot.utils.EmbedUtil;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.regex.Pattern;
 
@@ -42,21 +46,61 @@ public class MessageReceivedHandler {
             event.getMessage().delete().queue();
         }
 
+        if (!event.getMessage().getEmbeds().isEmpty()) {
+            handlePaymentMessage(event, event.getMessage().getEmbeds().get(0).getDescription());
+        }
+
         if (!isPrivate && URL_PATTERN.matcher(event.getMessage().getContentRaw()).find()) {
-            Member member = event.getMember();
-            Role linksAllowed = event.getGuild().getRoleById(Config.getRoleLinksAllowed());
-            if (member != null && linksAllowed != null && !hasRole(member, linksAllowed)) {
-                // Delete the message
-                event.getMessage().delete().queue();
+            handleFilterLinks(event);
+        }
+    }
 
-                // Mute the user
-                Role muteRole = event.getGuild().getRoleById(Config.getRoleMuted());
-                if (muteRole != null) {
-                    event.getGuild().addRoleToMember(member, muteRole).queue();
+    private void handlePaymentMessage(MessageReceivedEvent event, @Nullable String description) {
+        if (description != null && description.contains("Pending Payment")) {
+            double paid = 100;
+            double total = 200;
+            double remaining = 100;
 
-                    privateMessageSender.notifyMutedMember(event.getMember());
-                    EventsManager.onMutedMember(event);
-                }
+            Button copyButton = Button.primary("copy-paypal-email", "Copy PayPal Email");
+            event.getChannel().sendMessageEmbeds(EmbedUtil.createEmbed(
+                            "We're ready to proceed with your payment",
+                            String.format("Please send the remaining balance to our **PayPal** account at **%s**\n" +
+                                            "\n" +
+                                            "Amount already paid: **$%,.2f**\n" +
+                                            "Total price: **$%,.2f**\n" +
+                                            "Remaining balance: **$%,.2f**\n" +
+                                            "\n" +
+                                            "Once the payment has been made, please notify <@%s> so we can proceed with the next steps.\n" +
+                                            "\n" +
+                                            "`/payment` for more information or to see additional payment options",
+                                    Config.getPaypalEmail(),
+                                    paid,
+                                    total,
+                                    remaining,
+                                    Config.getContactManagerId()
+                            ),
+                            "Any fees incurred will be your responsibility. Thank you!",
+                            ColorUtil.getWarningColor()
+                    ))
+                    .addActionRow(copyButton)
+                    .queue();
+        }
+    }
+
+    private void handleFilterLinks(MessageReceivedEvent event) {
+        Member member = event.getMember();
+        Role linksAllowed = event.getGuild().getRoleById(Config.getRoleLinksAllowed());
+        if (member != null && linksAllowed != null && !hasRole(member, linksAllowed)) {
+            // Delete the message
+            event.getMessage().delete().queue();
+
+            // Mute the user
+            Role muteRole = event.getGuild().getRoleById(Config.getRoleMuted());
+            if (muteRole != null) {
+                event.getGuild().addRoleToMember(member, muteRole).queue();
+
+                privateMessageSender.notifyMutedMember(event.getMember());
+                EventsManager.onMutedMember(event);
             }
         }
     }

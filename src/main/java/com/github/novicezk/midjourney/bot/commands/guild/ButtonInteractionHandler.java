@@ -41,7 +41,14 @@ public class ButtonInteractionHandler {
             handleCreateAvatarButton(event);
         } else if (event.getComponentId().equals("re-roll")) {
             handleReRollButton(event);
+        } else if (event.getComponentId().equals("copy-paypal-email")) {
+            handleCopyPayPalEmail(event);
         }
+    }
+
+    private void handleCopyPayPalEmail(ButtonInteractionEvent event) {
+        privateMessageSender.sendArtToUser(event, Config.getPaypalEmail());
+        event.getHook().sendMessageEmbeds(EmbedUtil.createEmbed("We've sent you the email address in a private message. You can copy it from there.")).queue();
     }
 
     private void handleReRollButton(ButtonInteractionEvent event) {
