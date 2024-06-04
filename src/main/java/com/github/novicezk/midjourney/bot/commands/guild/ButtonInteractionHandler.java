@@ -47,7 +47,7 @@ public class ButtonInteractionHandler {
     }
 
     private void handleCopyPayPalEmail(ButtonInteractionEvent event) {
-        privateMessageSender.sendArtToUser(event, Config.getPaypalEmail());
+        privateMessageSender.sendMessageFromButtonClick(event, Config.getPaypalEmail());
         event.getHook().sendMessageEmbeds(EmbedUtil.createEmbed("We've sent you the email address in a private message. You can copy it from there.")).queue();
     }
 
@@ -79,7 +79,7 @@ public class ButtonInteractionHandler {
                 notificationChannel = "<#" + Config.getCreateAvatarChannel() + ">\n";
             }
 
-            privateMessageSender.sendArtToUser(event, "Hi there!\n\n" +
+            privateMessageSender.sendMessageFromButtonClick(event, "Hi there!\n\n" +
                     "Our team has been notified about your request and we'll get in touch as soon as we're available. Feel free to share your thoughts here or simply wait for our contact.");
         }
 
@@ -96,7 +96,7 @@ public class ButtonInteractionHandler {
     }
 
     private void handleCreateButton(ButtonInteractionEvent event) {
-        privateMessageSender.sendArtToUser(event, "Hi there!\n\n" +
+        privateMessageSender.sendMessageFromButtonClick(event, "Hi there!\n\n" +
                 "If you're looking for an avatar like the one in the picture just reach out to <@" + Config.getContactManagerId() + ">!");
 
         String messageLink = MessageUtil.getLinkToMessage(event.getMessage(), event.getGuild(), event.getChannel());

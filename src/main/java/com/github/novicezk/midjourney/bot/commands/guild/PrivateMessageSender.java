@@ -18,18 +18,34 @@ import java.util.List;
 
 public class PrivateMessageSender {
 
-    public void sendArtToUser(ButtonInteractionEvent event, String text) {
+    public void sendMessageToUser(User user, String text) {
+        sendMessageToUser(user, text, new ArrayList<>(), false);
+    }
+
+    public void sendMessageEmbedToUser(User user, String text) {
+        sendMessageToUser(user, text, new ArrayList<>(), true);
+    }
+
+    public void sendMessageToUser(User user, String text, List<FileUpload> files, boolean embeds) {
+        user.openPrivateChannel().queue(privateChannel -> {
+            if (embeds) {
+                privateChannel.sendMessageEmbeds(EmbedUtil.createEmbedCute(text))
+                        .addFiles(files)
+                        .queue();
+            } else {
+                privateChannel.sendMessage(text)
+                        .addFiles(files)
+                        .queue();
+            }
+        });
+    }
+
+    public void sendMessageFromButtonClick(ButtonInteractionEvent event, String text) {
         Member member = event.getMember();
         if (member != null) {
             List<Message.Attachment> attachments = event.getMessage().getAttachments();
             List<FileUpload> files = getFilesFromAttachments(attachments);
-
-            User user = member.getUser();
-            user.openPrivateChannel().queue(privateChannel -> {
-                privateChannel.sendMessage(text)
-                        .addFiles(files)
-                        .queue();
-            });
+            sendMessageToUser(member.getUser(), text, files, false);
         }
     }
 

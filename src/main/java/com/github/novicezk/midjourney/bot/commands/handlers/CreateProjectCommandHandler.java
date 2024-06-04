@@ -1,6 +1,7 @@
 package com.github.novicezk.midjourney.bot.commands.handlers;
 
 import com.github.novicezk.midjourney.bot.commands.CommandsUtil;
+import com.github.novicezk.midjourney.bot.commands.guild.PrivateMessageSender;
 import com.github.novicezk.midjourney.bot.error.OnErrorAction;
 import com.github.novicezk.midjourney.bot.trello.TrelloManager;
 import com.github.novicezk.midjourney.bot.utils.Config;
@@ -9,6 +10,7 @@ import com.julienvey.trello.domain.Card;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.concrete.Category;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -23,6 +25,12 @@ import java.util.List;
 
 public class CreateProjectCommandHandler implements CommandHandler {
     public static final String COMMAND_NAME = "create-project";
+
+    private final PrivateMessageSender privateMessageSender;
+
+    public CreateProjectCommandHandler(PrivateMessageSender privateMessageSender) {
+        this.privateMessageSender = privateMessageSender;
+    }
 
     @Override
     public void handle(SlashCommandInteractionEvent event) {
@@ -67,31 +75,75 @@ public class CreateProjectCommandHandler implements CommandHandler {
                 .addPermissionOverride(customer, Permission.VIEW_CHANNEL.getRawValue(), 0)
                 .addPermissionOverride(artist, Permission.VIEW_CHANNEL.getRawValue(), 0)
                 .queue(channel -> {
-                    channel.sendMessage(String.format("""
-                                    ## Welcome to **Avatar Studio**!
+                    String channelLink = "<#" + channel.getId() + ">";
 
-                                    <@%s>
+                    sendMessageToPrivateChannel(channel, trelloCard.getName(), artist.getId(), priceOption.getAsDouble());
+                    sendPrivateMessageToClient(customer.getUser(), channelLink);
+                    sendPrivateMessageToArtist(artist.getUser(), channelLink, trelloCard.getName(), trelloLink);
+
+                    updateChannelTopic(channel, trelloCard, priceOption.getAsDouble());
+                });
+    }
+
+    private void sendMessageToPrivateChannel(TextChannel channel, String projectName, String artistId, double price) {
+        channel.sendMessageEmbeds(EmbedUtil.createEmbedCute(
+                        "Welcome to Avatar Studio!",
+                        String.format("""
                                     Your project **%s** is now in progress!
                                     Chat here to discuss details.
-                                    
+
                                     **3D Artist:** <@%s>
                                     **Project Manager:** <@%s>
+
                                     **Price:** $%,.2f
 
                                     `/info` for the current project status
                                     `/payment` for payment details
                                     """,
-                                    customer.getId(),
-                                    trelloCard.getName(),
-                                    artist.getId(),
-                                    Config.getContactManagerId(),
-                                    priceOption.getAsDouble()
-                            ))
-                            .queue();
+                                projectName,
+                                artistId,
+                                Config.getContactManagerId(),
+                                price
+                        )))
+                .queue();
+    }
 
-                    updateChannelTopic(channel, trelloCard, priceOption.getAsDouble());
-                });
+    private void sendPrivateMessageToArtist(User user, String channelLink, String projectName, String projectLink) {
+        privateMessageSender.sendMessageEmbedToUser(user, String.format("""
+                            ### Project %s started!
+                            %s
 
+                            %s
+                            Use the link above to update the client and discuss any details.
+
+                            <#%s>
+                            Follow service rules for safe and comfortable chats.
+                            Also you can learn bot commands to manage the channel there.
+                            """,
+                projectName,
+                projectLink,
+                channelLink,
+                Config.getDevRulesChannel()
+        ));
+    }
+
+    private void sendPrivateMessageToClient(User user, String channelLink) {
+        privateMessageSender.sendMessageEmbedToUser(user, String.format("""
+                            ### Hello! We've started your project!
+
+                            %s
+                            To track progress and discuss details click the link above.
+
+                            For your safety, remember:
+
+                            ・Discuss project details in the provided channel **only**.
+                            ・Contact <@%s> for payment information.
+                            ・Only <@%s> is authorized to accept payments.
+                            """,
+                channelLink,
+                Config.getContactManagerId(),
+                Config.getContactManagerId()
+        ));
     }
 
     private void updateChannelTopic(TextChannel channel, Card trelloCard, double price) {

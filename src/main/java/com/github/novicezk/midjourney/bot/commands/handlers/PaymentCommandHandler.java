@@ -32,7 +32,7 @@ public class PaymentCommandHandler implements CommandHandler {
                 "Payment Details",
                 details,
                 "Any fees incurred will be your responsibility. Thank you!",
-                ColorUtil.getCuteColor()
+                ColorUtil.getDefaultColor()
         )).setEphemeral(true).queue();
     }
 
