@@ -1,13 +1,16 @@
 package com.github.novicezk.midjourney.bot.commands.guild;
 
 import com.github.novicezk.midjourney.bot.commands.util.GeneratingRequestHandler;
+import com.github.novicezk.midjourney.bot.error.OnErrorAction;
 import com.github.novicezk.midjourney.bot.events.EventsManager;
+import com.github.novicezk.midjourney.bot.model.TopicSettings;
 import com.github.novicezk.midjourney.bot.utils.Config;
 import com.github.novicezk.midjourney.bot.utils.EmbedUtil;
 import com.github.novicezk.midjourney.bot.utils.MessageUtil;
 import com.github.novicezk.midjourney.controller.SubmitController;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import org.jetbrains.annotations.NotNull;
 
@@ -43,7 +46,30 @@ public class ButtonInteractionHandler {
             handleReRollButton(event);
         } else if (event.getComponentId().equals("copy-paypal-email")) {
             handleCopyPayPalEmail(event);
+        } else if (event.getComponentId().startsWith("set-total-price")
+                || event.getComponentId().startsWith("add-total-price")) {
+            handleChangeTotalPriceButton(event, event.getComponentId().startsWith("set-total-price"));
         }
+    }
+
+    private void handleChangeTotalPriceButton(ButtonInteractionEvent event, boolean setPrice) {
+        if (!Config.getProjectsCategory().equals(event.getChannel().asTextChannel().getParentCategoryId())) {
+            OnErrorAction.sendMessage(event, "This button can't be used in this category", false);
+            return;
+        }
+
+        double price = Double.parseDouble(event.getComponentId().substring("set-total-price:".length()));
+        TextChannel channel = event.getChannel().asTextChannel();
+        TopicSettings topicSettings = new TopicSettings(channel.getTopic());
+
+        if (setPrice) {
+            topicSettings.setTotal(price);
+        } else {
+            topicSettings.setTotal(topicSettings.getTotal() + price);
+        }
+        channel.getManager().setTopic(topicSettings.getTopicSummary()).queue();
+        event.getHook().sendMessageEmbeds(EmbedUtil.createEmbedSuccess("done")).queue();
+        channel.sendMessageEmbeds(EmbedUtil.createEmbedSuccess("The total price has been changed!", topicSettings.getTopicPrice())).queue();
     }
 
     private void handleCopyPayPalEmail(ButtonInteractionEvent event) {

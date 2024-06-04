@@ -2,6 +2,7 @@ package com.github.novicezk.midjourney.bot.commands.handlers;
 
 import com.github.novicezk.midjourney.bot.commands.CommandsUtil;
 import com.github.novicezk.midjourney.bot.error.OnErrorAction;
+import com.github.novicezk.midjourney.bot.model.TopicSettings;
 import com.github.novicezk.midjourney.bot.utils.EmbedUtil;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Member;
@@ -40,53 +41,18 @@ public class SettingsProjectCommandHandler implements CommandHandler {
             return;
         }
 
-        String status = null;
-        double paid = 0;
-        double total = 0;
+        TopicSettings topicSettings = new TopicSettings(currentTopic);
+        topicSettings.setTotal(totalAmount == null ? topicSettings.getTotal() : totalAmount.getAsDouble());
+        topicSettings.setPaid(paidAmount == null ? topicSettings.getPaid() : paidAmount.getAsDouble());
 
-        String[] lines = currentTopic.split("\\n");
-        for (String line : lines) {
-            if (line.startsWith("Project status:")) {
-                status = line.substring("Project status: ".length());
-            } else if (line.startsWith("Total price:")) {
-                String totalStr = line.substring("Total price: ".length())
-                        .replace("**", "")
-                        .replace("$", "")
-                        .replace(",", ".");
-                total = Double.parseDouble(totalStr);
-            } else if (line.startsWith("Already paid:")) {
-                String paidStr = line.substring("Already paid: ".length())
-                        .replace("**", "")
-                        .replace("$", "")
-                        .replace(",", ".");
-                paid = Double.parseDouble(paidStr);
-            }
-        }
+        channel.getManager().setTopic(topicSettings.getTopicSummary()).queue();
 
-        total = totalAmount == null ? total : totalAmount.getAsDouble();
-        paid = paidAmount == null ? paid : paidAmount.getAsDouble();
-        double remaining = total - paid;
-
-        String price = String.format("""
-                Total price: **$%,.2f**
-                Already paid: **$%,.2f**
-                Remaining balance: **$%,.2f**
-                """, total, paid, remaining);
-        channel.getManager().setTopic(
-                String.format(
-                        """
-                        Project status: %s
-                        
-                        %s
-                        """, status, price
-                )).queue();
-
-        String title = "The total price has been updated";
+        String title = "The total price has been changed!";
         if (paidAmount != null) {
             title = "Payment received!";
         }
         event.getHook().sendMessageEmbeds(EmbedUtil.createEmbedSuccess("done")).queue();
-        channel.sendMessageEmbeds(EmbedUtil.createEmbedSuccess(title, price)).queue();
+        channel.sendMessageEmbeds(EmbedUtil.createEmbedSuccess(title, topicSettings.getTopicPrice())).queue();
     }
 
     @Override

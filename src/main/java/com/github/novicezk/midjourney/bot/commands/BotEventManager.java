@@ -2,6 +2,7 @@ package com.github.novicezk.midjourney.bot.commands;
 
 import com.github.novicezk.midjourney.bot.commands.guild.*;
 import com.github.novicezk.midjourney.bot.commands.handlers.*;
+import com.github.novicezk.midjourney.bot.commands.price.PriceManager;
 import com.github.novicezk.midjourney.bot.events.EventsManager;
 import com.github.novicezk.midjourney.bot.queue.QueueManager;
 import com.github.novicezk.midjourney.bot.user.UserJoinTimeManager;
@@ -32,7 +33,7 @@ public class BotEventManager extends ListenerAdapter {
         PrivateMessageSender privateMessageSender = new PrivateMessageSender();
 
         this.buttonInteractionHandler = new ButtonInteractionHandler(submitController, privateMessageSender);
-        this.commandHandlers = initializeCommandHandlers(submitController, privateMessageSender);
+        this.commandHandlers = initializeCommandHandlers(submitController, privateMessageSender, new PriceManager());
         this.messageReceivedHandler = new MessageReceivedHandler(privateMessageSender);
         this.guildMemberJoinHandler = new GuildMemberJoinHandler(submitController);
         this.guildMemberLeaveHandler = new GuildMemberLeaveHandler();
@@ -40,7 +41,8 @@ public class BotEventManager extends ListenerAdapter {
 
     private List<CommandHandler> initializeCommandHandlers(
             SubmitController submitController,
-            PrivateMessageSender privateMessageSender
+            PrivateMessageSender privateMessageSender,
+            PriceManager priceManager
     ) {
         List<CommandHandler> handlers = new ArrayList<>();
 
@@ -48,6 +50,7 @@ public class BotEventManager extends ListenerAdapter {
         handlers.add(new ContractCommandHandler(submitController));
         handlers.add(new GenerateCommandHandler(submitController));
         handlers.add(new MuteCommandHandler(privateMessageSender));
+        handlers.add(new PriceCommandHandler(priceManager));
         handlers.add(new SettingsProjectCommandHandler());
         handlers.add(new DeleteMessageCommandHandler());
         handlers.add(new UploadImageCommandHandler());
@@ -58,7 +61,6 @@ public class BotEventManager extends ListenerAdapter {
         handlers.add(new GetLogCommandHandler());
         handlers.add(new QueueCommandHandler());
         handlers.add(new EmbedCommandHandler());
-        handlers.add(new PriceCommandHandler());
         handlers.add(new PingCommandHandler());
         handlers.add(new HelpCommandHandler());
         handlers.add(new KofiCommandHandler());

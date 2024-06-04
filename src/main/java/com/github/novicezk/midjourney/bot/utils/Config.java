@@ -27,8 +27,11 @@ public class Config {
     private static final String SHOWCASES_CHANNEL = "SHOWCASES_CHANNEL";
     private static final String UPDATES_CHANNEL = "UPDATES_CHANNEL";
     private static final String RULES_CHANNEL = "RULES_CHANNEL";
-    private static final String DEV_RULES_CHANNEL = "DEV_RULES_CHANNEL";
     private static final String PROJECTS_CATEGORY = "PROJECTS_CATEGORY";
+
+    // Channel IDs for developers
+    private static final String DEV_RULES_CHANNEL = "DEV_RULES_CHANNEL";
+    private static final String DEV_PRICE_CHANNEL = "DEV_PRICE_CHANNEL";
 
     // Roles rarity IDs
     private static final String ROLE_COMMON = "COMMON";
@@ -232,6 +235,10 @@ public class Config {
 
     public static String getDevRulesChannel() {
         return properties.getProperty(DEV_RULES_CHANNEL);
+    }
+
+    public static String getDevPriceChannel() {
+        return properties.getProperty(DEV_PRICE_CHANNEL);
     }
 
     public static String getProjectsCategory() {
