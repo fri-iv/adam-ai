@@ -86,12 +86,13 @@ public class EventsManager {
     }
 
     private static void sendLogToDiscord(
-            @Nullable Guild guild,
+            @Nullable Guild originEventGuild,
             @Nullable String userId,
             @Nullable String username,
             String text,
             Color color
     ) {
+        Guild guild = AdamBotInitializer.getApiInstance().getGuildById(Config.getGuildId());
         if (guild == null || guild.getTextChannelById(Config.getLogsChannel()) == null) {
             return;
         }
@@ -99,6 +100,10 @@ public class EventsManager {
         String postText = text;
         if (userId != null && username != null) {
             postText = String.format("%s — <@%s>, %s", text, userId, username);
+        }
+
+        if (originEventGuild != null && originEventGuild.getId().equals(Config.getDevGuildId())) {
+            postText = String.format("%s\n%s", "Dev Guild Event", postText);
         }
 
         TextChannel logChannel = guild.getTextChannelById(Config.getLogsChannel());

@@ -16,20 +16,41 @@ public class HelpCommandHandler implements CommandHandler {
     public void handle(SlashCommandInteractionEvent event) {
         event.replyEmbeds(EmbedUtil.createEmbed(
                 "List of All Commands",
-                String.format("""
-                1. `/generate` – Generate a random avatar image for inspiration.
-                2. `/upload-image` – Upload your own image to use as an avatar reference.
-                3. `/get-images` – View all the images you have uploaded.
-                4. `/get-queue` – Check the current queue status.
-                5. `/clear-queue` – Clear the queue (<@&%s> role required).
-                6. `/get-log` – Get access to the log files.
-                7. `/contract` – Manage contracts (<@&%s> role required).
-                8. `/create-embed` – Create an embed message (<@&%s> role required).
-                9. `/ping` – Check the bot's.""",
-                        Config.getAdminsRoleId(),
-                        Config.getAdminsRoleId(),
-                        Config.getAdminsRoleId()
-                ),
+                """
+                AI Generating Commands
+
+                ・`/generate` – Generate a concept art image of an avatar for inspiration
+                ・`/upload-image` – Upload your own image to use as an avatar reference
+                ・`/get-images` – View all the images you have uploaded
+                ・`/get-queue` – Check the current queue status
+                ・`/clear-queue` – Clear the queue (Admin role required)
+
+                Project commands:
+
+                ・`/price` - Calculate the **final** price
+                ・`/settings-project` - Update price information
+                ・`/payment` - Get relevant payment information
+                ・`/kofi-price` - Calculate the price for a **ko-fi** donation
+                ・`/info` - Get current info about the project
+
+                Administrate commands:
+
+                ・`/mute` - Add the **MUTED** role to a user
+                ・`/delete-message` - **Delete** any message in the channels
+                ・`/pin-message` - Pin messages in any channels
+                ・`/ping-channel` - Ping a **private** channel with the *@everyone* tag
+
+                Dev commands:
+
+                ・`/contract` – Manage contracts
+                ・`/create-embed` – Create an embed message
+                ・`/get-log` – Get access to the log files
+                ・`/analytics` – Get detailed statistics about channels
+                ・`/create-project` – Create a new private channel from the request
+                
+                ・`/help` – Get a list of all commands
+                ・`/ping` – Get the current bot version
+                """,
                 "Commands list may be updated",
                 ColorUtil.getDefaultColor()
         )).setEphemeral(true).queue();
