@@ -34,7 +34,9 @@ public class MessageReceivedHandler {
         boolean forbiddenMessageChannels = !BotUtil.isAdamBot(event.getAuthor().getId())
                 && (event.getChannel().getId().equals(Config.getArtsChannel())
                 || event.getChannel().getId().equals(Config.getQueueChannel())
-                || event.getChannel().getId().equals(Config.getFaqChannel()));
+                || event.getChannel().getId().equals(Config.getFaqChannel())
+                || event.getChannel().getId().equals(Config.getDevRulesChannel())
+                || event.getChannel().getId().equals(Config.getDevPriceChannel()));
 
         // check for private messages to bot
         if (isPrivate) {

@@ -9,9 +9,11 @@ import com.github.novicezk.midjourney.bot.utils.Config;
 import com.github.novicezk.midjourney.bot.utils.EmbedUtil;
 import com.github.novicezk.midjourney.result.SubmitResultVO;
 import lombok.extern.slf4j.Slf4j;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.GenericCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 
 import java.util.ArrayList;
@@ -94,5 +96,17 @@ public class CommandsUtil {
         String godfatherId = Config.getGodfatherId();
         return member.getRoles().stream()
                 .anyMatch(role -> role.getId().equals(adminsRoleId) || role.getId().equals(godfatherId));
+    }
+
+    public static boolean isUserAuthorized(SlashCommandInteractionEvent event, Member member) {
+        Guild guild = event.getGuild();
+        boolean isInDevGuild = false;
+
+        if (guild != null) {
+            String guildId = event.getGuild().getId();
+            isInDevGuild = guildId.equals(Config.getDevGuildId());
+        }
+
+        return isUserAuthorized(member) || isInDevGuild;
     }
 }

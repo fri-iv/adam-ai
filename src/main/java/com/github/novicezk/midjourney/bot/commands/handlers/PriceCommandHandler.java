@@ -33,7 +33,7 @@ public class PriceCommandHandler implements CommandHandler {
         event.deferReply().setEphemeral(true).queue();
 
         Member member = event.getMember();
-        if (member == null || !CommandsUtil.isUserAuthorized(member)) {
+        if (member == null || !CommandsUtil.isUserAuthorized(event, member)) {
             OnErrorAction.onMissingRoleMessage(event);
             return;
         }
@@ -53,12 +53,16 @@ public class PriceCommandHandler implements CommandHandler {
                         String.format(
                                 """
                                 <#%s>
-                                To see how we calculated it please visit this channel
-                                
-                                **Set Total** replaces the current total
-                                **Add to Total** adds this price to the total
+                                how we calculated it
+
+                                <#%s>
+                                buttons will be _clickable_ here 👆
+
+                                `Set Total` replaces the current total
+                                `Add to Total` adds this price to the total
                                 """,
-                                Config.getDevPriceChannel()
+                                Config.getDevPriceChannel(),
+                                Config.getProjectsCategory()
                         ),
                         "This is the final price to share with the client",
                         ColorUtil.getCuteColor()

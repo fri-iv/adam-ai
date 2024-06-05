@@ -1,5 +1,6 @@
 package com.github.novicezk.midjourney.bot.commands.handlers;
 
+import com.github.novicezk.midjourney.bot.AdamBotInitializer;
 import com.github.novicezk.midjourney.bot.commands.CommandsUtil;
 import com.github.novicezk.midjourney.bot.error.OnErrorAction;
 import com.github.novicezk.midjourney.bot.model.CharacterStrength;
@@ -12,6 +13,7 @@ import com.github.novicezk.midjourney.controller.SubmitController;
 import com.github.novicezk.midjourney.dto.SubmitImagineDTO;
 import com.github.novicezk.midjourney.result.SubmitResultVO;
 import lombok.extern.slf4j.Slf4j;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
@@ -43,17 +45,20 @@ public class ContractCommandHandler implements CommandHandler {
         event.deferReply().setEphemeral(true).queue();
 
         Member member = event.getMember();
-        if (member == null || !CommandsUtil.isUserAuthorized(member)) {
+        if (member == null || !CommandsUtil.isUserAuthorized(event, member)) {
             OnErrorAction.onMissingRoleMessage(event);
             return;
         }
 
         OptionMapping promptMapping = event.getOption("prompt");
         OptionMapping taskMapping = event.getOption("task");
+        OptionMapping productionMapping = event.getOption("production");
+        boolean prod = productionMapping != null && productionMapping.getAsBoolean();
+
         if (promptMapping != null && !promptMapping.getAsString().isEmpty()) {
             handlePrompt(event, promptMapping.getAsString());
         } else if (taskMapping != null && !taskMapping.getAsString().isEmpty()) {
-            handleTask(event, taskMapping.getAsString());
+            handleTask(event, taskMapping.getAsString(), prod);
         } else {
             OnErrorAction.onMissingFieldMessage(event);
         }
@@ -70,7 +75,7 @@ public class ContractCommandHandler implements CommandHandler {
         }
     }
 
-    private void handleTask(SlashCommandInteractionEvent event, String task) {
+    private void handleTask(SlashCommandInteractionEvent event, String task, boolean prod) {
         switch (task) {
             case "test":
                 event.getHook().sendMessageEmbeds(List.of(EmbedUtil.createEmbed("test command"))).queue();
@@ -94,10 +99,91 @@ public class ContractCommandHandler implements CommandHandler {
             case "generate":
                 handeGenerateCommand(event);
                 break;
+            case "dev-price":
+                handleDevPriceCommand(event, prod);
+                break;
             default:
                 event.getHook().sendMessageEmbeds(List.of(EmbedUtil.createEmbed("Command not found"))).queue();
                 break;
         }
+    }
+
+    private void handleDevPriceCommand(SlashCommandInteractionEvent event, boolean prod) {
+        String guildId = Config.getDevGuildId();
+        String channelId = Config.getDevDebugChannel();
+        if (prod) {
+            channelId = Config.getDevPriceChannel();
+        }
+
+        Guild guild = AdamBotInitializer.getApiInstance().getGuildById(guildId);
+        if (guild == null || guild.getTextChannelById(channelId) == null) {
+            OnErrorAction.onDefaultMessage(event);
+            return;
+        }
+
+        event.getHook().sendMessageEmbeds(EmbedUtil.createEmbedSuccess("Done")).queue();
+        TextChannel channel = guild.getTextChannelById(channelId);
+        channel.sendMessageEmbeds(EmbedUtil.createEmbedSuccess(
+                "Pricing Formula Explained",
+                """
+                *Price = C + (Mr ÷ 100 × C)*
+
+                **First correction**:
+
+                *If Price < BTM*
+                  *Price = C + (C × S)*
+
+                **Second correction**:
+
+                *If Price > UPR*
+                  *Price = C + UPR + (C × L)*
+
+                **Apply transaction commission**:
+                *Price = Price + (Price × T)*, if **Second correction** was not applied
+
+                Where:
+
+                *C* - Performer price
+
+                *BTM = 140* - Bottom range line
+                *UPR = 320* - Upper range line
+
+                *Mr = 100%* - Marginality
+                *T = 16%* - Transaction commission
+                *S = 30%* - Studio commission
+                *L = 15%* - Large price difference
+                """,
+                "The final price can be adjusted during discussions with your project manager"
+        )).queue();
+
+        channel.sendMessageEmbeds(EmbedUtil.createEmbedWarning(
+                "Project Commands",
+                String.format("""
+                `/price` - Calculate the **final** price
+
+                Once your project starts it will appear in
+                <#%s>
+                there you can click the buttons in the response's embed
+
+                `/settings-project` - Update price information
+
+                Manually update the **Total** or **Paid** amount
+
+                `/payment` - Get relevant payment information
+                `/kofi-price` - Calculate the price for a **ko-fi** donation
+                `/info` - Get current info about the project
+
+                Share these commands with the client if they ask
+
+                `/mute` - Add the **MUTED** role to a user
+                `/delete-message` - **Delete** any message in the channels
+                `/pin-message` - Pin messages in any channels
+                `/ping-channel` - Ping a **private** channel with the *@everyone* tag
+
+                Use these commands to administrate channels
+                """, Config.getProjectsCategory()),
+                "To get all command use /help"
+        )).queue();
     }
 
     private void handeGenerateCommand(SlashCommandInteractionEvent event) {
@@ -268,7 +354,10 @@ public class ContractCommandHandler implements CommandHandler {
     public List<CommandData> getCommandData() {
         OptionData promptContract = new OptionData(OptionType.STRING, "prompt", "Prompt to use the contract command");
         OptionData idContract = new OptionData(OptionType.STRING, "task", "Task id");
+        OptionData productionContract = new OptionData(OptionType.BOOLEAN, "production", "Send to the public channel");
+
         return Collections.singletonList(Commands
-                .slash(ContractCommandHandler.COMMAND_NAME, "Admins only").addOptions(promptContract, idContract));
+                .slash(ContractCommandHandler.COMMAND_NAME, "Admins only")
+                .addOptions(promptContract, idContract, productionContract));
     }
 }
