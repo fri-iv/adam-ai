@@ -27,6 +27,7 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
 import net.dv8tion.jda.api.utils.FileUpload;
 
+import java.awt.*;
 import java.util.Collections;
 import java.util.List;
 
@@ -102,28 +103,81 @@ public class ContractCommandHandler implements CommandHandler {
             case "dev-price":
                 handleDevPriceCommand(event, prod);
                 break;
+            case "dev-rules":
+                handleDevRulesCommand(event, prod);
+                break;
             default:
                 event.getHook().sendMessageEmbeds(List.of(EmbedUtil.createEmbed("Command not found"))).queue();
                 break;
         }
     }
 
-    private void handleDevPriceCommand(SlashCommandInteractionEvent event, boolean prod) {
-        String guildId = Config.getDevGuildId();
+    private void handleDevRulesCommand(SlashCommandInteractionEvent event, boolean prod) {
         String channelId = Config.getDevDebugChannel();
         if (prod) {
-            channelId = Config.getDevPriceChannel();
+            channelId = Config.getDevRulesChannel();
         }
 
+        String guildId = Config.getDevGuildId();
         Guild guild = AdamBotInitializer.getApiInstance().getGuildById(guildId);
         if (guild == null || guild.getTextChannelById(channelId) == null) {
             OnErrorAction.onDefaultMessage(event);
             return;
         }
 
-        event.getHook().sendMessageEmbeds(EmbedUtil.createEmbedSuccess("Done")).queue();
-        TextChannel channel = guild.getTextChannelById(channelId);
-        channel.sendMessageEmbeds(EmbedUtil.createEmbedSuccess(
+        event.getHook().sendMessageEmbeds(EmbedUtil.createEmbedSuccess("Done")).setEphemeral(true).queue();
+        sendEmbedToDevChannel(
+                guild.getTextChannelById(channelId),
+                "Service Guidelines",
+                String.format("""
+                **Client Interaction**
+                
+                ・Keep conversations comfortable for clients
+                ・Assist with any client issues
+                
+                **Direct Messages**
+                
+                ・Contacting clients via direct messages is strictly prohibited
+                ・Discuss the project only in the assigned channel
+                
+                **Pricing**
+                
+                ・Use the `/price` command before quoting any price to clients
+                ・For questions or to discuss the calculated price contact your manager – <@%s>
+                ・More information on pricing can be found in the <#%s> channel
+                
+                **Tips**
+                
+                ・Artists can keep all tips from clients minus the transaction commission
+                
+                **Updates**
+                
+                ・Share project materials with the community <#%s>
+                ・Posts should be within a 280 character limit
+                ・SFW content only
+                """, Config.getContactManagerId(), Config.getDevPriceChannel(), Config.getUpdatesChannel()),
+                "/help to get the full list of commands",
+                ColorUtil.getSuccessColor()
+        );
+
+    }
+
+    private void handleDevPriceCommand(SlashCommandInteractionEvent event, boolean prod) {
+        String channelId = Config.getDevDebugChannel();
+        if (prod) {
+            channelId = Config.getDevPriceChannel();
+        }
+
+        String guildId = Config.getDevGuildId();
+        Guild guild = AdamBotInitializer.getApiInstance().getGuildById(guildId);
+        if (guild == null || guild.getTextChannelById(channelId) == null) {
+            OnErrorAction.onDefaultMessage(event);
+            return;
+        }
+
+        event.getHook().sendMessageEmbeds(EmbedUtil.createEmbedSuccess("Done")).setEphemeral(true).queue();
+        sendEmbedToDevChannel(
+                guild.getTextChannelById(channelId),
                 "Pricing Formula Explained",
                 """
                 *Price = C + (Mr ÷ 100 × C)*
@@ -139,6 +193,7 @@ public class ContractCommandHandler implements CommandHandler {
                   *Price = C + UPR + (C × L)*
 
                 **Apply transaction commission**:
+
                 *Price = Price + (Price × T)*, if **Second correction** was not applied
 
                 Where:
@@ -153,10 +208,11 @@ public class ContractCommandHandler implements CommandHandler {
                 *S = 30%* - Studio commission
                 *L = 15%* - Large price difference
                 """,
-                "The final price can be adjusted during discussions with your project manager"
-        )).queue();
-
-        channel.sendMessageEmbeds(EmbedUtil.createEmbedWarning(
+                "The final price can be adjusted during discussions with your project manager",
+                ColorUtil.getSuccessColor()
+        );
+        sendEmbedToDevChannel(
+                guild.getTextChannelById(channelId),
                 "Project Commands",
                 String.format("""
                 `/price` - Calculate the **final** price
@@ -182,8 +238,20 @@ public class ContractCommandHandler implements CommandHandler {
 
                 Use these commands to administrate channels
                 """, Config.getProjectsCategory()),
-                "To get all command use /help"
-        )).queue();
+                "To get all command use /help",
+                ColorUtil.getWarningColor()
+        );
+    }
+
+    private void sendEmbedToDevChannel(
+            TextChannel channel,
+            String title,
+            String description,
+            String footer,
+            Color color
+    ) {
+
+        channel.sendMessageEmbeds(EmbedUtil.createEmbed(title, description, footer, color)).queue();
     }
 
     private void handeGenerateCommand(SlashCommandInteractionEvent event) {
