@@ -25,6 +25,7 @@ import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
+import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
 import net.dv8tion.jda.api.utils.FileUpload;
 
 import java.awt.*;
@@ -126,6 +127,7 @@ public class ContractCommandHandler implements CommandHandler {
         }
 
         event.getHook().sendMessageEmbeds(EmbedUtil.createEmbedSuccess("Done")).setEphemeral(true).queue();
+        Button helpButton = Button.primary("help-button", "See All Commands");
         sendEmbedToDevChannel(
                 guild.getTextChannelById(channelId),
                 "Service Guidelines",
@@ -137,7 +139,7 @@ public class ContractCommandHandler implements CommandHandler {
                 
                 **Direct Messages**
                 
-                ・Contacting clients via direct messages is strictly prohibited
+                ・Contacting clients via direct messages is **strictly prohibited**
                 ・Discuss the project only in the assigned channel
                 
                 **Pricing**
@@ -157,7 +159,8 @@ public class ContractCommandHandler implements CommandHandler {
                 ・SFW content only
                 """, Config.getContactManagerId(), Config.getDevPriceChannel(), Config.getUpdatesChannel()),
                 "/help to get the full list of commands",
-                ColorUtil.getSuccessColor()
+                ColorUtil.getSuccessColor(),
+                helpButton
         );
 
     }
@@ -211,15 +214,15 @@ public class ContractCommandHandler implements CommandHandler {
                 "The final price can be adjusted during discussions with your project manager",
                 ColorUtil.getSuccessColor()
         );
+
+        Button helpButton = Button.primary("help-button", "See All Commands");
         sendEmbedToDevChannel(
                 guild.getTextChannelById(channelId),
                 "Project Commands",
-                String.format("""
+                """
                 `/price` - Calculate the **final** price
 
-                Once your project starts it will appear in
-                <#%s>
-                there you can click the buttons in the response's embed
+                Your project will appear in the **Projects** category. Buttons works there.
 
                 `/settings-project` - Update price information
 
@@ -237,10 +240,27 @@ public class ContractCommandHandler implements CommandHandler {
                 `/ping-channel` - Ping a **private** channel with the *@everyone* tag
 
                 Use these commands to administrate channels
-                """, Config.getProjectsCategory()),
+                """,
                 "To get all command use /help",
-                ColorUtil.getWarningColor()
+                ColorUtil.getWarningColor(),
+                helpButton
         );
+    }
+
+    private void sendEmbedToDevChannel(
+            TextChannel channel,
+            String title,
+            String description,
+            String footer,
+            Color color,
+            Button button
+    ) {
+        MessageCreateAction action = channel.sendMessageEmbeds(EmbedUtil.createEmbed(title, description, footer, color));
+        if (button != null) {
+            action = action.addActionRow(button);
+        }
+
+        action.queue();
     }
 
     private void sendEmbedToDevChannel(
@@ -250,8 +270,7 @@ public class ContractCommandHandler implements CommandHandler {
             String footer,
             Color color
     ) {
-
-        channel.sendMessageEmbeds(EmbedUtil.createEmbed(title, description, footer, color)).queue();
+        sendEmbedToDevChannel(channel, title, description, footer, color, null);
     }
 
     private void handeGenerateCommand(SlashCommandInteractionEvent event) {

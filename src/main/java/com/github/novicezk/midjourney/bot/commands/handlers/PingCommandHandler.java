@@ -19,7 +19,7 @@ public class PingCommandHandler implements CommandHandler {
 
         String text;
         if (probability <= 1) {
-            text = ":partying_face: wow looks like you **win!** :tada:";
+            text = ":partying_face: I can't believe you did this :tada:";
         } else if (probability <= 5) {
             text = "what's the score btw?";
         } else if (probability <= 20) {

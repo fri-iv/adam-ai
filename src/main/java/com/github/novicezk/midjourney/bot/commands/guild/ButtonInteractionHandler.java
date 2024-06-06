@@ -1,9 +1,11 @@
 package com.github.novicezk.midjourney.bot.commands.guild;
 
+import com.github.novicezk.midjourney.bot.commands.util.CommandsHelper;
 import com.github.novicezk.midjourney.bot.commands.util.GeneratingRequestHandler;
 import com.github.novicezk.midjourney.bot.error.OnErrorAction;
 import com.github.novicezk.midjourney.bot.events.EventsManager;
 import com.github.novicezk.midjourney.bot.model.TopicSettings;
+import com.github.novicezk.midjourney.bot.utils.ColorUtil;
 import com.github.novicezk.midjourney.bot.utils.Config;
 import com.github.novicezk.midjourney.bot.utils.EmbedUtil;
 import com.github.novicezk.midjourney.bot.utils.MessageUtil;
@@ -49,7 +51,18 @@ public class ButtonInteractionHandler {
         } else if (event.getComponentId().startsWith("set-total-price")
                 || event.getComponentId().startsWith("add-total-price")) {
             handleChangeTotalPriceButton(event, event.getComponentId().startsWith("set-total-price"));
+        } else if (event.getComponentId().equals("help-button")) {
+            handleHelpButton(event);
         }
+    }
+
+    private void handleHelpButton(ButtonInteractionEvent event) {
+        event.getHook().sendMessageEmbeds(EmbedUtil.createEmbed(
+                "List of All Commands",
+                CommandsHelper.getAllCommands(),
+                "Commands list may be updated",
+                ColorUtil.getDefaultColor()
+        )).queue();
     }
 
     private void handleChangeTotalPriceButton(ButtonInteractionEvent event, boolean setPrice) {

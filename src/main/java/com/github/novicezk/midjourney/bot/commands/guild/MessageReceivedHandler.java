@@ -2,6 +2,7 @@ package com.github.novicezk.midjourney.bot.commands.guild;
 
 import com.github.novicezk.midjourney.bot.commands.util.BotUtil;
 import com.github.novicezk.midjourney.bot.events.EventsManager;
+import com.github.novicezk.midjourney.bot.model.TopicSettings;
 import com.github.novicezk.midjourney.bot.utils.ColorUtil;
 import com.github.novicezk.midjourney.bot.utils.Config;
 import com.github.novicezk.midjourney.bot.utils.EmbedUtil;
@@ -9,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.jetbrains.annotations.Nullable;
@@ -59,9 +61,11 @@ public class MessageReceivedHandler {
 
     private void handlePaymentMessage(MessageReceivedEvent event, @Nullable String description) {
         if (description != null && description.contains("Pending Payment")) {
-            double paid = 100;
-            double total = 200;
-            double remaining = 100;
+            TextChannel channel = event.getChannel().asTextChannel();
+            TopicSettings topicSettings = new TopicSettings(channel.getTopic());
+            double paid = topicSettings.getPaid();
+            double total = topicSettings.getTotal();
+            double remaining = topicSettings.getRemaining();
 
             Button copyButton = Button.primary("copy-paypal-email", "Copy PayPal Email");
             event.getChannel().sendMessageEmbeds(EmbedUtil.createEmbed(

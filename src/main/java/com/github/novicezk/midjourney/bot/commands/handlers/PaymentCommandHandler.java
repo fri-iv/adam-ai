@@ -6,6 +6,7 @@ import com.github.novicezk.midjourney.bot.utils.EmbedUtil;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 import java.util.List;
 
@@ -14,6 +15,8 @@ public class PaymentCommandHandler implements CommandHandler {
 
     @Override
     public void handle(SlashCommandInteractionEvent event) {
+        event.deferReply().setEphemeral(true).queue();
+
         String details = String.format("""
                         We accept payments via **PayPal**, **ko-fi**, and **cryptocurrency**.
 
@@ -28,12 +31,16 @@ public class PaymentCommandHandler implements CommandHandler {
                 Config.getContactManagerId()
         );
 
-        event.replyEmbeds(EmbedUtil.createEmbed(
+        Button copyButton = Button.primary("copy-paypal-email", "Copy PayPal Email");
+        event.getHook().sendMessageEmbeds((EmbedUtil.createEmbed(
                 "Payment Details",
                 details,
                 "Any fees incurred will be your responsibility. Thank you!",
                 ColorUtil.getDefaultColor()
-        )).setEphemeral(true).queue();
+        )))
+                .addActionRow(copyButton)
+                .setEphemeral(true)
+                .queue();
     }
 
     @Override
