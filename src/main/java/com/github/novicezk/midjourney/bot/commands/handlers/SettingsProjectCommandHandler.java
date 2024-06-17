@@ -47,12 +47,14 @@ public class SettingsProjectCommandHandler implements CommandHandler {
 
         channel.getManager().setTopic(topicSettings.getTopicSummary()).queue();
 
+        String footer = null;
         String title = "The total price has been changed!";
         if (paidAmount != null) {
             title = "Payment received!";
+            footer = "The receipt will be sent to your DMs";
         }
         event.getHook().sendMessageEmbeds(EmbedUtil.createEmbedSuccess("done")).queue();
-        channel.sendMessageEmbeds(EmbedUtil.createEmbedSuccess(title, topicSettings.getTopicPrice())).queue();
+        channel.sendMessageEmbeds(EmbedUtil.createEmbedSuccess(title, topicSettings.getTopicPrice(), footer)).queue();
     }
 
     @Override

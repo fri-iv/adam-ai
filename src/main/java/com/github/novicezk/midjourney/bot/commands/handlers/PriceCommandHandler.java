@@ -55,14 +55,12 @@ public class PriceCommandHandler implements CommandHandler {
                                 <#%s>
                                 how we calculated it
 
-                                <#%s>
-                                buttons will be _clickable_ here 👆
+                                buttons will be _clickable_ in the **Projects** category
 
                                 `Set Total` replaces the current total
                                 `Add to Total` adds this price to the total
                                 """,
-                                Config.getDevPriceChannel(),
-                                Config.getProjectsCategory()
+                                Config.getDevPriceChannel()
                         ),
                         "This is the final price to share with the client",
                         ColorUtil.getCuteColor()

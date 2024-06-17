@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 public class PriceManager {
     private static final int RANGE_BOTTOM_LINE = 140;
     private static final int RANGE_UPPER_LINE = 320;
-    private static final double MARGINALITY = 1.0;
+    private static final double MARGINALITY = 0.45;
 
     private static final double TRANSACTION_COMMISSION_RATE = 0.16;
     private static final double STUDIO_COMMISSION_RATE = 0.30;
@@ -16,15 +16,14 @@ public class PriceManager {
 
     public double calculateFinalPrice(double performerPrice) {
         // Initial calculation
-        double finalPrice = performerPrice + performerPrice * MARGINALITY;
-        log.debug("calculateFinalPrice {}", finalPrice);
+        double finalPrice = performerPrice / (1 - MARGINALITY);
 
         boolean includeTransactionFees = true;
 
         // Adjust final price based on conditions
-        if (finalPrice - performerPrice < RANGE_BOTTOM_LINE) {
+        if (performerPrice < RANGE_BOTTOM_LINE) {
             finalPrice = performerPrice + (performerPrice * STUDIO_COMMISSION_RATE);
-        } else if (finalPrice - performerPrice > RANGE_UPPER_LINE) {
+        } else if (performerPrice > RANGE_UPPER_LINE) {
             finalPrice = performerPrice + RANGE_UPPER_LINE + performerPrice * LARGE_DIFFERENCE;
             includeTransactionFees = false;
         }

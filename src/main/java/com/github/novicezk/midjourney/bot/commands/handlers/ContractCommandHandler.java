@@ -183,21 +183,21 @@ public class ContractCommandHandler implements CommandHandler {
                 guild.getTextChannelById(channelId),
                 "Pricing Formula Explained",
                 """
-                *Price = C + (Mr ÷ 100 × C)*
+                *Price = C / (1 - Mr)*
 
                 **First correction**:
 
-                *If Price < BTM*
+                *If C < BTM*
                   *Price = C + (C × S)*
 
                 **Second correction**:
 
-                *If Price > UPR*
+                *If C > UPR*
                   *Price = C + UPR + (C × L)*
 
                 **Apply transaction commission**:
 
-                *Price = Price + (Price × T)*, if **Second correction** was not applied
+                *Price = Price × T*, if **Second correction** was not applied
 
                 Where:
 
@@ -206,7 +206,7 @@ public class ContractCommandHandler implements CommandHandler {
                 *BTM = 140* - Bottom range line
                 *UPR = 320* - Upper range line
 
-                *Mr = 100%* - Marginality
+                *Mr = 45%* - Marginality
                 *T = 16%* - Transaction commission
                 *S = 30%* - Studio commission
                 *L = 15%* - Large price difference
@@ -222,7 +222,7 @@ public class ContractCommandHandler implements CommandHandler {
                 """
                 `/price` - Calculate the **final** price
 
-                Your project will appear in the **Projects** category. Buttons works there.
+                Once your project created it will appear in the **Projects** category
 
                 `/settings-project` - Update price information
 

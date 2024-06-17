@@ -84,7 +84,7 @@ public class PrivateMessageSender {
             User user = member.getUser();
             user.openPrivateChannel().queue(privateChannel ->
                     privateChannel.sendMessage(String.format(
-                                    "You've been muted in the guild for violating our rules. To be unmuted, please contact <@%s>",
+                                    "You've been muted in the guild for violating our rules. To be unmuted please contact <@%s>.",
                                     Config.getContactManagerId()
                             ))
                             .queue());
