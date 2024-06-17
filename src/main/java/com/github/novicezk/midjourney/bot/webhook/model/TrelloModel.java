@@ -1,4 +1,4 @@
-package com.github.novicezk.midjourney.bot.trello.model;
+package com.github.novicezk.midjourney.bot.webhook.model;
 
 import lombok.Data;
 

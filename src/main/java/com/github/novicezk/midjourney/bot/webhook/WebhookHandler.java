@@ -1,9 +1,9 @@
-package com.github.novicezk.midjourney.bot.trello;
+package com.github.novicezk.midjourney.bot.webhook;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.novicezk.midjourney.bot.AdamBotInitializer;
-import com.github.novicezk.midjourney.bot.trello.model.TrelloModel;
+import com.github.novicezk.midjourney.bot.webhook.model.TrelloModel;
 import com.github.novicezk.midjourney.bot.utils.Config;
 import com.github.novicezk.midjourney.bot.utils.EmbedUtil;
 import com.sun.net.httpserver.HttpExchange;

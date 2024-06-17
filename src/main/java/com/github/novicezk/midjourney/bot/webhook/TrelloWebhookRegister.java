@@ -1,4 +1,4 @@
-package com.github.novicezk.midjourney.bot.trello;
+package com.github.novicezk.midjourney.bot.webhook;
 
 import com.sun.net.httpserver.HttpServer;
 
@@ -11,7 +11,8 @@ public class TrelloWebhookRegister {
         HttpServer server;
         try {
             server = HttpServer.create(new InetSocketAddress(8000), 0);
-            server.createContext("/webhook", new WebhookHandler());
+            server.createContext("/webhook", new WebhookHandler()); // trello webhook
+            server.createContext("/paypal-webhook", new WebhookHandler());
             server.setExecutor(null); // creates a default executor
             server.start();
         } catch (IOException e) {

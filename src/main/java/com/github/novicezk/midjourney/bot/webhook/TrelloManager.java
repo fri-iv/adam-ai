@@ -1,4 +1,4 @@
-package com.github.novicezk.midjourney.bot.trello;
+package com.github.novicezk.midjourney.bot.webhook;
 
 import com.github.novicezk.midjourney.bot.utils.Config;
 import com.julienvey.trello.Trello;

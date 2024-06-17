@@ -3,7 +3,7 @@ package com.github.novicezk.midjourney.bot.commands.handlers;
 import com.github.novicezk.midjourney.bot.commands.CommandsUtil;
 import com.github.novicezk.midjourney.bot.commands.guild.PrivateMessageSender;
 import com.github.novicezk.midjourney.bot.error.OnErrorAction;
-import com.github.novicezk.midjourney.bot.trello.TrelloManager;
+import com.github.novicezk.midjourney.bot.webhook.TrelloManager;
 import com.github.novicezk.midjourney.bot.utils.Config;
 import com.github.novicezk.midjourney.bot.utils.EmbedUtil;
 import com.julienvey.trello.domain.Card;
