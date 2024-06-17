@@ -7,6 +7,7 @@ import com.github.novicezk.midjourney.bot.utils.ColorUtil;
 import com.github.novicezk.midjourney.bot.utils.Config;
 import com.github.novicezk.midjourney.bot.utils.EmbedUtil;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -14,6 +15,8 @@ import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
+import net.dv8tion.jda.api.requests.restaction.WebhookMessageCreateAction;
 
 import java.text.DecimalFormat;
 import java.util.Collections;
@@ -47,26 +50,35 @@ public class PriceCommandHandler implements CommandHandler {
         double clientsPrice = priceManager.calculateFinalPrice(price.getAsDouble());
         Button setTotal = Button.success("set-total-price:" + clientsPrice, "Set Total");
         Button addTotal = Button.primary("add-total-price:" + clientsPrice, "Add to Total");
+        boolean projectsCategory = Config.getProjectsCategory().equals(event.getChannel().asTextChannel().getParentCategoryId());
 
-        event.getHook().sendMessageEmbeds(EmbedUtil.createEmbed(
-                        "$" + new DecimalFormat("#.##").format(clientsPrice),
-                        String.format(
-                                """
-                                <#%s>
-                                how we calculated it
+        String description = String.format(
+                """
+                <#%s>
+                how we calculated it
+                """,
+                Config.getDevPriceChannel()
+        );
+        if (projectsCategory) {
+            description = description +
+                    """
+                    `Set Total` replaces the current total
+                    `Add to Total` adds this price to the total
+                    """;
+        }
 
-                                buttons will be _clickable_ in the **Projects** category
+        WebhookMessageCreateAction<Message> action = event.getHook().sendMessageEmbeds(EmbedUtil.createEmbed(
+                "$" + new DecimalFormat("#.##").format(clientsPrice),
+                description,
+                "This is the price to share with the client",
+                ColorUtil.getCuteColor()
+        ));
 
-                                `Set Total` replaces the current total
-                                `Add to Total` adds this price to the total
-                                """,
-                                Config.getDevPriceChannel()
-                        ),
-                        "This is the final price to share with the client",
-                        ColorUtil.getCuteColor()
-                ))
-                .addActionRow(setTotal, addTotal)
-                .queue();
+        if (projectsCategory) {
+            action = action.addActionRow(setTotal, addTotal);
+        }
+
+        action.queue();
     }
 
     @Override
