@@ -1,7 +1,7 @@
 package com.github.novicezk.midjourney.bot;
 
 import com.github.novicezk.midjourney.bot.commands.BotEventManager;
-import com.github.novicezk.midjourney.bot.webhook.TrelloWebhookRegister;
+import com.github.novicezk.midjourney.bot.webhook.WebhookRegister;
 import com.github.novicezk.midjourney.bot.utils.Config;
 import com.github.novicezk.midjourney.controller.SubmitController;
 import lombok.RequiredArgsConstructor;
@@ -59,6 +59,6 @@ public class AdamBotInitializer implements ApplicationRunner {
     }
 
     private void registerApi() {
-        TrelloWebhookRegister.registerWebhook();
+        WebhookRegister.registerWebhook();
     }
 }

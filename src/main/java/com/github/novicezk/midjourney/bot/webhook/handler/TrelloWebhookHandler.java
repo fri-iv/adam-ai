@@ -1,4 +1,4 @@
-package com.github.novicezk.midjourney.bot.webhook;
+package com.github.novicezk.midjourney.bot.webhook.handler;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,10 +17,10 @@ import java.io.*;
 import java.util.regex.Pattern;
 
 @Slf4j
-public class WebhookHandler implements HttpHandler {
+public class TrelloWebhookHandler implements HttpHandler {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public WebhookHandler() {
+    public TrelloWebhookHandler() {
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
