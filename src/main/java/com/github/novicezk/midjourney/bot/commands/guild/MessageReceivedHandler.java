@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 @Slf4j
 public class MessageReceivedHandler {
     private static final Pattern URL_PATTERN = Pattern.compile(
-            "\\b((https?|ftp|file)://|www\\.|ftp\\.)[-A-Z0-9+&@#/%?=~_|$!:,.;]*[A-Z0-9+&@#/%=~_|$]",
+            "\\b((https?|ftp|file)://|www\\.|ftp\\.|[A-Z0-9.-]+\\.[A-Z]{2,4}\\b)[-A-Z0-9+&@#/%?=~_|$!:,.;]*[A-Z0-9+&@#/%=~_|$]",
             Pattern.CASE_INSENSITIVE);
 
     private final PrivateMessageSender privateMessageSender;
