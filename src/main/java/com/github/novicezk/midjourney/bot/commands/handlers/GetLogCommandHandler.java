@@ -5,6 +5,7 @@ import com.github.novicezk.midjourney.bot.error.model.ErrorLogData;
 import com.github.novicezk.midjourney.bot.events.EventsStorage;
 import com.github.novicezk.midjourney.bot.events.model.EventData;
 import com.github.novicezk.midjourney.bot.utils.Config;
+import com.github.novicezk.midjourney.bot.utils.FileUtil;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -57,14 +58,14 @@ public class GetLogCommandHandler implements CommandHandler {
         if (logs.length() <= 1000) {
             builder.addField("Full logs: ", "```" + logs + "```", false);
         } else {
-            FileUpload logsFile = getFileFromString(logs, "logs");
+            FileUpload logsFile = FileUtil.getFileFromString(logs, "logs", ".txt");
             description = sendFileIfNeeded(guild, logsFile);
         }
 
         if (stats != null && stats.length() <= 1000) {
             builder.addField("Stats: ", "```" + stats + "```", false);
         } else if (stats != null) {
-            FileUpload statsFile = getFileFromString(stats, "stats");
+            FileUpload statsFile = FileUtil.getFileFromString(stats, "stats", ".txt");
             description = sendFileIfNeeded(guild, statsFile);
         }
         return description;
@@ -75,7 +76,7 @@ public class GetLogCommandHandler implements CommandHandler {
         if (logs.length() <= 1000) {
             builder.addField("User logs: ", "```" + logs + "```", false);
         } else {
-            FileUpload logsFile = getFileFromString(logs, "user_logs");
+            FileUpload logsFile = FileUtil.getFileFromString(logs, "user_logs", ".txt");
             description = sendPrivateFileIfNeeded(user, logsFile);
         }
 
@@ -112,23 +113,6 @@ public class GetLogCommandHandler implements CommandHandler {
             builder.setDescription(description);
         }
         event.getHook().sendMessageEmbeds(builder.build()).queue();
-    }
-
-    private static FileUpload getFileFromString(String content, String filename) {
-        String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
-
-        File file = new File(filename + "." + timeStamp + ".txt");
-        try {
-            FileWriter writer = new FileWriter(file);
-            writer.write(content);
-            writer.close();
-
-            return FileUpload.fromData(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return null;
     }
 
     private static String getEvents(List<EventData> events) {

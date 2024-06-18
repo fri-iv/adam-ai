@@ -21,6 +21,7 @@ public class Config {
     private static final String QUEUE_CHANNEL = "QUEUE_CHANNEL";
     private static final String DEBUG_CHANNEL = "DEBUG_CHANNEL";
     private static final String LOGS_CHANNEL = "LOGS_CHANNEL";
+    private static final String PAY_LOGS_CHANNEL = "PAY_LOGS_CHANNEL";
     private static final String FAQ_CHANNEL = "FAQ_CHANNEL";
     private static final String ARTS_CHANNEL = "ARTS_CHANNEL";
     private static final String WELCOME_CHANNEL = "WELCOME_CHANNEL";
@@ -207,6 +208,10 @@ public class Config {
 
     public static String getLogsChannel() {
         return properties.getProperty(LOGS_CHANNEL);
+    }
+
+    public static String getPayLogsChannel() {
+        return properties.getProperty(PAY_LOGS_CHANNEL);
     }
 
     public static String getFaqChannel() {

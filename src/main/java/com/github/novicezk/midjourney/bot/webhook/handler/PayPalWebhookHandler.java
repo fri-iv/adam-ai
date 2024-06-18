@@ -1,6 +1,7 @@
 package com.github.novicezk.midjourney.bot.webhook.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.novicezk.midjourney.bot.events.EventsManager;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +37,7 @@ public class PayPalWebhookHandler implements HttpHandler {
     private void handlePost(HttpExchange exchange) throws IOException {
         try (InputStream requestBody = exchange.getRequestBody()) {
             String body = IOUtils.toString(requestBody);
-            log.debug("body {}", body);
+            EventsManager.onPayPalEvent(body);
         } catch (Exception e) {
             log.error("Failed to process webhook payload", e);
             exchange.sendResponseHeaders(500, -1);

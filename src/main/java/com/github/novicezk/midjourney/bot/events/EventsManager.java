@@ -8,6 +8,7 @@ import com.github.novicezk.midjourney.bot.events.model.LeaveEventData;
 import com.github.novicezk.midjourney.bot.utils.ColorUtil;
 import com.github.novicezk.midjourney.bot.utils.Config;
 import com.github.novicezk.midjourney.bot.utils.EmbedUtil;
+import com.github.novicezk.midjourney.bot.utils.FileUtil;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -17,6 +18,7 @@ import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.utils.FileUpload;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
@@ -81,6 +83,12 @@ public class EventsManager {
         sendLogToDiscord(event.getGuild(), id, username, errorMessage, ColorUtil.getErrorColor());
     }
 
+    public static void onPayPalEvent(String body) {
+        String formattedJson = FileUtil.formatJson(body);
+        FileUpload logsFile = FileUtil.getFileFromString(formattedJson, "payment_logs", ".json");
+        sendLogToDiscord(null, Config.getPayLogsChannel(), ColorUtil.getSuccessColor(), logsFile);
+    }
+
     private static void sendLogToDiscord(@Nullable Guild guild, String userId, String username, String text) {
         sendLogToDiscord(guild, userId, username, text, ColorUtil.getDefaultColor());
     }
@@ -92,11 +100,6 @@ public class EventsManager {
             String text,
             Color color
     ) {
-        Guild guild = AdamBotInitializer.getApiInstance().getGuildById(Config.getGuildId());
-        if (guild == null || guild.getTextChannelById(Config.getLogsChannel()) == null) {
-            return;
-        }
-
         String postText = text;
         if (userId != null && username != null) {
             postText = String.format("%s — <@%s>, %s", text, userId, username);
@@ -106,12 +109,25 @@ public class EventsManager {
             postText = String.format("%s\n%s", "Dev Guild Event", postText);
         }
 
-        TextChannel logChannel = guild.getTextChannelById(Config.getLogsChannel());
-        logChannel.sendMessageEmbeds(EmbedUtil.createEmbed(
-                null,
-                postText,
-                Config.getAppVersion(),
-                color
-        )).queue();
+        sendLogToDiscord(postText, Config.getLogsChannel(), color, null);
+    }
+
+    private static void sendLogToDiscord(String postText, String logChannelId, Color color, FileUpload logsFile) {
+        Guild guild = AdamBotInitializer.getApiInstance().getGuildById(Config.getGuildId());
+        if (guild == null || guild.getTextChannelById(logChannelId) == null) {
+            return;
+        }
+
+        TextChannel logChannel = guild.getTextChannelById(logChannelId);
+        if (logChannel != null && postText != null) {
+            logChannel.sendMessageEmbeds(EmbedUtil.createEmbed(
+                    null,
+                    postText,
+                    Config.getAppVersion(),
+                    color
+            )).queue();
+        } else if (logChannel != null && logsFile != null) {
+            logChannel.sendFiles(logsFile).queue();
+        }
     }
 }
