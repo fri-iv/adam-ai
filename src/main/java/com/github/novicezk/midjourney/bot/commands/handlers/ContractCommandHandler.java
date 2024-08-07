@@ -107,10 +107,34 @@ public class ContractCommandHandler implements CommandHandler {
             case "dev-rules":
                 handleDevRulesCommand(event, prod);
                 break;
+            case "dev-links":
+                handleDevLinksCommand(event, prod);
+                break;
             default:
                 event.getHook().sendMessageEmbeds(List.of(EmbedUtil.createEmbed("Command not found"))).queue();
                 break;
         }
+    }
+
+    private void handleDevLinksCommand(SlashCommandInteractionEvent event, boolean prod) {
+        String channelId = Config.getDevDebugChannel();
+        if (prod) {
+            channelId = Config.getDevLinksChannel();
+        }
+
+        String guildId = Config.getDevGuildId();
+        Guild guild = AdamBotInitializer.getApiInstance().getGuildById(guildId);
+        if (guild == null || guild.getTextChannelById(channelId) == null) {
+            OnErrorAction.onDefaultMessage(event);
+            return;
+        }
+
+        event.getHook().sendMessageEmbeds(EmbedUtil.createEmbedSuccess("Done")).setEphemeral(true).queue();
+        guild.getTextChannelById(channelId).sendMessage("""
+                Client Server: this is where we communicate with our customers
+                
+                https://discord.gg/avis
+                """).queue();
     }
 
     private void handleDevRulesCommand(SlashCommandInteractionEvent event, boolean prod) {
@@ -162,7 +186,6 @@ public class ContractCommandHandler implements CommandHandler {
                 ColorUtil.getSuccessColor(),
                 helpButton
         );
-
     }
 
     private void handleDevPriceCommand(SlashCommandInteractionEvent event, boolean prod) {
