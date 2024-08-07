@@ -28,7 +28,7 @@ public class PingCommandHandler implements CommandHandler {
             text = "pong";
         }
 
-        text += "\nVersion: " + Config.getAppVersion();
+        text += "\nv: " + Config.getAppVersion();
 
         event.reply(text).setEphemeral(true).queue();
     }

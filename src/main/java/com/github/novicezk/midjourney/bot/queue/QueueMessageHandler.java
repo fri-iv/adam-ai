@@ -58,7 +58,7 @@ public class QueueMessageHandler extends MessageHandler {
 
     private void handleCriticalFail(DataObject message, String failReason) {
         Guild guild = AdamBotInitializer.getApiInstance().getGuildById(Config.getGuildId());
-        if (guild != null) {
+        if (guild != null && message.getObject("interaction_metadata").hasKey("user_id")) {
             String userId = message.getObject("interaction_metadata").getString("user_id");
             ErrorMessageHandler.sendMessage(guild, userId, "Critical miss! \uD83C\uDFB2\uD83E\uDD26 \nTry again or upload new image!", failReason);
         }

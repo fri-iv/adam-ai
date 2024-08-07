@@ -72,8 +72,7 @@ public class PromptGenerator {
         StringBuilder messageBuilder = buildMessage(
                 character,
                 characterStrength,
-                characterClass,
-                style.getDisplayName()
+                characterClass
         );
 
         GeneratedPromptData promptData = new GeneratedPromptData();
@@ -113,13 +112,11 @@ public class PromptGenerator {
     private StringBuilder buildMessage(
             Character character,
             CharacterStrength characterStrength,
-            CharacterClass characterClass,
-            String messageStyle
+            CharacterClass characterClass
     ) {
         StringBuilder messageBuilder = new StringBuilder();
         messageBuilder
                 .append("**Reference Name:** ").append(character.getDisplayName()).append("\n")
-                .append("**Generated Style:** ").append(messageStyle).append("\n")
                 .append("**Seed:** s").append(SeasonTracker.getCurrentSeasonVersion())
                 .append(".").append(SeasonTracker.getCurrentGenerationCount()).append("\n");
 

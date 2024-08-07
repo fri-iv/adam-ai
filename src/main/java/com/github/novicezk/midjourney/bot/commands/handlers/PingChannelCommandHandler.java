@@ -30,7 +30,7 @@ public class PingChannelCommandHandler implements CommandHandler {
             return;
         }
 
-        event.getChannel().sendMessage("Hello to @everyone! Please pay attention to this channel.").queue();
+        event.getChannel().sendMessage("Hello @everyone! Please pay attention to this channel.").queue();
         event.getHook().sendMessageEmbeds(EmbedUtil.createEmbed("done!")).queue();
     }
 

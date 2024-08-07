@@ -87,7 +87,7 @@ public class CreateProjectCommandHandler implements CommandHandler {
 
     private void sendMessageToPrivateChannel(TextChannel channel, String projectName, String artistId, double price) {
         channel.sendMessageEmbeds(EmbedUtil.createEmbedCute(
-                        "Welcome to Avatar Studio!",
+                        "Welcome to AviHero!",
                         String.format("""
                                     Your project **%s** is now in progress!
                                     Chat here to discuss details.
@@ -171,8 +171,8 @@ public class CreateProjectCommandHandler implements CommandHandler {
     @Override
     public List<CommandData> getCommandData() {
         OptionData trello = new OptionData(OptionType.STRING, "trello-link", "https://trello.com/");
-        OptionData customer = new OptionData(OptionType.MENTIONABLE, "customer", "Participants");
-        OptionData artist = new OptionData(OptionType.MENTIONABLE, "artist", "Participants");
+        OptionData customer = new OptionData(OptionType.USER, "customer", "Participants");
+        OptionData artist = new OptionData(OptionType.USER, "artist", "Participants");
         OptionData price = new OptionData(OptionType.NUMBER, "price", "Project price");
 
         return Collections.singletonList(Commands

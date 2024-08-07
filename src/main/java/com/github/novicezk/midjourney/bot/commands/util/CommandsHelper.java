@@ -12,20 +12,20 @@ public class CommandsHelper {
                 ・`/get-queue` – Check the current queue status
                 ・`/clear-queue` – Clear the queue (Admin role required)
 
-                Project commands:
-
-                ・`/price` - Calculate the **final** price
-                ・`/settings-project` - Update price information
-                ・`/payment` - Get relevant payment information
-                ・`/kofi-price` - Calculate the price for a **ko-fi** donation
-                ・`/info` - Get current info about the project
-
                 Administrate commands:
 
                 ・`/mute` - Add the **MUTED** role to a user
                 ・`/delete-message` - **Delete** any message in the channels
                 ・`/pin-message` - Pin messages in any channels
-                ・`/ping-channel` - Ping a **private** channel with the *@everyone* tag
+                ・`/ping-channel` - Ping a private channel with the *@everyone* tag
+
+                Project commands:
+
+                ・`/price` - Calculate the final price
+                ・`/settings-project` - Update price information
+                ・`/payment` - Get relevant payment information
+                ・`/kofi-price` - Calculate the price for a ko-fi donation
+                ・`/info` - Get current info about the project
 
                 Dev commands:
 

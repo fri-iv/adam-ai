@@ -18,17 +18,17 @@ public class PriceManager {
         // Initial calculation
         double finalPrice = performerPrice / (1 - MARGINALITY);
 
-        boolean includeTransactionFees = true;
-
         // Adjust final price based on conditions
         if (performerPrice < RANGE_BOTTOM_LINE) {
             finalPrice = performerPrice + (performerPrice * STUDIO_COMMISSION_RATE);
         } else if (performerPrice > RANGE_UPPER_LINE) {
             finalPrice = performerPrice + RANGE_UPPER_LINE + performerPrice * LARGE_DIFFERENCE;
-            includeTransactionFees = false;
         }
 
+        // Do not include transaction fees for large projects
+        boolean includeTransactionFees = performerPrice <= RANGE_UPPER_LINE;
         double transactionCommission = includeTransactionFees ? finalPrice * TRANSACTION_COMMISSION_RATE : 0.0;
+
         return finalPrice + transactionCommission;
     }
 
