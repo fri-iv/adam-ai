@@ -69,7 +69,7 @@ public class QueueMessageHandler extends MessageHandler {
         String userId = getAuthorId(message);
         if (channel != null && userId != null) {
             try {
-                File imageFile = ImageDownloader.downloadImage(getImageUrl(message));
+                File imageFile = ImageDownloader.downloadImage(getImageUrl(message), "image.jpg");
                 FileUpload file = FileUpload.fromData(imageFile);
                 sendTaskCompletionMessage(channel, userId, parseData, file);
             } catch (IOException e) {

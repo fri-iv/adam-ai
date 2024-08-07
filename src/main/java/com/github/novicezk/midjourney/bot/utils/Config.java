@@ -34,6 +34,7 @@ public class Config {
     private static final String DEV_GUILD_ID = "DEV_GUILD_ID";
 
     // Channel IDs for developers
+    private static final String DEV_BUDGET_CHANNEL = "DEV_BUDGET_CHANNEL";
     private static final String DEV_LINKS_CHANNEL = "DEV_LINKS_CHANNEL";
     private static final String DEV_RULES_CHANNEL = "DEV_RULES_CHANNEL";
     private static final String DEV_PRICE_CHANNEL = "DEV_PRICE_CHANNEL";
@@ -241,6 +242,10 @@ public class Config {
 
     public static String getRulesChannel() {
         return properties.getProperty(RULES_CHANNEL);
+    }
+
+    public static String getDevBudgetChannel() {
+        return properties.getProperty(DEV_BUDGET_CHANNEL);
     }
 
     public static String getDevLinksChannel() {

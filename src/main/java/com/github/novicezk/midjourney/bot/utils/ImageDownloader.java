@@ -11,14 +11,14 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class ImageDownloader {
-    public static File downloadImage(String imageUrl) throws IOException {
+    public static File downloadImage(String imageUrl, String filename) throws IOException {
         HttpClient httpClient = HttpClientBuilder.create().build();
         HttpGet request = new HttpGet(imageUrl);
         HttpResponse response = httpClient.execute(request);
 
         if (response.getStatusLine().getStatusCode() == 200) {
             try (InputStream inputStream = response.getEntity().getContent()) {
-                File file = new File("image.jpg");
+                File file = new File(filename);
                 try (FileOutputStream outputStream = new FileOutputStream(file)) {
                     byte[] buffer = new byte[1024];
                     int bytesRead;

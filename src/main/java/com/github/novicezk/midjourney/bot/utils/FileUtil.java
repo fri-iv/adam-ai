@@ -2,12 +2,15 @@ package com.github.novicezk.midjourney.bot.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.utils.FileUpload;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FileUtil {
 
@@ -42,5 +45,23 @@ public class FileUtil {
             e.printStackTrace();
             return body; // return original body in case of error
         }
+    }
+
+    public static List<FileUpload> getFilesFromAttachments(List<Message.Attachment> attachments) {
+        return getFilesFromAttachments(attachments, "image.jpg");
+    }
+
+    public static List<FileUpload> getFilesFromAttachments(List<Message.Attachment> attachments, String filename) {
+        List<FileUpload> files = new ArrayList<>();
+        for (Message.Attachment attachment : attachments) {
+            try {
+                File imageFile = ImageDownloader.downloadImage(attachment.getUrl(), filename);
+                files.add(FileUpload.fromData(imageFile));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return files;
     }
 }
