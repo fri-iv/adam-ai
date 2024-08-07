@@ -38,7 +38,10 @@ public class MessageReceivedHandler {
                 || event.getChannel().getId().equals(Config.getQueueChannel())
                 || event.getChannel().getId().equals(Config.getFaqChannel())
                 || event.getChannel().getId().equals(Config.getDevRulesChannel())
-                || event.getChannel().getId().equals(Config.getDevPriceChannel()));
+                || event.getChannel().getId().equals(Config.getDevPriceChannel())
+                || event.getChannel().getId().equals(Config.getDevTeamChannel())
+                || event.getChannel().getId().equals(Config.getDevBudgetChannel())
+                || event.getChannel().getId().equals(Config.getDevLinksChannel()));
 
         // check for private messages to bot
         if (isPrivate) {
