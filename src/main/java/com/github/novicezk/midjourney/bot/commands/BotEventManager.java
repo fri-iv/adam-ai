@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
@@ -54,6 +55,7 @@ public class BotEventManager extends ListenerAdapter {
         handlers.add(new SettingsProjectCommandHandler());
         handlers.add(new DeleteMessageCommandHandler());
         handlers.add(new UpdatePublishCommandHandler());
+        handlers.add(new UpdateStatusCommandHandler());
         handlers.add(new UploadImageCommandHandler());
         handlers.add(new PingChannelCommandHandler());
         handlers.add(new DevBudgetCommandHandler());
@@ -76,6 +78,15 @@ public class BotEventManager extends ListenerAdapter {
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         messageReceivedHandler.onMessageReceived(event);
+    }
+
+    @Override
+    public void onStringSelectInteraction(StringSelectInteractionEvent event) {
+        for (CommandHandler handler : commandHandlers) {
+            if (handler instanceof CommandSelectHandler) {
+                ((CommandSelectHandler) handler).onStringSelectInteraction(event);
+            }
+        }
     }
 
     @Override

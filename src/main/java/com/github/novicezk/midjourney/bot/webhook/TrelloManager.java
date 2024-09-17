@@ -6,6 +6,7 @@ import com.julienvey.trello.domain.Card;
 import com.julienvey.trello.domain.TList;
 import com.julienvey.trello.impl.TrelloImpl;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -39,5 +40,19 @@ public class TrelloManager {
             return matcher.group(1);
         }
         return null;
+    }
+
+    public static List<TList> getBoardColumns() {
+        return getBoardColumns(Config.getTrelloBoard());
+    }
+
+    /**
+     * Return all the columns
+     *
+     * @param boardId ID board Trello
+     * @return list of columns
+     */
+    public static List<TList> getBoardColumns(String boardId) {
+        return trelloApi.getBoardLists(boardId);
     }
 }

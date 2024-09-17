@@ -3,6 +3,7 @@ package com.github.novicezk.midjourney.bot.webhook.handler;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.novicezk.midjourney.bot.AdamBotInitializer;
+import com.github.novicezk.midjourney.bot.utils.ChannelUtil;
 import com.github.novicezk.midjourney.bot.webhook.model.TrelloModel;
 import com.github.novicezk.midjourney.bot.utils.Config;
 import com.github.novicezk.midjourney.bot.utils.EmbedUtil;
@@ -84,29 +85,8 @@ public class TrelloWebhookHandler implements HttpHandler {
                 channel.sendMessageEmbeds(EmbedUtil.createEmbedCute(String.format("Project status updated: **%s**", status)))
                         .queue();
 
-                updateChannelTopic(channel, status);
+                ChannelUtil.updateChannelTopic(channel, status);
             }
         }
-    }
-
-    private void updateChannelTopic(TextChannel channel, String status) {
-        String topic = channel.getTopic();
-        if (topic == null) {
-            return;
-        }
-
-        String[] lines = topic.split("\\n");
-        lines[0] = String.format("Project status: **%s**", status);
-
-        StringBuilder topicBuilder = new StringBuilder();
-        for (String line : lines) {
-            topicBuilder.append(line).append("\n");
-        }
-
-        if (!topicBuilder.isEmpty()) {
-            topicBuilder.setLength(topicBuilder.length() - 1);
-        }
-
-        channel.getManager().setTopic(topicBuilder.toString()).queue();
     }
 }
