@@ -48,14 +48,23 @@ public class FileUtil {
     }
 
     public static List<FileUpload> getFilesFromAttachments(List<Message.Attachment> attachments) {
-        return getFilesFromAttachments(attachments, "image.jpg");
+        return getFilesFromAttachments(attachments, null, true);
     }
 
     public static List<FileUpload> getFilesFromAttachments(List<Message.Attachment> attachments, String filename) {
+        return getFilesFromAttachments(attachments, filename, false);
+    }
+
+    private static List<FileUpload> getFilesFromAttachments(
+            List<Message.Attachment> attachments,
+            String filename,
+            boolean originalName
+    ) {
         List<FileUpload> files = new ArrayList<>();
         for (Message.Attachment attachment : attachments) {
             try {
-                File imageFile = ImageDownloader.downloadImage(attachment.getUrl(), filename);
+                String name = originalName ? attachment.getFileName() : filename;
+                File imageFile = ImageDownloader.downloadImage(attachment.getUrl(), name);
                 files.add(FileUpload.fromData(imageFile));
             } catch (IOException e) {
                 e.printStackTrace();
