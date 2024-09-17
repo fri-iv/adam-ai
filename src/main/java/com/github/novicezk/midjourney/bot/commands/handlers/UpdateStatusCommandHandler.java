@@ -50,7 +50,7 @@ public class UpdateStatusCommandHandler implements CommandSelectHandler {
                 .setEphemeral(true)
                 .queue();
 
-        event.getHook().sendMessageEmbeds(EmbedUtil.createEmbedSuccess("done")).setEphemeral(true).queue();
+        event.getHook().sendMessageEmbeds(EmbedUtil.createEmbedSuccess("choose the status")).setEphemeral(true).queue();
     }
 
     @Override
@@ -77,11 +77,11 @@ public class UpdateStatusCommandHandler implements CommandSelectHandler {
                     .map(TList::getName)
                     .orElse("Unknown");
 
-            event.getHook().sendMessageEmbeds(EmbedUtil.createEmbedSuccess(
-                            String.format("Project status updated: **%s**", selectedColumnName)))
-                    .setEphemeral(true).queue();
+            event.getHook().sendMessageEmbeds(EmbedUtil.createEmbedSuccess("done")).setEphemeral(true).queue();
 
             ChannelUtil.updateChannelTopic(event.getChannel().asTextChannel(), selectedColumnName);
+            event.getChannel().sendMessageEmbeds(EmbedUtil.createEmbedCute(String.format("Project status updated: **%s**", selectedColumnName)))
+                    .queue();
         }
     }
 }
