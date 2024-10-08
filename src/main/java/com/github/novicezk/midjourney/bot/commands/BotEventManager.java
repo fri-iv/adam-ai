@@ -47,6 +47,7 @@ public class BotEventManager extends ListenerAdapter {
     ) {
         List<CommandHandler> handlers = new ArrayList<>();
 
+        handlers.add(new AddProjectMemberCommandHandler(privateMessageSender));
         handlers.add(new CreateProjectCommandHandler(privateMessageSender));
         handlers.add(new ContractCommandHandler(submitController));
         handlers.add(new GenerateCommandHandler(submitController));
