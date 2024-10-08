@@ -10,7 +10,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class FileUtil {
 
@@ -48,29 +50,60 @@ public class FileUtil {
     }
 
     public static List<FileUpload> getFilesFromAttachments(List<Message.Attachment> attachments) {
-        return getFilesFromAttachments(attachments, null, true);
+        List<FileUpload> files = new ArrayList<>();
+        Set<String> fileNames = new HashSet<>();
+
+        for (Message.Attachment attachment : attachments) {
+            String originalFileName = attachment.getFileName();
+            String uniqueFileName = getUniqueFileName(fileNames, originalFileName);
+
+            files.addAll(getFileFromAttachment(attachment, uniqueFileName));
+        }
+        return files;
     }
 
-    public static List<FileUpload> getFilesFromAttachments(List<Message.Attachment> attachments, String filename) {
-        return getFilesFromAttachments(attachments, filename, false);
+    public static List<FileUpload> getFilesFromAttachment(Message.Attachment attachment, String filename) {
+        return getFileFromAttachment(attachment, filename);
     }
 
-    private static List<FileUpload> getFilesFromAttachments(
-            List<Message.Attachment> attachments,
-            String filename,
-            boolean originalName
+    private static List<FileUpload> getFileFromAttachment(
+            Message.Attachment attachment,
+            String filename
     ) {
         List<FileUpload> files = new ArrayList<>();
-        for (Message.Attachment attachment : attachments) {
-            try {
-                String name = originalName ? attachment.getFileName() : filename;
-                File imageFile = ImageDownloader.downloadImage(attachment.getUrl(), name);
-                files.add(FileUpload.fromData(imageFile));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        try {
+            File imageFile = ImageDownloader.downloadImage(attachment.getUrl(), filename);
+            files.add(FileUpload.fromData(imageFile));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         return files;
     }
+
+    private static String getUniqueFileName(Set<String> existingNames, String fileName) {
+        String name = fileName;
+        String extension = "";
+
+        // Check if the file has an extension
+        int dotIndex = fileName.lastIndexOf(".");
+        if (dotIndex > 0) {
+            name = fileName.substring(0, dotIndex);
+            extension = fileName.substring(dotIndex); // including the dot
+        }
+
+        // If a file with the same name already exists, add a numeric suffix
+        int counter = 1;
+        String uniqueFileName = fileName;
+        while (existingNames.contains(uniqueFileName)) {
+            uniqueFileName = name + "_" + counter + extension;
+            counter++;
+        }
+
+        // Add a unique name to the list of existing names
+        existingNames.add(uniqueFileName);
+
+        return uniqueFileName;
+    }
+
 }
