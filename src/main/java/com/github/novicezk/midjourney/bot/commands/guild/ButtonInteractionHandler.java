@@ -47,13 +47,32 @@ public class ButtonInteractionHandler {
         } else if (event.getComponentId().equals("re-roll")) {
             handleReRollButton(event);
         } else if (event.getComponentId().equals("copy-paypal-email")) {
+            handleHelpButton(event);
             handleCopyPayPalEmail(event);
         } else if (event.getComponentId().startsWith("set-total-price")
                 || event.getComponentId().startsWith("add-total-price")) {
             handleChangeTotalPriceButton(event, event.getComponentId().startsWith("set-total-price"));
         } else if (event.getComponentId().equals("help-button")) {
             handleHelpButton(event);
+        } else if (event.getComponentId().equals("payment-complete")) {
+            handlePaymentCompleteButton(event);
         }
+    }
+
+    private void handlePaymentCompleteButton(ButtonInteractionEvent event) {
+        event.getHook().sendMessageEmbeds(EmbedUtil.createEmbed("Thanks! Your manager has been notified. We'll process your payment as soon as possible.")).queue();
+
+        TextChannel channel = event.getChannel().asTextChannel();
+        channel.sendMessageEmbeds(EmbedUtil.createEmbedSuccess("Client has sent the payment")).queue();
+
+        // Notify contact manager
+        String notificationChannel = "<#" + event.getChannel().getId() + ">";
+        privateMessageSender.notifyContactManager(
+                event.getJDA(),
+                event.getMessage().getAttachments(),
+                "Client has sent the payment!",
+                String.format("%s\nPayment confirmation received from this channel.", notificationChannel)
+        );
     }
 
     private void handleHelpButton(ButtonInteractionEvent event) {

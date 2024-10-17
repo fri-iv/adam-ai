@@ -86,6 +86,7 @@ public class Config {
 
     // Contact details
     private static final String PAYPAL_EMAIL = "PAYPAL_EMAIL";
+    private static final String PAYPAL_LINK = "PAYPAL_LINK";
     private static final String KOFI_PAGE = "KOFI_PAGE";
 
     private static final String CONFIG_FILE = "adam-ai/config.properties";
@@ -305,6 +306,10 @@ public class Config {
 
     public static String getPaypalEmail() {
         return properties.getProperty(PAYPAL_EMAIL);
+    }
+
+    public static String getPaypalLink() {
+        return properties.getProperty(PAYPAL_LINK);
     }
 
     public static String getKofiPage() {

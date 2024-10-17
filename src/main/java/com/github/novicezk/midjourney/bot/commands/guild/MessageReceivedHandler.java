@@ -70,25 +70,23 @@ public class MessageReceivedHandler {
             double total = topicSettings.getTotal();
             double remaining = topicSettings.getRemaining();
 
-            Button copyButton = Button.primary("copy-paypal-email", "Copy PayPal Email");
+            Button copyButton = Button.success("payment-complete", "Payment Complete");
             event.getChannel().sendMessageEmbeds(EmbedUtil.createEmbed(
-                            "We're ready to proceed with your payment",
-                            String.format("Please send the remaining balance to our **PayPal** account at **%s**\n" +
+                            "We're ready to proceed with your payment!",
+                            String.format("%s\n" +
+                                            "Please use this link to send the remaining balance. Choose **Family and Friends** to avoid extra fees. Any additional fees will be your responsibility.\n" +
                                             "\n" +
                                             "Total price: **$%,.2f**\n" +
                                             "Already paid: **$%,.2f**\n" +
                                             "Remaining balance: **$%,.2f**\n" +
                                             "\n" +
-                                            "Once the payment has been made, please notify <@%s> so we can proceed with the next steps.\n" +
-                                            "\n" +
-                                            "`/payment` for more information or to see additional payment options",
-                                    Config.getPaypalEmail(),
+                                            "For more details, use `/payment`",
+                                    Config.getPaypalLink(),
                                     total,
                                     paid,
-                                    remaining,
-                                    Config.getContactManagerId()
+                                    remaining
                             ),
-                            "Any fees incurred will be your responsibility. Thank you!",
+                            "Once paid, click the button below. Thank you!",
                             ColorUtil.getSuccessColor()
                     ))
                     .addActionRow(copyButton)
