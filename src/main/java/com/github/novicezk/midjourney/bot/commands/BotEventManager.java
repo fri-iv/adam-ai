@@ -54,6 +54,7 @@ public class BotEventManager extends ListenerAdapter {
         handlers.add(new MuteCommandHandler(privateMessageSender));
         handlers.add(new PriceCommandHandler(priceManager));
         handlers.add(new SettingsProjectCommandHandler());
+        handlers.add(new ArchiveChannelCommandHandler());
         handlers.add(new DeleteMessageCommandHandler());
         handlers.add(new UpdatePublishCommandHandler());
         handlers.add(new UpdateStatusCommandHandler());

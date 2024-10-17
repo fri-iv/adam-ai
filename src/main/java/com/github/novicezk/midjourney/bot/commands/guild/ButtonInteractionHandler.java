@@ -56,7 +56,22 @@ public class ButtonInteractionHandler {
             handleHelpButton(event);
         } else if (event.getComponentId().equals("payment-complete")) {
             handlePaymentCompleteButton(event);
+        } else if (event.getComponentId().equals("new-request")) {
+            handleNewRequestButton(event);
         }
+    }
+
+    private void handleNewRequestButton(ButtonInteractionEvent event) {
+        event.getHook().sendMessageEmbeds(EmbedUtil.createEmbed("Thanks for your request! Your manager has been notified and we’ll reach out to you shortly!")).queue();
+
+        // Notify contact manager
+        String notificationChannel = "<#" + event.getChannel().getId() + ">";
+        privateMessageSender.notifyContactManager(
+                event.getJDA(),
+                event.getMessage().getAttachments(),
+                "New request has been opened!",
+                String.format("<@%s>\n%s\nWe've received the request from this channel.", event.getUser().getId(), notificationChannel)
+        );
     }
 
     private void handlePaymentCompleteButton(ButtonInteractionEvent event) {

@@ -3,6 +3,7 @@ package com.github.novicezk.midjourney.bot.commands.handlers;
 import com.github.novicezk.midjourney.bot.commands.CommandsUtil;
 import com.github.novicezk.midjourney.bot.error.OnErrorAction;
 import com.github.novicezk.midjourney.bot.model.TopicSettings;
+import com.github.novicezk.midjourney.bot.utils.Config;
 import com.github.novicezk.midjourney.bot.utils.EmbedUtil;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Member;
@@ -28,6 +29,11 @@ public class SettingsProjectCommandHandler implements CommandHandler {
         Member member = event.getMember();
         if (member == null || !CommandsUtil.isUserAuthorized(member)) {
             OnErrorAction.onMissingRoleMessage(event);
+            return;
+        }
+
+        if (!Config.getProjectsCategory().equals(event.getChannel().asTextChannel().getParentCategoryId())) {
+            OnErrorAction.sendMessage(event, "This command can't be used in this category", false);
             return;
         }
 

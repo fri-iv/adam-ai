@@ -28,7 +28,10 @@ public class Config {
     private static final String SHOWCASES_CHANNEL = "SHOWCASES_CHANNEL";
     private static final String UPDATES_CHANNEL = "UPDATES_CHANNEL";
     private static final String RULES_CHANNEL = "RULES_CHANNEL";
-    private static final String PROJECTS_CATEGORY = "PROJECTS_CATEGORY";
+
+    // Category IDs
+    private static final String CATEGORY_PROJECTS = "CATEGORY_PROJECTS";
+    private static final String CATEGORY_ARCHIVE = "CATEGORY_ARCHIVE";
 
     // Guild ID for developers
     private static final String DEV_GUILD_ID = "DEV_GUILD_ID";
@@ -297,7 +300,11 @@ public class Config {
     }
 
     public static String getProjectsCategory() {
-        return properties.getProperty(PROJECTS_CATEGORY);
+        return properties.getProperty(CATEGORY_PROJECTS);
+    }
+
+    public static String getCategoryArchive() {
+        return properties.getProperty(CATEGORY_ARCHIVE);
     }
 
     public static String getMixpanelProjectToken() {
