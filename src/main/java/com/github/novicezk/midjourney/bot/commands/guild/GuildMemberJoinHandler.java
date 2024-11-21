@@ -100,10 +100,11 @@ public class GuildMemberJoinHandler {
     // send welcome message to DMs
     private void handleWelcomeDirectMessage(User user) {
         String welcomeMessage = String.format("""
-               Hey there! I'm Adam, the **AviHero**'s bot.
+               Hello! I'm Adam, the **Avatar Studio**'s bot.
                                \s
-               Want to create your own avatar? Send me your ideas or reach out to our manager <@%s>
-               Click the button and we'll get in touch ASAP. Enjoy your stay!
+               **Beware of scammers!** Only our manager <@%s> handles orders and requests. If anyone else from the server offers help, it's a **scam**—be cautious!
+               Want your own custom avatar? Click the button to share your ideas, and we'll get in touch ASAP.
+               Enjoy your stay!
                """,
                 Config.getContactManagerId()
         );
