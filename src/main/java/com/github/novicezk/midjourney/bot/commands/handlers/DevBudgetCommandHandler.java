@@ -51,7 +51,7 @@ public class DevBudgetCommandHandler implements CommandHandler {
                 monthMapping.getAsString() + " Report",
                 "To access the report go to https://zenmoney.ru/a/#import and upload the file",
                 "prepared by " + member.getEffectiveName()
-        )).addFiles(FileUtil.getFilesFromAttachment(fileMapping.getAsAttachment(), "avihero.csv")).queue();
+        )).addFiles(FileUtil.getFilesFromAttachment(fileMapping.getAsAttachment(), "avibagels.csv")).queue();
     }
 
     @Override

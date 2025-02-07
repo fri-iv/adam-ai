@@ -87,13 +87,13 @@ public class CreateProjectCommandHandler implements CommandHandler {
 
     private void sendMessageToPrivateChannel(TextChannel channel, String projectName, String artistId, double price) {
         channel.sendMessageEmbeds(EmbedUtil.createEmbedCute(
-                        "Welcome to AviHero!",
+                        "Welcome to Avatar Studio Bagels!",
                         String.format("""
                                     Your project **%s** is now in progress!
                                     Chat here to discuss details.
 
-                                    **3D Artist:** <@%s>
                                     **Project Manager:** <@%s>
+                                    **3D Artist:** <@%s>
 
                                     **Price:** $%,.2f
 
@@ -101,8 +101,8 @@ public class CreateProjectCommandHandler implements CommandHandler {
                                     `/payment` for payment details
                                     """,
                                 projectName,
-                                artistId,
                                 Config.getContactManagerId(),
+                                artistId,
                                 price
                         )))
                 .queue();

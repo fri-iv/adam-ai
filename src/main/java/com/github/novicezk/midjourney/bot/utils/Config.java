@@ -28,6 +28,7 @@ public class Config {
     private static final String SHOWCASES_CHANNEL = "SHOWCASES_CHANNEL";
     private static final String UPDATES_CHANNEL = "UPDATES_CHANNEL";
     private static final String RULES_CHANNEL = "RULES_CHANNEL";
+    private static final String TOS_CHANNEL = "TOS_CHANNEL";
 
     // Category IDs
     private static final String CATEGORY_PROJECTS = "CATEGORY_PROJECTS";
@@ -253,6 +254,10 @@ public class Config {
 
     public static String getRulesChannel() {
         return properties.getProperty(RULES_CHANNEL);
+    }
+
+    public static String getTosChannel() {
+        return properties.getProperty(TOS_CHANNEL);
     }
 
     public static String getDevTeamChannel() {

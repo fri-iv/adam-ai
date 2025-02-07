@@ -78,8 +78,8 @@ public class DevTeamCommandHandler implements CommandHandler {
                         
                         - Administers the artists' guild
                         - Reviews team working conditions
-                        - Receives a share of the income
-                        
+                        - Helps the team learn and grow together
+
                         **Role:** <@&%s>
                         **Members:** %s
                         

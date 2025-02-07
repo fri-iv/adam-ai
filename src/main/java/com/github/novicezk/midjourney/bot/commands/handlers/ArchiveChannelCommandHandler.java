@@ -93,8 +93,8 @@ public class ArchiveChannelCommandHandler implements CommandHandler {
         Button requestButton = Button.success("new-request", "New Request \uD83D\uDCAB");
 
         channel.sendMessageEmbeds(EmbedUtil.createEmbedSuccess(
-                "This channel has been archived",
-                String.format("To create a new request, please click the button below or contact <@%s>", Config.getContactManagerId())
+                "This channel is currently archived",
+                String.format("To start a new request or reopen this conversation, click the button below. You can also reach out to <@%s> for assistance", Config.getContactManagerId())
         )).addActionRow(requestButton).queue();
     }
 
