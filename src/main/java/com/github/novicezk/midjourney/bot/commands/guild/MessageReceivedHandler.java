@@ -19,9 +19,24 @@ import java.util.regex.Pattern;
 
 @Slf4j
 public class MessageReceivedHandler {
+    // Основной шаблон для поиска ссылок
     private static final Pattern URL_PATTERN = Pattern.compile(
             "\\b((https?|ftp|file)://|www\\.|ftp\\.|[A-Z0-9.-]+\\.[A-Z]{2,4}\\b)[-A-Z0-9+&@#/%?=~_|$!:,.;]*[A-Z0-9+&@#/%=~_|$]",
             Pattern.CASE_INSENSITIVE);
+
+    // Шаблоны для исключений (гифки, YouTube и изображения)
+    private static final Pattern GIF_PATTERN = Pattern.compile(
+            "\\.gif$|giphy\\.com|tenor\\.com",
+            Pattern.CASE_INSENSITIVE
+    );
+    private static final Pattern YOUTUBE_PATTERN = Pattern.compile(
+            "youtube\\.com|youtu\\.be",
+            Pattern.CASE_INSENSITIVE
+    );
+    private static final Pattern IMAGE_PATTERN = Pattern.compile(
+            "\\.(jpg|jpeg|png|webp|bmp|svg)$|imgur\\.com|i\\.imgur\\.com|ibb\\.co",
+            Pattern.CASE_INSENSITIVE
+    );
 
     private final PrivateMessageSender privateMessageSender;
 
@@ -57,9 +72,29 @@ public class MessageReceivedHandler {
             handlePaymentMessage(event, event.getMessage().getEmbeds().get(0).getDescription());
         }
 
-        if (!isPrivate && URL_PATTERN.matcher(event.getMessage().getContentRaw()).find()) {
-            handleFilterLinks(event);
+        String messageContent = event.getMessage().getContentRaw();
+
+        if (!isPrivate && containsLink(messageContent)) {
+            if (!isGifLink(messageContent) && !isYouTubeLink(messageContent) && !isImageLink(messageContent)) {
+                handleFilterLinks(event);
+            }
         }
+    }
+
+    private static boolean containsLink(String message) {
+        return URL_PATTERN.matcher(message).find();
+    }
+
+    private static boolean isGifLink(String message) {
+        return GIF_PATTERN.matcher(message).find();
+    }
+
+    private static boolean isYouTubeLink(String message) {
+        return YOUTUBE_PATTERN.matcher(message).find();
+    }
+
+    private static boolean isImageLink(String message) {
+        return IMAGE_PATTERN.matcher(message).find();
     }
 
     private void handlePaymentMessage(MessageReceivedEvent event, @Nullable String description) {
