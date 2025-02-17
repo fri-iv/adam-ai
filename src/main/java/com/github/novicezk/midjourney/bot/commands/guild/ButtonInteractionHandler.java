@@ -58,7 +58,17 @@ public class ButtonInteractionHandler {
             handlePaymentCompleteButton(event);
         } else if (event.getComponentId().equals("new-request")) {
             handleNewRequestButton(event);
+        } else if (event.getComponentId().equals("stream-watchers")) {
+            handleStreamWatchersButton(event, guild);
         }
+    }
+
+    private void handleStreamWatchersButton(ButtonInteractionEvent event, Guild guild) {
+        event.getHook().sendMessageEmbeds(
+                EmbedUtil.createEmbed("Welcome to <@&" + Config.getRoleStreamWatchers() + ">! You can now get streams notifications.")
+        ).queue();
+
+        guild.addRoleToMember(event.getMember(), guild.getRoleById(Config.getRoleStreamWatchers())).queue();
     }
 
     private void handleNewRequestButton(ButtonInteractionEvent event) {

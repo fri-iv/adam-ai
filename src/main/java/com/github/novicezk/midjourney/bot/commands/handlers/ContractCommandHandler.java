@@ -110,10 +110,40 @@ public class ContractCommandHandler implements CommandHandler {
             case "dev-links":
                 handleDevLinksCommand(event, prod);
                 break;
+            case "stream":
+                handleStreamCommand(event, prod);
+                break;
             default:
                 event.getHook().sendMessageEmbeds(List.of(EmbedUtil.createEmbed("Command not found"))).queue();
                 break;
         }
+    }
+
+    private void handleStreamCommand(SlashCommandInteractionEvent event, boolean prod) {
+        String channelId = Config.getDebugChannel();
+        if (prod) {
+            channelId = Config.getStreamsChannel();
+        }
+
+        String guildId = Config.getGuildId();
+        Guild guild = AdamBotInitializer.getApiInstance().getGuildById(guildId);
+        if (guild == null || guild.getTextChannelById(channelId) == null) {
+            OnErrorAction.onDefaultMessage(event);
+            return;
+        }
+
+        event.getHook().sendMessageEmbeds(EmbedUtil.createEmbedSuccess("Done")).setEphemeral(true).queue();
+
+        Button roleButton = Button.primary("stream-watchers", "Join Stream Watchers");
+        guild.getTextChannelById(channelId).sendMessage(String.format("""
+                ### Welcome to our Streams!
+                Our team hosts live streams where you can watch the process of creating avatars and chat with our artists.
+                ### Want to get notified about upcoming streams?
+                Click the button below to get the <@&%s> role and stay updated!
+                """, Config.getRoleStreamWatchers()))
+                .addActionRow(roleButton)
+                .queue();
+
     }
 
     private void handleDevLinksCommand(SlashCommandInteractionEvent event, boolean prod) {

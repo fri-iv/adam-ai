@@ -29,6 +29,7 @@ public class Config {
     private static final String UPDATES_CHANNEL = "UPDATES_CHANNEL";
     private static final String RULES_CHANNEL = "RULES_CHANNEL";
     private static final String TOS_CHANNEL = "TOS_CHANNEL";
+    private static final String STREAMS_CHANNEL = "STREAMS_CHANNEL";
 
     // Category IDs
     private static final String CATEGORY_PROJECTS = "CATEGORY_PROJECTS";
@@ -64,6 +65,7 @@ public class Config {
     private static final String ROLE_VANGUARD = "VANGUARD";
     private static final String ROLE_TESTER = "TESTER";
     private static final String ROLE_MUTED = "MUTED";
+    private static final String ROLE_STREAM_WATCHERS = "STREAM_WATCHERS";
 
     // Links to channels
     private static final String FAQ_CHANNEL_URL = "FAQ_CHANNEL_URL";
@@ -164,6 +166,10 @@ public class Config {
         return properties.getProperty(ROLE_MUTED);
     }
 
+    public static String getRoleStreamWatchers() {
+        return properties.getProperty(ROLE_STREAM_WATCHERS);
+    }
+
     public static String getRoleLinksAllowed() {
         return properties.getProperty(ROLE_LINKS_ALLOWED);
     }
@@ -258,6 +264,10 @@ public class Config {
 
     public static String getTosChannel() {
         return properties.getProperty(TOS_CHANNEL);
+    }
+
+    public static String getStreamsChannel() {
+        return properties.getProperty(STREAMS_CHANNEL);
     }
 
     public static String getDevTeamChannel() {
