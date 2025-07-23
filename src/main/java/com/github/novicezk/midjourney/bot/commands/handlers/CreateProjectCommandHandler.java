@@ -87,7 +87,7 @@ public class CreateProjectCommandHandler implements CommandHandler {
 
     private void sendMessageToPrivateChannel(TextChannel channel, String projectName, String artistId, double price) {
         channel.sendMessageEmbeds(EmbedUtil.createEmbedCute(
-                        "Welcome to Avatar Studio Bagels!",
+                        "Welcome to Bagels Avatar Studio!",
                         String.format("""
                                     Your project **%s** is now in progress!
                                     Chat here to discuss details.

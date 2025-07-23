@@ -38,7 +38,8 @@ public class GuildMemberJoinHandler {
 
         handleWelcomeChannelMessage(event, user);
         handleWelcomeDirectMessage(user);
-        handleGenerateWelcomeArt(user, event);
+        // uncomment when image generating is ready
+//        handleGenerateWelcomeArt(user, event);
         cacheAllMembers(event.getGuild().getMembers());
     }
 

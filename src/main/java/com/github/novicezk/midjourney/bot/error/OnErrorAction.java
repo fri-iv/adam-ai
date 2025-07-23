@@ -11,6 +11,10 @@ import java.util.List;
 
 public class OnErrorAction {
 
+    public static void onImageGeneratingMessage(ButtonInteractionEvent event) {
+        sendMessage(event, "Image generation is currently disabled. If you'd like to use this feature, please contact <@" + Config.getContactManagerId() + ">", false);
+    }
+
     public static void onImageErrorMessage(SlashCommandInteractionEvent event) {
         sendMessage(event, "Oops! We couldn't find any image. Please run the command `/upload-image` and try again.", false);
     }

@@ -12,11 +12,11 @@ import java.util.Random;
  * 8%
  */
 public enum CharacterStrength {
-    COMMON("Common", Config.getRoleCommon(), 30),
-    RARE("Rare", Config.getRoleRare(), 30),
-    STRANGE("Strange", Config.getRoleStrange(), 20),
-    UNIQUE("Unique", Config.getRoleUnique(), 12),
-    EPIC("Epic", Config.getRoleEpic(), 8);
+    COMMON("Common", Config.getRoleCommon(), 39),
+    RARE("Rare", Config.getRoleRare(), 1),
+    STRANGE("Strange", Config.getRoleStrange(), 29),
+    UNIQUE("Unique", Config.getRoleUnique(), 21),
+    EPIC("Epic", Config.getRoleEpic(), 10);
 
     private final String strengthName;
     private final String roleId;

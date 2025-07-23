@@ -46,6 +46,12 @@ public class GeneratingRequestHandler {
         List<String> imageUrls = getUserImageUrls(event.getUser());
         String title = generateTitle(imageUrls.isEmpty(), "");
 
+        // delete when generating images are ready
+        if (true) {
+            OnErrorAction.onImageGeneratingMessage(event);
+            return;
+        }
+
         if (imageUrls.isEmpty()) {
             String discordAvatarUrl = getImageUrlFromDiscordAvatar(event.getUser());
             if (discordAvatarUrl != null) {
